@@ -22,6 +22,7 @@ const {
 
 const router = express.Router();
 
+
 // ==========================================
 // CREATE PURCHASE REQUEST
 // POST /api/purchase-requests
@@ -35,8 +36,6 @@ router.post(
         try {
 
             const {
-                requesterName,
-                department,
                 itemDescription,
                 quantity,
                 estimatedCost,
@@ -44,7 +43,7 @@ router.post(
             } = req.body;
 
             // ==========================================
-            // VERIFY USER
+            // VERIFY AUTHENTICATED USER
             // ==========================================
 
             if (!req.user || !req.user.id) {
@@ -72,22 +71,90 @@ router.post(
             }
 
             // ==========================================
+            // GET USER FROM DATABASE
+            // NEVER TRUST IDENTITY FIELDS FROM FRONTEND
+            // ==========================================
+
+            const user = await User.findById(
+                req.user.id
+            );
+
+            if (!user) {
+
+                return res.status(401).json({
+                    success: false,
+                    message:
+                        "Authenticated user account could not be found"
+                });
+
+            }
+
+            if (!user.active) {
+
+                return res.status(403).json({
+                    success: false,
+                    message:
+                        "Your account is inactive"
+                });
+
+            }
+
+            // ==========================================
             // VALIDATE REQUEST
             // ==========================================
 
             if (
-                !requesterName ||
-                !department ||
                 !itemDescription ||
                 !quantity ||
                 estimatedCost === undefined ||
+                estimatedCost === null ||
                 !justification
             ) {
 
                 return res.status(400).json({
                     success: false,
                     message:
-                        "All required fields must be provided"
+                        "Item description, quantity, estimated cost and justification are required"
+                });
+
+            }
+
+            // ==========================================
+            // VALIDATE QUANTITY
+            // ==========================================
+
+            const numericQuantity =
+                Number(quantity);
+
+            if (
+                !Number.isFinite(numericQuantity) ||
+                numericQuantity <= 0
+            ) {
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Quantity must be a valid number greater than zero"
+                });
+
+            }
+
+            // ==========================================
+            // VALIDATE ESTIMATED COST
+            // ==========================================
+
+            const numericCost =
+                Number(estimatedCost);
+
+            if (
+                !Number.isFinite(numericCost) ||
+                numericCost < 0
+            ) {
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Estimated cost must be a valid number greater than or equal to zero"
                 });
 
             }
@@ -101,6 +168,10 @@ router.post(
 
             // ==========================================
             // CREATE PURCHASE REQUEST
+            //
+            // IMPORTANT:
+            // requesterName and department come from
+            // MongoDB rather than the browser.
             // ==========================================
 
             const purchaseRequest =
@@ -109,26 +180,30 @@ router.post(
                     requestNumber,
 
                     requesterId:
-                        req.user.id,
+                        user._id,
 
-                    requesterName,
+                    requesterName:
+                        user.name,
 
-                    department,
+                    department:
+                        user.department || "",
 
-                    itemDescription,
+                    itemDescription:
+                        String(itemDescription).trim(),
 
                     quantity:
-                        Number(quantity),
+                        numericQuantity,
 
                     estimatedCost:
-                        Number(estimatedCost),
+                        numericCost,
 
-                    justification
+                    justification:
+                        String(justification).trim()
 
                 });
 
             console.log(
-                `Purchase request created: ${purchaseRequest.requestNumber}`
+                `Purchase request created: ${purchaseRequest.requestNumber} by ${user.email}`
             );
 
             // ==========================================
@@ -163,8 +238,6 @@ router.post(
                                 purchaseRequest
 
                         });
-
-                        
 
                     } catch (emailError) {
 
@@ -213,7 +286,6 @@ router.post(
                 success: false,
 
                 message:
-                    error.message ||
                     "Failed to create purchase request"
 
             });
@@ -223,9 +295,19 @@ router.post(
     }
 );
 
+
 // ==========================================
-// GET ALL PURCHASE REQUESTS
+// GET PURCHASE REQUESTS
 // GET /api/purchase-requests
+//
+// EMPLOYEE:
+//   Own requests only
+//
+// MANAGER:
+//   All requests
+//
+// ADMIN:
+//   All requests
 // ==========================================
 
 router.get(
@@ -235,9 +317,52 @@ router.get(
 
         try {
 
+            if (!req.user || !req.user.id) {
+
+                return res.status(401).json({
+                    success: false,
+                    message:
+                        "Authenticated user could not be identified"
+                });
+
+            }
+
+            let query = {};
+
+            // ==========================================
+            // EMPLOYEE
+            // ==========================================
+
+            if (req.user.role === "Employee") {
+
+                query = {
+                    requesterId: req.user.id
+                };
+
+            }
+
+            // ==========================================
+            // MANAGER / ADMIN
+            // ==========================================
+            //
+            // Managers and Admins can see all requests.
+            // ==========================================
+
             const requests =
                 await PurchaseRequest
-                    .find()
+                    .find(query)
+                    .populate(
+                        "requesterId",
+                        "name email role department"
+                    )
+                    .populate(
+                        "approvedBy",
+                        "name email"
+                    )
+                    .populate(
+                        "rejectedBy",
+                        "name email"
+                    )
                     .sort({
                         createdAt: -1
                     });
@@ -266,7 +391,6 @@ router.get(
                 success: false,
 
                 message:
-                    error.message ||
                     "Failed to retrieve purchase requests"
 
             });
@@ -275,6 +399,7 @@ router.get(
 
     }
 );
+
 
 // ==========================================
 // GET MY PURCHASE REQUESTS
@@ -346,7 +471,6 @@ router.get(
                 success: false,
 
                 message:
-                    error.message ||
                     "Failed to retrieve your purchase requests"
 
             });
@@ -356,9 +480,16 @@ router.get(
     }
 );
 
+
 // ==========================================
 // GET SINGLE PURCHASE REQUEST
 // GET /api/purchase-requests/:id
+//
+// EMPLOYEE:
+//   Own request only
+//
+// MANAGER / ADMIN:
+//   Any request
 // ==========================================
 
 router.get(
@@ -385,6 +516,18 @@ router.get(
             const request =
                 await PurchaseRequest.findById(
                     req.params.id
+                )
+                .populate(
+                    "requesterId",
+                    "name email role department"
+                )
+                .populate(
+                    "approvedBy",
+                    "name email"
+                )
+                .populate(
+                    "rejectedBy",
+                    "name email"
                 );
 
             if (!request) {
@@ -393,6 +536,25 @@ router.get(
                     success: false,
                     message:
                         "Purchase request not found"
+                });
+
+            }
+
+            // ==========================================
+            // EMPLOYEE OWNERSHIP CHECK
+            // ==========================================
+
+            if (
+                req.user.role === "Employee" &&
+                request.requesterId &&
+                request.requesterId._id.toString() !==
+                    req.user.id
+            ) {
+
+                return res.status(403).json({
+                    success: false,
+                    message:
+                        "You are not authorized to view this purchase request"
                 });
 
             }
@@ -418,7 +580,6 @@ router.get(
                 success: false,
 
                 message:
-                    error.message ||
                     "Failed to retrieve purchase request"
 
             });
@@ -427,6 +588,7 @@ router.get(
 
     }
 );
+
 
 // ==========================================
 // REPAIR OLD REQUEST
@@ -542,7 +704,6 @@ router.patch(
                 success: false,
 
                 message:
-                    error.message ||
                     "Failed to repair purchase request"
 
             });
@@ -551,6 +712,7 @@ router.patch(
 
     }
 );
+
 
 // ==========================================
 // APPROVE PURCHASE REQUEST
@@ -575,19 +737,6 @@ router.patch(
                     success: false,
                     message:
                         "Invalid purchase request ID"
-                });
-
-            }
-
-            if (
-                !req.user ||
-                !req.user.id
-            ) {
-
-                return res.status(401).json({
-                    success: false,
-                    message:
-                        "Manager identity could not be verified"
                 });
 
             }
@@ -665,12 +814,12 @@ router.patch(
                     req.user.id
                 );
 
-            if (!manager) {
+            if (!manager || !manager.active) {
 
                 return res.status(401).json({
                     success: false,
                     message:
-                        "Manager account could not be found."
+                        "Manager account could not be verified."
                 });
 
             }
@@ -732,10 +881,6 @@ router.patch(
 
             }
 
-            // ==========================================
-            // SUCCESS
-            // ==========================================
-
             return res.json({
 
                 success: true,
@@ -760,7 +905,6 @@ router.patch(
                 success: false,
 
                 message:
-                    error.message ||
                     "Failed to approve purchase request"
 
             });
@@ -769,6 +913,7 @@ router.patch(
 
     }
 );
+
 
 // ==========================================
 // REJECT PURCHASE REQUEST
@@ -862,12 +1007,12 @@ router.patch(
                     req.user.id
                 );
 
-            if (!manager) {
+            if (!manager || !manager.active) {
 
                 return res.status(401).json({
                     success: false,
                     message:
-                        "Manager account could not be found."
+                        "Manager account could not be verified."
                 });
 
             }
@@ -888,7 +1033,9 @@ router.patch(
             request.rejectionReason =
                 req.body &&
                 req.body.rejectionReason
-                    ? req.body.rejectionReason
+                    ? String(
+                        req.body.rejectionReason
+                    ).trim()
                     : null;
 
             request.approvedBy =
@@ -932,10 +1079,6 @@ router.patch(
 
             }
 
-            // ==========================================
-            // SUCCESS
-            // ==========================================
-
             return res.json({
 
                 success: true,
@@ -960,7 +1103,6 @@ router.patch(
                 success: false,
 
                 message:
-                    error.message ||
                     "Failed to reject purchase request"
 
             });
@@ -970,9 +1112,12 @@ router.patch(
     }
 );
 
+
 // ==========================================
 // SEND TO PROCUREMENT
 // PATCH /api/purchase-requests/:id/procurement
+//
+// MANAGER / ADMIN ONLY
 // ==========================================
 
 router.patch(
@@ -981,6 +1126,30 @@ router.patch(
     async (req, res) => {
 
         try {
+
+            // ==========================================
+            // AUTHORIZATION
+            // ==========================================
+
+            if (
+                !req.user ||
+                (
+                    req.user.role !== "Manager" &&
+                    req.user.role !== "Admin"
+                )
+            ) {
+
+                return res.status(403).json({
+                    success: false,
+                    message:
+                        "Manager or Admin access required"
+                });
+
+            }
+
+            // ==========================================
+            // VALIDATE ID
+            // ==========================================
 
             if (
                 !mongoose.Types.ObjectId.isValid(
@@ -1010,6 +1179,10 @@ router.patch(
                 });
 
             }
+
+            // ==========================================
+            // STATUS CHECK
+            // ==========================================
 
             if (
                 request.status !== "Approved"
@@ -1052,7 +1225,6 @@ router.patch(
                 success: false,
 
                 message:
-                    error.message ||
                     "Failed to send request to procurement"
 
             });
@@ -1061,5 +1233,6 @@ router.patch(
 
     }
 );
+
 
 module.exports = router;
