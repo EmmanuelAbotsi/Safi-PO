@@ -5,7 +5,9 @@ const userSchema = new mongoose.Schema(
         name: {
             type: String,
             required: true,
-            trim: true
+            trim: true,
+            minlength: 2,
+            maxlength: 100
         },
 
         email: {
@@ -13,12 +15,14 @@ const userSchema = new mongoose.Schema(
             required: true,
             unique: true,
             lowercase: true,
-            trim: true
+            trim: true,
+            maxlength: 254
         },
 
         password: {
             type: String,
-            required: true
+            required: true,
+            minlength: 60
         },
 
         role: {
@@ -34,6 +38,7 @@ const userSchema = new mongoose.Schema(
         department: {
             type: String,
             trim: true,
+            maxlength: 100,
             default: ""
         },
 
@@ -47,4 +52,9 @@ const userSchema = new mongoose.Schema(
     }
 );
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model(
+    "User",
+    userSchema
+);
+
+
