@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ProcureFlow | Procurement Management System</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-mark">P</div>
+
+            <div class="logo-text">
+                <strong>Procure<span>Flow</span></strong>
+                <small>PROCUREMENT SYSTEM</small>
+            </div>
+        </div>
+
+        <nav class="navigation">
+
+            <p class="nav-label">MAIN MENU</p>
+
+            <a href="index.html" class="nav-item active">
+                <span class="nav-icon">▦</span>
+                Dashboard
+            </a>
+
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">＋</span>
+                New Request
+            </a>
+
+            <a href="my-requests.html" class="nav-item">
+                <span class="nav-icon">◫</span>
+                My Requests
+            </a>
+
+            <p class="nav-label">MANAGEMENT</p>
+
+            <a href="#" class="nav-item">
+                <span class="nav-icon">✓</span>
+                Approvals
+                <span class="badge">3</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                <span class="nav-icon">▤</span>
+                Purchase Orders
+            </a>
+
+            <a href="#" class="nav-item">
+                <span class="nav-icon">♙</span>
+                Suppliers
+            </a>
+
+            <p class="nav-label">SYSTEM</p>
+
+            <a href="#" class="nav-item">
+                <span class="nav-icon">⚙</span>
+                Settings
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="help-box">
+                <div class="help-icon">?</div>
+
+                <div>
+                    <strong>Need Help?</strong>
+                    <p>Contact Procurement</p>
+                </div>
+            </div>
+
+            <!-- LOGOUT -->
+            <div class="user-card">
+
+                <div class="avatar" id="userAvatar">
+                    EA
+                </div>
+
+                <div class="user-details">
+                    <strong id="sidebarUserName">
+                        Employee
+                    </strong>
+
+                    <span id="sidebarUserDepartment">
+                        Finance Department
+                    </span>
+                </div>
+
+                <button
+                    type="button"
+                    class="logout"
+                    id="logoutButton"
+                    title="Logout"
+                >
+                    ↪
+                </button>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Topbar -->
+        <header class="topbar">
+
+            <div class="mobile-logo">
+                <div class="logo-mark">P</div>
+                <strong>Procure<span>Flow</span></strong>
+            </div>
+
+            <div class="breadcrumb">
+                <span>Home</span>
+                <span>/</span>
+                <strong>New Purchase Request</strong>
+            </div>
+
+            <div class="topbar-actions">
+
+                <button class="notification" type="button">
+                    🔔
+                    <span></span>
+                </button>
+
+                <div class="top-user">
+
+                    <div
+                        class="avatar small"
+                        id="topUserAvatar"
+                    >
+                        EA
+                    </div>
+
+                    <div>
+                        <strong id="topUserName">
+                            Employee
+                        </strong>
+
+                        <span id="topUserDepartment">
+                            Finance
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- Page -->
+        <section class="page">
+
+            <!-- Hero -->
+            <div class="page-heading">
+
+                <div>
+
+                    <div class="title-icon">
+                        ＋
+                    </div>
+
+                    <div class="heading-text">
+
+                        <p class="eyebrow">
+                            PROCUREMENT PORTAL
+                        </p>
+
+                        <h1>
+                            Create Purchase Request
+                        </h1>
+
+                        <p>
+                            Submit a request for goods or services and track
+                            it through the approval process.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="request-status">
+                    <span class="status-dot"></span>
+                    System Online
+                </div>
+
+            </div>
+
+
+            <!-- Progress -->
+            <div class="progress-card">
+
+                <div class="progress-step active">
+
+                    <div class="step-number">
+                        1
+                    </div>
+
+                    <div>
+                        <strong>
+                            Request Details
+                        </strong>
+
+                        <span>
+                            Enter purchase information
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="progress-line"></div>
+
+                <div class="progress-step">
+
+                    <div class="step-number">
+                        2
+                    </div>
+
+                    <div>
+                        <strong>
+                            Review
+                        </strong>
+
+                        <span>
+                            Check your request
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="progress-line"></div>
+
+                <div class="progress-step">
+
+                    <div class="step-number">
+                        3
+                    </div>
+
+                    <div>
+                        <strong>
+                            Approval
+                        </strong>
+
+                        <span>
+                            Manager review
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Form Card -->
+            <div class="content-grid">
+
+                <section class="form-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <span class="section-number">
+                                01
+                            </span>
+
+                            <div>
+
+                                <h2>
+                                    Purchase Information
+                                </h2>
+
+                                <p>
+                                    Provide details about the item or service
+                                    you are requesting.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <span class="required">
+                            * Required fields
+                        </span>
+
+                    </div>
+
+
+                    <form id="purchaseRequestForm">
+
+                        <div class="form-grid">
+
+                            <!-- Requester -->
+                            <div class="form-group">
+
+                                <label for="requesterName">
+                                    Requester Name
+                                    <span>*</span>
+                                </label>
+
+                                <div class="input-wrapper">
+
+                                    <span class="input-icon">
+                                        ♙
+                                    </span>
+
+                                    <input
+                                        type="text"
+                                        id="requesterName"
+                                        name="requesterName"
+                                        placeholder="Enter your full name"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Department -->
+                            <div class="form-group">
+
+                                <label for="department">
+                                    Department
+                                    <span>*</span>
+                                </label>
+
+                                <div class="input-wrapper">
+
+                                    <span class="input-icon">
+                                        ▦
+                                    </span>
+
+                                    <select
+                                        id="department"
+                                        name="department"
+                                        required
+                                    >
+
+                                        <option value="">
+                                            Select department
+                                        </option>
+
+                                        <option>
+                                            Finance
+                                        </option>
+
+                                        <option>
+                                            Human Resources
+                                        </option>
+
+                                        <option>
+                                            Information Technology
+                                        </option>
+
+                                        <option>
+                                            Operations
+                                        </option>
+
+                                        <option>
+                                            Procurement
+                                        </option>
+
+                                        <option>
+                                            Administration
+                                        </option>
+
+                                        <option>
+                                            Marketing
+                                        </option>
+
+                                        <option>
+                                            Internal Audit
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Item -->
+                            <div class="form-group full">
+
+                                <label for="itemDescription">
+                                    Item / Service Description
+                                    <span>*</span>
+                                </label>
+
+                                <div class="input-wrapper">
+
+                                    <span class="input-icon">
+                                        ▤
+                                    </span>
+
+                                    <input
+                                        type="text"
+                                        id="itemDescription"
+                                        name="itemDescription"
+                                        placeholder="e.g. Laptop computers, office furniture, software subscription..."
+                                        required
+                                    >
+
+                                </div>
+
+                                <small>
+                                    Be as specific as possible.
+                                </small>
+
+                            </div>
+
+
+                            <!-- Quantity -->
+                            <div class="form-group">
+
+                                <label for="quantity">
+                                    Quantity
+                                    <span>*</span>
+                                </label>
+
+                                <div class="input-wrapper">
+
+                                    <span class="input-icon">
+                                        #
+                                    </span>
+
+                                    <input
+                                        type="number"
+                                        id="quantity"
+                                        name="quantity"
+                                        min="1"
+                                        placeholder="Enter quantity"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Cost -->
+                            <div class="form-group">
+
+                                <label for="estimatedCost">
+                                    Estimated Cost
+                                    <span>*</span>
+                                </label>
+
+                                <div class="money-input">
+
+                                    <span>
+                                        GHS
+                                    </span>
+
+                                    <input
+                                        type="number"
+                                        id="estimatedCost"
+                                        name="estimatedCost"
+                                        min="0"
+                                        step="0.01"
+                                        placeholder="0.00"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Justification -->
+                            <div class="form-group full">
+
+                                <label for="justification">
+                                    Business Justification
+                                    <span>*</span>
+                                </label>
+
+                                <textarea
+                                    id="justification"
+                                    name="justification"
+                                    rows="6"
+                                    placeholder="Explain why this purchase is required, how it will support your department and the expected benefit..."
+                                    required
+                                ></textarea>
+
+                                <small>
+                                    Provide enough information to help the
+                                    approver make an informed decision.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Message -->
+                        <div
+                            id="message"
+                            class="message"
+                        ></div>
+
+
+                        <!-- Footer -->
+                        <div class="form-footer">
+
+                            <button
+                                type="reset"
+                                class="btn btn-secondary"
+                            >
+                                Clear Form
+                            </button>
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                                id="submitBtn"
+                            >
+                                <span>
+                                    Submit Purchase Request
+                                </span>
+
+                                <b>
+                                    →
+                                </b>
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </section>
+
+
+                <!-- Right Panel -->
+                <aside class="side-panel">
+
+                    <div class="info-card blue-card">
+
+                        <div class="info-icon">
+                            ✓
+                        </div>
+
+                        <h3>
+                            What happens next?
+                        </h3>
+
+                        <p>
+                            Your request will go through the following
+                            procurement workflow:
+                        </p>
+
+                        <div class="workflow">
+
+                            <div class="workflow-item">
+
+                                <span>
+                                    1
+                                </span>
+
+                                <div>
+
+                                    <strong>
+                                        Submit Request
+                                    </strong>
+
+                                    <small>
+                                        Your request is recorded
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="workflow-item">
+
+                                <span>
+                                    2
+                                </span>
+
+                                <div>
+
+                                    <strong>
+                                        Manager Approval
+                                    </strong>
+
+                                    <small>
+                                        Your manager reviews it
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="workflow-item">
+
+                                <span>
+                                    3
+                                </span>
+
+                                <div>
+
+                                    <strong>
+                                        Procurement Review
+                                    </strong>
+
+                                    <small>
+                                        Procurement processes it
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="workflow-item">
+
+                                <span>
+                                    4
+                                </span>
+
+                                <div>
+
+                                    <strong>
+                                        Purchase Order
+                                    </strong>
+
+                                    <small>
+                                        Order is issued to supplier
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-card orange-card">
+
+                        <div class="orange-title">
+
+                            <span>
+                                !
+                            </span>
+
+                            Important
+
+                        </div>
+
+                        <p>
+                            Make sure your estimated cost and business
+                            justification are accurate before submitting.
+                        </p>
+
+                    </div>
+
+
+                    <div class="info-card red-card">
+
+                        <div class="red-title">
+
+                            <span>
+                                ⚠
+                            </span>
+
+                            Procurement Policy
+
+                        </div>
+
+                        <p>
+                            Purchases must comply with the organization's
+                            procurement policies and approval thresholds.
+                        </p>
+
+                        <button type="button">
+                            View Procurement Policy →
+                        </button>
+
+                    </div>
+
+                </aside>
+
+            </div>
+
+
+            <!-- Bottom Statistics -->
+            <div class="stats-row">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon blue">
+                        ◫
+                    </div>
+
+                    <div>
+                        <span>
+                            My Requests
+                        </span>
+
+                        <strong id="myRequestsCount">
+                            0
+                        </strong>
+                    </div>
+
+                    <small>
+                        View all →
+                    </small>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon orange">
+                        ◷
+                    </div>
+
+                    <div>
+                        <span>
+                            Pending Approval
+                        </span>
+
+                        <strong id="pendingCount">
+                            0
+                        </strong>
+                    </div>
+
+                    <small>
+                        Track →
+                    </small>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon red">
+                        !
+                    </div>
+
+                    <div>
+                        <span>
+                            Requires Action
+                        </span>
+
+                        <strong id="actionCount">
+                            0
+                        </strong>
+                    </div>
+
+                    <small>
+                        Review →
+                    </small>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Main application JavaScript -->
+    <script src="app.js"></script>
+
+
+    <!-- Logout + User Information -->
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                // ==========================================
+                // GET LOGGED-IN USER
+                // ==========================================
+
+                const storedUser =
+                    localStorage.getItem("user");
+
+                let user = null;
+
+                try {
+
+                    user =
+                        storedUser
+                            ? JSON.parse(storedUser)
+                            : null;
+
+                } catch (error) {
+
+                    console.error(
+                        "Unable to read saved user:",
+                        error
+                    );
+
+                }
+
+
+                // ==========================================
+                // UPDATE USER INFORMATION
+                // ==========================================
+
+                if (user) {
+
+                    const name =
+                        user.name || "Employee";
+
+                    const department =
+                        user.department ||
+                        "Department";
+
+
+                    const avatar =
+                        name
+                            .split(" ")
+                            .map(
+                                word =>
+                                    word.charAt(0)
+                            )
+                            .join("")
+                            .substring(0, 2)
+                            .toUpperCase();
+
+
+                    const userAvatar =
+                        document.getElementById(
+                            "userAvatar"
+                        );
+
+                    const topUserAvatar =
+                        document.getElementById(
+                            "topUserAvatar"
+                        );
+
+                    const sidebarUserName =
+                        document.getElementById(
+                            "sidebarUserName"
+                        );
+
+                    const sidebarUserDepartment =
+                        document.getElementById(
+                            "sidebarUserDepartment"
+                        );
+
+                    const topUserName =
+                        document.getElementById(
+                            "topUserName"
+                        );
+
+                    const topUserDepartment =
+                        document.getElementById(
+                            "topUserDepartment"
+                        );
+
+
+                    if (userAvatar) {
+                        userAvatar.textContent =
+                            avatar;
+                    }
+
+                    if (topUserAvatar) {
+                        topUserAvatar.textContent =
+                            avatar;
+                    }
+
+                    if (sidebarUserName) {
+                        sidebarUserName.textContent =
+                            name;
+                    }
+
+                    if (sidebarUserDepartment) {
+                        sidebarUserDepartment.textContent =
+                            department +
+                            " Department";
+                    }
+
+                    if (topUserName) {
+                        topUserName.textContent =
+                            name;
+                    }
+
+                    if (topUserDepartment) {
+                        topUserDepartment.textContent =
+                            department;
+                    }
+
+                }
+
+
+                // ==========================================
+                // LOGOUT
+                // ==========================================
+
+                const logoutButton =
+                    document.getElementById(
+                        "logoutButton"
+                    );
+
+
+                if (logoutButton) {
+
+                    logoutButton.addEventListener(
+                        "click",
+                        function () {
+
+                            const confirmed =
+                                confirm(
+                                    "Are you sure you want to logout?"
+                                );
+
+
+                            if (!confirmed) {
+                                return;
+                            }
+
+
+                            // Remove authentication
+                            localStorage.removeItem(
+                                "token"
+                            );
+
+                            localStorage.removeItem(
+                                "user"
+                            );
+
+                            localStorage.removeItem(
+                                "authToken"
+                            );
+
+
+                            // Redirect to login
+                            window.location.href =
+                                "login.html";
+
+                        }
+                    );
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>

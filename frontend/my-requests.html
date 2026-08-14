@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ProcureFlow | My Requests</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-mark">
+                P
+            </div>
+
+            <div class="logo-text">
+                <strong>
+                    Procure<span>Flow</span>
+                </strong>
+
+                <small>
+                    PROCUREMENT SYSTEM
+                </small>
+            </div>
+
+        </div>
+
+
+        <!-- NAVIGATION -->
+        <nav class="navigation">
+
+            <p class="nav-label">
+                MAIN MENU
+            </p>
+
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">▦</span>
+                Dashboard
+            </a>
+
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">＋</span>
+                New Request
+            </a>
+
+            <a
+                href="my-requests.html"
+                class="nav-item active"
+            >
+                <span class="nav-icon">◫</span>
+                My Requests
+            </a>
+
+
+            <p class="nav-label">
+                MANAGEMENT
+            </p>
+
+            <a href="#" class="nav-item">
+                <span class="nav-icon">✓</span>
+                Approvals
+                <span class="badge">3</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                <span class="nav-icon">▤</span>
+                Purchase Orders
+            </a>
+
+            <a href="#" class="nav-item">
+                <span class="nav-icon">♙</span>
+                Suppliers
+            </a>
+
+
+            <p class="nav-label">
+                SYSTEM
+            </p>
+
+            <a href="#" class="nav-item">
+                <span class="nav-icon">⚙</span>
+                Settings
+            </a>
+
+        </nav>
+
+
+        <!-- SIDEBAR BOTTOM -->
+        <div class="sidebar-bottom">
+
+            <div class="help-box">
+
+                <div class="help-icon">
+                    ?
+                </div>
+
+                <div>
+                    <strong>
+                        Need Help?
+                    </strong>
+
+                    <p>
+                        Contact Procurement
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- USER CARD -->
+            <div class="user-card">
+
+                <div
+                    class="avatar"
+                    id="userAvatar"
+                >
+                    EA
+                </div>
+
+                <div class="user-details">
+
+                    <strong id="sidebarUserName">
+                        Employee
+                    </strong>
+
+                    <span id="sidebarUserDepartment">
+                        Finance Department
+                    </span>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="logout"
+                    id="logoutButton"
+                    title="Logout"
+                >
+                    ↪
+                </button>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <div class="mobile-logo">
+
+                <div class="logo-mark">
+                    P
+                </div>
+
+                <strong>
+                    Procure<span>Flow</span>
+                </strong>
+
+            </div>
+
+
+            <div class="breadcrumb">
+
+                <span>
+                    Home
+                </span>
+
+                <span>
+                    /
+                </span>
+
+                <strong>
+                    My Requests
+                </strong>
+
+            </div>
+
+
+            <div class="topbar-actions">
+
+                <button
+                    class="notification"
+                    type="button"
+                >
+                    🔔
+                    <span></span>
+                </button>
+
+
+                <div class="top-user">
+
+                    <div
+                        class="avatar small"
+                        id="topUserAvatar"
+                    >
+                        EA
+                    </div>
+
+                    <div>
+
+                        <strong id="topUserName">
+                            Employee
+                        </strong>
+
+                        <span id="topUserDepartment">
+                            Finance
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- PAGE -->
+        <section class="page">
+
+
+            <!-- PAGE HEADING -->
+            <div class="page-heading">
+
+                <div>
+
+                    <div class="title-icon">
+                        ◫
+                    </div>
+
+                    <div class="heading-text">
+
+                        <p class="eyebrow">
+                            PROCUREMENT PORTAL
+                        </p>
+
+                        <h1>
+                            My Purchase Requests
+                        </h1>
+
+                        <p>
+                            View and track all purchase requests
+                            you have submitted.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <a
+                    href="index.html"
+                    class="btn btn-primary"
+                >
+                    + New Request
+                </a>
+
+            </div>
+
+
+            <!-- STATISTICS -->
+            <div class="stats-row">
+
+
+                <!-- TOTAL -->
+                <div class="stat-card">
+
+                    <div class="stat-icon blue">
+                        ◫
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Total Requests
+                        </span>
+
+                        <strong id="totalRequests">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PENDING -->
+                <div class="stat-card">
+
+                    <div class="stat-icon orange">
+                        ◷
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Pending
+                        </span>
+
+                        <strong id="pendingRequests">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACTION -->
+                <div class="stat-card">
+
+                    <div class="stat-icon red">
+                        !
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Requires Action
+                        </span>
+
+                        <strong id="actionRequests">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- REQUEST HISTORY -->
+            <section class="form-card requests-card">
+
+
+                <!-- HEADER -->
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="section-number">
+                            01
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Request History
+                            </h2>
+
+                            <p>
+                                Your submitted purchase requests.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        onclick="loadRequests()"
+                    >
+                        ↻ Refresh
+                    </button>
+
+                </div>
+
+
+                <!-- LOADING -->
+                <div
+                    id="loadingMessage"
+                    class="message"
+                >
+                    Loading purchase requests...
+                </div>
+
+
+                <!-- ERROR -->
+                <div
+                    id="errorMessage"
+                    class="message error"
+                    style="display:none;"
+                >
+                </div>
+
+
+                <!-- TABLE -->
+                <div class="table-container">
+
+                    <table class="requests-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Request No.
+                                </th>
+
+                                <th>
+                                    Item / Service
+                                </th>
+
+                                <th>
+                                    Department
+                                </th>
+
+                                <th>
+                                    Quantity
+                                </th>
+
+                                <th>
+                                    Estimated Cost
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Date
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody
+                            id="requestsTableBody"
+                        >
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+    <!-- MY REQUESTS JAVASCRIPT -->
+    <script src="my-requests.js"></script>
+
+
+    <!-- USER + LOGOUT JAVASCRIPT -->
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                // ==========================================
+                // GET LOGGED-IN USER
+                // ==========================================
+
+                const storedUser =
+                    localStorage.getItem("user");
+
+                let user = null;
+
+                try {
+
+                    user =
+                        storedUser
+                            ? JSON.parse(storedUser)
+                            : null;
+
+                } catch (error) {
+
+                    console.error(
+                        "Unable to read logged-in user:",
+                        error
+                    );
+
+                }
+
+
+                // ==========================================
+                // UPDATE USER INFORMATION
+                // ==========================================
+
+                if (user) {
+
+                    const name =
+                        user.name || "Employee";
+
+                    const department =
+                        user.department ||
+                        "Department";
+
+
+                    // Create initials
+                    const initials =
+                        name
+                            .split(" ")
+                            .filter(Boolean)
+                            .map(
+                                word =>
+                                    word
+                                        .charAt(0)
+                                        .toUpperCase()
+                            )
+                            .join("")
+                            .substring(0, 2);
+
+
+                    // Sidebar
+                    const userAvatar =
+                        document.getElementById(
+                            "userAvatar"
+                        );
+
+                    const sidebarUserName =
+                        document.getElementById(
+                            "sidebarUserName"
+                        );
+
+                    const sidebarUserDepartment =
+                        document.getElementById(
+                            "sidebarUserDepartment"
+                        );
+
+
+                    // Topbar
+                    const topUserAvatar =
+                        document.getElementById(
+                            "topUserAvatar"
+                        );
+
+                    const topUserName =
+                        document.getElementById(
+                            "topUserName"
+                        );
+
+                    const topUserDepartment =
+                        document.getElementById(
+                            "topUserDepartment"
+                        );
+
+
+                    if (userAvatar) {
+
+                        userAvatar.textContent =
+                            initials || "EA";
+
+                    }
+
+
+                    if (topUserAvatar) {
+
+                        topUserAvatar.textContent =
+                            initials || "EA";
+
+                    }
+
+
+                    if (sidebarUserName) {
+
+                        sidebarUserName.textContent =
+                            name;
+
+                    }
+
+
+                    if (sidebarUserDepartment) {
+
+                        sidebarUserDepartment.textContent =
+                            department +
+                            " Department";
+
+                    }
+
+
+                    if (topUserName) {
+
+                        topUserName.textContent =
+                            name;
+
+                    }
+
+
+                    if (topUserDepartment) {
+
+                        topUserDepartment.textContent =
+                            department;
+
+                    }
+
+                }
+
+
+                // ==========================================
+                // LOGOUT
+                // ==========================================
+
+                const logoutButton =
+                    document.getElementById(
+                        "logoutButton"
+                    );
+
+
+                if (logoutButton) {
+
+                    logoutButton.addEventListener(
+                        "click",
+                        function () {
+
+                            const confirmed =
+                                confirm(
+                                    "Are you sure you want to logout?"
+                                );
+
+
+                            if (!confirmed) {
+                                return;
+                            }
+
+
+                            // Remove authentication
+                            localStorage.removeItem(
+                                "token"
+                            );
+
+                            localStorage.removeItem(
+                                "user"
+                            );
+
+                            localStorage.removeItem(
+                                "authToken"
+                            );
+
+
+                            // Return to login
+                            window.location.href =
+                                "login.html";
+
+                        }
+                    );
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>

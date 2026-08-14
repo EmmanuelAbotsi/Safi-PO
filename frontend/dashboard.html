@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>ProcureFlow | Dashboard</title>
+
+<link rel="stylesheet" href="style.css">
+```
+
+</head>
+
+<body>
+
+```
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-mark">
+            P
+        </div>
+
+        <div class="logo-text">
+            <strong>
+                Procure<span>Flow</span>
+            </strong>
+
+            <small>
+                PROCUREMENT SYSTEM
+            </small>
+        </div>
+
+    </div>
+
+
+    <nav class="navigation">
+
+        <p class="nav-label">
+            MAIN MENU
+        </p>
+
+
+        <a
+            href="dashboard.html"
+            class="nav-item active">
+
+            <span class="nav-icon">
+                ▦
+            </span>
+
+            Dashboard
+
+        </a>
+
+
+        <a
+            href="index.html"
+            class="nav-item">
+
+            <span class="nav-icon">
+                ＋
+            </span>
+
+            New Request
+
+        </a>
+
+
+        <a
+            href="my-requests.html"
+            class="nav-item">
+
+            <span class="nav-icon">
+                ◫
+            </span>
+
+            My Requests
+
+        </a>
+
+
+        <p class="nav-label">
+            MANAGEMENT
+        </p>
+
+
+        <a
+            href="approvals.html"
+            class="nav-item">
+
+            <span class="nav-icon">
+                ✓
+            </span>
+
+            Approvals
+
+        </a>
+
+
+        <a
+            href="purchase-orders.html"
+            class="nav-item">
+
+            <span class="nav-icon">
+                ▤
+            </span>
+
+            Purchase Orders
+
+        </a>
+
+
+        <a
+            href="#"
+            class="nav-item">
+
+            <span class="nav-icon">
+                ♙
+            </span>
+
+            Suppliers
+
+        </a>
+
+
+        <p class="nav-label">
+            SYSTEM
+        </p>
+
+
+        <a
+            href="#"
+            class="nav-item">
+
+            <span class="nav-icon">
+                ⚙
+            </span>
+
+            Settings
+
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <div class="help-box">
+
+            <div class="help-icon">
+                ?
+            </div>
+
+            <div>
+
+                <strong>
+                    Need Help?
+                </strong>
+
+                <p>
+                    Contact Procurement
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="user-card">
+
+            <div
+                class="avatar"
+                id="sidebarAvatar">
+
+                EA
+
+            </div>
+
+
+            <div class="user-details">
+
+                <strong id="sidebarUserName">
+                    User
+                </strong>
+
+                <span id="sidebarDepartment">
+                    Department
+                </span>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="logout"
+                id="logoutBtn">
+
+                ↪
+
+            </button>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+
+        <div class="mobile-logo">
+
+            <div class="logo-mark">
+                P
+            </div>
+
+            <strong>
+                Procure<span>Flow</span>
+            </strong>
+
+        </div>
+
+
+        <div class="breadcrumb">
+
+            <span>
+                Home
+            </span>
+
+            <span>
+                /
+            </span>
+
+            <strong>
+                Dashboard
+            </strong>
+
+        </div>
+
+
+        <div class="topbar-actions">
+
+            <button
+                type="button"
+                class="notification">
+
+                🔔
+
+                <span></span>
+
+            </button>
+
+
+            <div class="top-user">
+
+                <div
+                    class="avatar small"
+                    id="topAvatar">
+
+                    EA
+
+                </div>
+
+
+                <div>
+
+                    <strong id="topUserName">
+                        User
+                    </strong>
+
+                    <span id="topUserDepartment">
+                        Department
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- PAGE -->
+    <section class="page">
+
+
+        <!-- PAGE HEADING -->
+        <div class="page-heading">
+
+            <div>
+
+                <div class="title-icon">
+                    ▦
+                </div>
+
+
+                <div class="heading-text">
+
+                    <p class="eyebrow">
+                        PROCUREMENT PORTAL
+                    </p>
+
+                    <h1>
+                        Dashboard
+                    </h1>
+
+                    <p>
+                        Overview of your procurement activities
+                        and purchase requests.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="request-status">
+
+                <span class="status-dot"></span>
+
+                System Online
+
+            </div>
+
+        </div>
+
+
+        <!-- STATISTICS -->
+        <div class="stats-row dashboard-stats">
+
+
+            <!-- TOTAL REQUESTS -->
+            <div class="stat-card">
+
+                <div class="stat-icon blue">
+                    ◫
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Total Requests
+                    </span>
+
+                    <strong id="totalRequests">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- PENDING -->
+            <div class="stat-card">
+
+                <div class="stat-icon orange">
+                    ◷
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Pending Approval
+                    </span>
+
+                    <strong id="pendingRequests">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- APPROVED -->
+            <div class="stat-card">
+
+                <div class="stat-icon blue">
+                    ✓
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Approved
+                    </span>
+
+                    <strong id="approvedRequests">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- REJECTED -->
+            <div class="stat-card">
+
+                <div class="stat-icon red">
+                    !
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Rejected
+                    </span>
+
+                    <strong id="rejectedRequests">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DASHBOARD CONTENT -->
+        <div class="content-grid">
+
+
+            <!-- RECENT REQUESTS -->
+            <section class="form-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="section-number">
+                            01
+                        </span>
+
+
+                        <div>
+
+                            <h2>
+                                Recent Purchase Requests
+                            </h2>
+
+                            <p>
+                                Latest procurement requests
+                                submitted through the system.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <a
+                        href="my-requests.html"
+                        class="dashboard-link">
+
+                        View All →
+
+                    </a>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table class="requests-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Request No.
+                                </th>
+
+                                <th>
+                                    Item / Service
+                                </th>
+
+                                <th>
+                                    Department
+                                </th>
+
+                                <th>
+                                    Cost
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="requestsTableBody">
+
+                            <tr>
+
+                                <td colspan="5">
+                                    Loading requests...
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            <!-- RIGHT PANEL -->
+            <aside class="side-panel">
+
+
+                <!-- QUICK ACTIONS -->
+                <div class="info-card blue-card">
+
+                    <div class="info-icon">
+                        ＋
+                    </div>
+
+
+                    <h3>
+                        Quick Actions
+                    </h3>
+
+
+                    <p>
+                        Common procurement actions.
+                    </p>
+
+
+                    <div class="quick-actions">
+
+
+                        <a
+                            href="index.html"
+                            class="quick-action">
+
+                            <span>
+                                ＋
+                            </span>
+
+
+                            <div>
+
+                                <strong>
+                                    New Purchase Request
+                                </strong>
+
+                                <small>
+                                    Create a new request
+                                </small>
+
+                            </div>
+
+                        </a>
+
+
+                        <a
+                            href="my-requests.html"
+                            class="quick-action">
+
+                            <span>
+                                ◫
+                            </span>
+
+
+                            <div>
+
+                                <strong>
+                                    My Requests
+                                </strong>
+
+                                <small>
+                                    Track submitted requests
+                                </small>
+
+                            </div>
+
+                        </a>
+
+
+                        <a
+                            href="approvals.html"
+                            class="quick-action">
+
+                            <span>
+                                ✓
+                            </span>
+
+
+                            <div>
+
+                                <strong>
+                                    Approvals
+                                </strong>
+
+                                <small>
+                                    Review pending requests
+                                </small>
+
+                            </div>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- WORKFLOW -->
+                <div class="info-card orange-card">
+
+                    <div class="orange-title">
+
+                        <span>
+                            !
+                        </span>
+
+                        Procurement Workflow
+
+                    </div>
+
+
+                    <p>
+                        Requests move through manager approval,
+                        procurement review and purchase order
+                        processing.
+                    </p>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+
+        <!-- DASHBOARD MESSAGE -->
+        <div
+            id="dashboardMessage"
+            class="message">
+        </div>
+
+
+    </section>
+
+</main>
+
+
+<!-- DASHBOARD JAVASCRIPT -->
+<script src="dashboard.js"></script>
+```
+
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE/editor files
+.vscode/
+.idea/
+
+# Runtime/generated files
+coverage/
+dist/
+build/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Local database files
+*.sqlite
+*.sqlite3
+
+# Git
+.git/

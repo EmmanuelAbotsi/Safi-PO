@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ProcureFlow | Admin Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-mark">
+                P
+            </div>
+
+            <div class="logo-text">
+                <strong>
+                    Procure<span>Flow</span>
+                </strong>
+
+                <small>
+                    PROCUREMENT SYSTEM
+                </small>
+            </div>
+
+        </div>
+
+
+        <nav class="navigation">
+
+            <p class="nav-label">
+                MAIN MENU
+            </p>
+
+            <a
+                href="admin.html"
+                class="nav-item active">
+
+                <span class="nav-icon">
+                    ▦
+                </span>
+
+                Dashboard
+
+            </a>
+
+
+            <a
+                href="#requests"
+                class="nav-item"
+                id="requestsNav">
+
+                <span class="nav-icon">
+                    ◫
+                </span>
+
+                All Requests
+
+            </a>
+
+
+            <p class="nav-label">
+                USER MANAGEMENT
+            </p>
+
+
+            <a
+                href="#users"
+                class="nav-item"
+                id="usersNav">
+
+                <span class="nav-icon">
+                    ♙
+                </span>
+
+                Users
+
+            </a>
+
+
+            <a
+                href="#create-user"
+                class="nav-item"
+                id="createUserNav">
+
+                <span class="nav-icon">
+                    ＋
+                </span>
+
+                Create User
+
+            </a>
+
+
+            <p class="nav-label">
+                SYSTEM
+            </p>
+
+
+            <a
+                href="#"
+                class="nav-item"
+                id="settingsNav">
+
+                <span class="nav-icon">
+                    ⚙
+                </span>
+
+                Settings
+
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="help-box">
+
+                <div class="help-icon">
+                    ?
+                </div>
+
+                <div>
+
+                    <strong>
+                        Need Help?
+                    </strong>
+
+                    <p>
+                        Contact Procurement
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="user-card">
+
+                <div
+                    class="avatar"
+                    id="sidebarAvatar">
+
+                    AD
+
+                </div>
+
+
+                <div class="user-details">
+
+                    <strong id="sidebarUserName">
+                        Admin
+                    </strong>
+
+                    <span id="sidebarDepartment">
+                        Administrator
+                    </span>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="logout"
+                    id="logoutBtn">
+
+                    ↪
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <div class="mobile-logo">
+
+                <div class="logo-mark">
+                    P
+                </div>
+
+                <strong>
+                    Procure<span>Flow</span>
+                </strong>
+
+            </div>
+
+
+            <div class="breadcrumb">
+
+                <span>
+                    Home
+                </span>
+
+                <span>
+                    /
+                </span>
+
+                <strong>
+                    Admin Dashboard
+                </strong>
+
+            </div>
+
+
+            <div class="topbar-actions">
+
+                <button
+                    type="button"
+                    class="notification">
+
+                    🔔
+
+                    <span></span>
+
+                </button>
+
+
+                <div class="top-user">
+
+                    <div
+                        class="avatar small"
+                        id="topAvatar">
+
+                        AD
+
+                    </div>
+
+                    <div>
+
+                        <strong id="topUserName">
+                            Admin
+                        </strong>
+
+                        <span id="topUserDepartment">
+                            Administrator
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- PAGE -->
+        <section class="page">
+
+
+            <!-- PAGE HEADING -->
+            <div class="page-heading">
+
+                <div>
+
+                    <div class="title-icon">
+                        ⚙
+                    </div>
+
+                    <div class="heading-text">
+
+                        <p class="eyebrow">
+                            SYSTEM ADMINISTRATION
+                        </p>
+
+                        <h1>
+                            Admin Dashboard
+                        </h1>
+
+                        <p>
+                            Manage users, monitor procurement requests
+                            and oversee system activity.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="request-status">
+
+                    <span class="status-dot"></span>
+
+                    System Online
+
+                </div>
+
+            </div>
+
+
+
+            <!-- STATISTICS -->
+            <div class="stats-row dashboard-stats">
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon blue">
+                        ♙
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Total Users
+                        </span>
+
+                        <strong id="totalUsers">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon blue">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Active Users
+                        </span>
+
+                        <strong id="activeUsers">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon blue">
+                        ◫
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Total Requests
+                        </span>
+
+                        <strong id="totalRequests">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon orange">
+                        ◷
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Pending Requests
+                        </span>
+
+                        <strong id="pendingRequests">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon blue">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Approved
+                        </span>
+
+                        <strong id="approvedRequests">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon red">
+                        !
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Rejected
+                        </span>
+
+                        <strong id="rejectedRequests">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- USER MANAGEMENT -->
+            <section
+                class="form-card"
+                id="users">
+
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="section-number">
+                            01
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                User Management
+                            </h2>
+
+                            <p>
+                                View and manage Employees,
+                                Managers and Admins.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="dashboard-link"
+                        id="openCreateUser">
+
+                        ＋ Create User
+
+                    </button>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table class="requests-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Name
+                                </th>
+
+                                <th>
+                                    Email
+                                </th>
+
+                                <th>
+                                    Department
+                                </th>
+
+                                <th>
+                                    Role
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="usersTableBody">
+
+                            <tr>
+
+                                <td colspan="6">
+
+                                    Loading users...
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- PURCHASE REQUESTS -->
+            <section
+                class="form-card"
+                id="requests"
+                style="margin-top: 24px;">
+
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="section-number">
+                            02
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                All Purchase Requests
+                            </h2>
+
+                            <p>
+                                View every purchase request submitted
+                                through the procurement system.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="dashboard-link"
+                        id="refreshRequests">
+
+                        ↻ Refresh
+
+                    </button>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table class="requests-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Request No.
+                                </th>
+
+                                <th>
+                                    Requester
+                                </th>
+
+                                <th>
+                                    Item / Service
+                                </th>
+
+                                <th>
+                                    Department
+                                </th>
+
+                                <th>
+                                    Cost
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="requestsTableBody">
+
+                            <tr>
+
+                                <td colspan="7">
+
+                                    Loading purchase requests...
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- CREATE USER -->
+            <section
+                class="form-card"
+                id="create-user"
+                style="margin-top: 24px;">
+
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="section-number">
+                            03
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Create User
+                            </h2>
+
+                            <p>
+                                Create an Employee, Manager or Admin account.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <form id="createUserForm">
+
+
+                    <div class="form-grid">
+
+
+                        <div class="form-group">
+
+                            <label for="userName">
+                                Full Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="userName"
+                                required
+                                placeholder="Enter full name">
+
+                        </div>
+
+
+
+                        <div class="form-group">
+
+                            <label for="userEmail">
+                                Email Address
+                            </label>
+
+                            <input
+                                type="email"
+                                id="userEmail"
+                                required
+                                placeholder="Enter email address">
+
+                        </div>
+
+
+
+                        <div class="form-group">
+
+                            <label for="userPassword">
+                                Temporary Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="userPassword"
+                                required
+                                minlength="6"
+                                placeholder="Enter temporary password">
+
+                        </div>
+
+
+
+                        <div class="form-group">
+
+                            <label for="userRole">
+                                User Role
+                            </label>
+
+                            <select id="userRole" required>
+
+                                <option value="Employee">
+                                    Employee
+                                </option>
+
+                                <option value="Manager">
+                                    Manager
+                                </option>
+
+                                <option value="Admin">
+                                    Admin
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+
+                        <div class="form-group">
+
+                            <label for="userDepartment">
+                                Department
+                            </label>
+
+                            <input
+                                type="text"
+                                id="userDepartment"
+                                placeholder="Enter department">
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div
+                        id="userMessage"
+                        class="message">
+                    </div>
+
+
+                    <div class="form-actions">
+
+                        <button
+                            type="submit"
+                            class="submit-btn"
+                            id="createUserBtn">
+
+                            <span>
+                                Create User
+                            </span>
+
+                            <b>
+                                →
+                            </b>
+
+                        </button>
+
+                    </div>
+
+
+                </form>
+
+            </section>
+
+
+
+            <!-- ADMIN INFORMATION -->
+            <div
+                class="content-grid"
+                style="margin-top: 24px;">
+
+
+                <section class="form-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <span class="section-number">
+                                04
+                            </span>
+
+                            <div>
+
+                                <h2>
+                                    Procurement Overview
+                                </h2>
+
+                                <p>
+                                    Current status of the procurement workflow.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-grid">
+
+                        <div class="detail-item">
+
+                            <span>
+                                In Procurement
+                            </span>
+
+                            <strong id="procurementRequests">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span>
+                                Completed
+                            </span>
+
+                            <strong id="completedRequests">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <aside class="side-panel">
+
+                    <div class="info-card blue-card">
+
+                        <div class="info-icon">
+                            ⚙
+                        </div>
+
+                        <h3>
+                            Administrator
+                        </h3>
+
+                        <p>
+                            Admin users oversee the procurement
+                            system and manage user accounts.
+                        </p>
+
+                    </div>
+
+
+                    <div class="info-card orange-card">
+
+                        <div class="orange-title">
+
+                            <span>
+                                !
+                            </span>
+
+                            Role Separation
+
+                        </div>
+
+                        <p>
+                            Managers approve or reject purchase requests.
+                            Administrators manage users and oversee the
+                            entire system.
+                        </p>
+
+                    </div>
+
+                </aside>
+
+            </div>
+
+
+
+            <!-- MESSAGE -->
+            <div
+                id="adminMessage"
+                class="message">
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+
+    <!-- REQUEST MODAL -->
+    <div
+        id="requestModal"
+        class="modal">
+
+        <div
+            class="modal-content"
+            id="modalContent">
+
+        </div>
+
+    </div>
+
+
+
+    <script src="admin.js"></script>
+
+</body>
+
+</html>
