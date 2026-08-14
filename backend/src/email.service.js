@@ -1,6 +1,6 @@
 console.log("📧 email.service.js loaded");
 
- const nodemailer = require("nodemailer");
+const nodemailer = require("nodemailer");
 
 // ==========================================
 // EMAIL TRANSPORTER
@@ -46,7 +46,7 @@ const sendNewRequestEmail = async ({
 
     const mailOptions = {
 
-        from: `"ProcureFlow" <${process.env.EMAIL_USER}>`,
+        from: `"Safisana Purchase Ordering System" <${process.env.EMAIL_USER}>`,
 
         to: manager.email,
 
@@ -123,13 +123,13 @@ const sendNewRequestEmail = async ({
                 </div>
 
                 <p>
-                    Please log in to ProcureFlow to review
-                    and take action on this request.
+                    Please log in to Safisana Purchase Ordering System
+                    to review and take action on this request.
                 </p>
 
                 <p>
                     Regards,<br>
-                    <strong>ProcureFlow</strong>
+                    <strong>Safisana Purchase Ordering System</strong>
                 </p>
 
             </div>
@@ -162,7 +162,7 @@ const sendApprovedEmail = async ({
 
     const mailOptions = {
 
-        from: `"ProcureFlow" <${process.env.EMAIL_USER}>`,
+        from: `"Safisana Purchase Ordering System" <${process.env.EMAIL_USER}>`,
 
         to: employee.email,
 
@@ -243,13 +243,13 @@ const sendApprovedEmail = async ({
                 </div>
 
                 <p>
-                    You can log in to ProcureFlow to
-                    track the progress of your request.
+                    You can log in to Safisana Purchase Ordering System
+                    to track the progress of your request.
                 </p>
 
                 <p>
                     Regards,<br>
-                    <strong>ProcureFlow</strong>
+                    <strong>Safisana Purchase Ordering System</strong>
                 </p>
 
             </div>
@@ -282,7 +282,7 @@ const sendRejectedEmail = async ({
 
     const mailOptions = {
 
-        from: `"ProcureFlow" <${process.env.EMAIL_USER}>`,
+        from: `"Safisana Purchase Ordering System" <${process.env.EMAIL_USER}>`,
 
         to: employee.email,
 
@@ -371,13 +371,13 @@ const sendRejectedEmail = async ({
                 </div>
 
                 <p>
-                    Please log in to ProcureFlow to
-                    review the request details.
+                    Please log in to Safisana Purchase Ordering System
+                    to review the request details.
                 </p>
 
                 <p>
                     Regards,<br>
-                    <strong>ProcureFlow</strong>
+                    <strong>Safisana Purchase Ordering System</strong>
                 </p>
 
             </div>
