@@ -11,11 +11,19 @@ const {
 
 const router = express.Router();
 
+
 // ==========================================
 // GET ALL PURCHASE ORDERS
 // GET /api/purchase-orders
-// ==========================================
-// AUTHENTICATED USERS ONLY
+//
+// EMPLOYEE:
+//   Own purchase orders only
+//
+// MANAGER:
+//   All purchase orders
+//
+// ADMIN:
+//   All purchase orders
 // ==========================================
 
 router.get(
@@ -25,13 +33,89 @@ router.get(
 
         try {
 
-            const orders =
-                await PurchaseOrder
-                    .find()
-                    .populate("purchaseRequest")
-                    .sort({
-                        createdAt: -1
-                    });
+            if (!req.user || !req.user.id) {
+
+                return res.status(401).json({
+                    success: false,
+                    message:
+                        "Authenticated user could not be identified"
+                });
+
+            }
+
+            let orders;
+
+
+            // ==========================================
+            // EMPLOYEE
+            // ==========================================
+            // Employees can only see purchase orders
+            // belonging to their own purchase requests.
+            // ==========================================
+
+            if (req.user.role === "Employee") {
+
+                const myRequests =
+                    await PurchaseRequest.find({
+                        requesterId: req.user.id
+                    }).select("_id");
+
+                const requestIds =
+                    myRequests.map(
+                        request => request._id
+                    );
+
+                orders =
+                    await PurchaseOrder
+                        .find({
+                            purchaseRequest: {
+                                $in: requestIds
+                            }
+                        })
+                        .populate("purchaseRequest")
+                        .sort({
+                            createdAt: -1
+                        });
+
+            }
+
+
+            // ==========================================
+            // MANAGER / ADMIN
+            // ==========================================
+            // Managers and Admins can view all POs.
+            // ==========================================
+
+            else if (
+                req.user.role === "Manager" ||
+                req.user.role === "Admin"
+            ) {
+
+                orders =
+                    await PurchaseOrder
+                        .find()
+                        .populate("purchaseRequest")
+                        .sort({
+                            createdAt: -1
+                        });
+
+            }
+
+
+            // ==========================================
+            // INVALID ROLE
+            // ==========================================
+
+            else {
+
+                return res.status(403).json({
+                    success: false,
+                    message:
+                        "Your account does not have permission to view purchase orders"
+                });
+
+            }
+
 
             return res.json({
 
@@ -70,8 +154,12 @@ router.get(
 // ==========================================
 // GET SINGLE PURCHASE ORDER
 // GET /api/purchase-orders/:id
-// ==========================================
-// AUTHENTICATED USERS ONLY
+//
+// EMPLOYEE:
+//   Own purchase order only
+//
+// MANAGER / ADMIN:
+//   Any purchase order
 // ==========================================
 
 router.get(
@@ -102,6 +190,11 @@ router.get(
 
             }
 
+
+            // ==========================================
+            // FIND PURCHASE ORDER
+            // ==========================================
+
             const order =
                 await PurchaseOrder
                     .findById(
@@ -110,6 +203,7 @@ router.get(
                     .populate(
                         "purchaseRequest"
                     );
+
 
             if (!order) {
 
@@ -123,6 +217,73 @@ router.get(
                 });
 
             }
+
+
+            // ==========================================
+            // EMPLOYEE OWNERSHIP CHECK
+            // ==========================================
+
+            if (
+                req.user.role === "Employee"
+            ) {
+
+                if (
+                    !order.purchaseRequest ||
+                    !order.purchaseRequest.requesterId
+                ) {
+
+                    return res.status(403).json({
+
+                        success: false,
+
+                        message:
+                            "You are not authorized to view this purchase order"
+
+                    });
+
+                }
+
+
+                if (
+                    order.purchaseRequest.requesterId.toString() !==
+                    req.user.id
+                ) {
+
+                    return res.status(403).json({
+
+                        success: false,
+
+                        message:
+                            "You are not authorized to view this purchase order"
+
+                    });
+
+                }
+
+            }
+
+
+            // ==========================================
+            // ROLE VALIDATION
+            // ==========================================
+
+            if (
+                req.user.role !== "Employee" &&
+                req.user.role !== "Manager" &&
+                req.user.role !== "Admin"
+            ) {
+
+                return res.status(403).json({
+
+                    success: false,
+
+                    message:
+                        "Your account does not have permission to view purchase orders"
+
+                });
+
+            }
+
 
             return res.json({
 
@@ -158,7 +319,7 @@ router.get(
 // ==========================================
 // CREATE PURCHASE ORDER
 // POST /api/purchase-orders
-// ==========================================
+//
 // ADMIN ONLY
 // ==========================================
 
@@ -261,7 +422,7 @@ router.post(
                     success: false,
 
                     message:
-                        "Total amount must be a valid positive number"
+                        "Total amount must be a valid number greater than or equal to zero"
 
                 });
 
@@ -429,7 +590,7 @@ router.post(
 // ==========================================
 // ISSUE PURCHASE ORDER
 // PATCH /api/purchase-orders/:id/issue
-// ==========================================
+//
 // ADMIN ONLY
 // ==========================================
 
@@ -554,7 +715,7 @@ router.patch(
 // ==========================================
 // COMPLETE PURCHASE ORDER
 // PATCH /api/purchase-orders/:id/complete
-// ==========================================
+//
 // ADMIN ONLY
 // ==========================================
 
@@ -696,7 +857,7 @@ router.patch(
 // ==========================================
 // CANCEL PURCHASE ORDER
 // PATCH /api/purchase-orders/:id/cancel
-// ==========================================
+//
 // ADMIN ONLY
 // ==========================================
 
