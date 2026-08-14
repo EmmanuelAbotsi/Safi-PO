@@ -1,93 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Safisana Purchase Ordering System | Procurement Management System</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="style.css">
+    <title>
+        Safisana Purchase Ordering  System
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
+
 
 <body>
 
-    <!-- Sidebar -->
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
     <aside class="sidebar">
 
         <div class="logo">
-            <div class="logo-mark">P</div>
+
+            <div class="logo-mark">
+                S
+            </div>
 
             <div class="logo-text">
-                <strong>Safi<span>PO</span></strong>
-                <small>Safisana Purchase Ordering System</small>
+
+                <strong>
+                    Safi<span>PO</span>
+                </strong>
+
+                <small>
+                    Safisana Purchase System
+                </small>
+
             </div>
+
         </div>
+
 
         <nav class="navigation">
 
-            <p class="nav-label">MAIN MENU</p>
+            <p class="nav-label">
+                MAIN MENU
+            </p>
 
-            <a href="index.html" class="nav-item active">
-                <span class="nav-icon">▦</span>
+
+            <a
+                href="index.html"
+                class="nav-item active"
+            >
+
+                <span class="nav-icon">
+                    ▦
+                </span>
+
                 Dashboard
+
             </a>
 
-            <a href="index.html" class="nav-item">
-                <span class="nav-icon">＋</span>
+
+            <a
+                href="#purchaseRequestForm"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ＋
+                </span>
+
                 New Request
+
             </a>
 
-            <a href="my-requests.html" class="nav-item">
-                <span class="nav-icon">◫</span>
+
+            <a
+                href="my-requests.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ◫
+                </span>
+
                 My Requests
+
             </a>
 
-            <p class="nav-label">MANAGEMENT</p>
 
-            <a href="#" class="nav-item">
-                <span class="nav-icon">✓</span>
+            <p class="nav-label">
+                MANAGEMENT
+            </p>
+
+
+            <a
+                href="#"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ✓
+                </span>
+
                 Approvals
-                <span class="badge">3</span>
+
+                <span class="badge">
+                    3
+                </span>
+
             </a>
 
-            <a href="#" class="nav-item">
-                <span class="nav-icon">▤</span>
+
+            <a
+                href="#"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ▤
+                </span>
+
                 Purchase Orders
+
             </a>
 
-            <a href="#" class="nav-item">
-                <span class="nav-icon">♙</span>
+
+            <a
+                href="#"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ♙
+                </span>
+
                 Suppliers
+
             </a>
 
-            <p class="nav-label">SYSTEM</p>
 
-            <a href="#" class="nav-item">
-                <span class="nav-icon">⚙</span>
+            <p class="nav-label">
+                SYSTEM
+            </p>
+
+
+            <a
+                href="#"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ⚙
+                </span>
+
                 Settings
+
             </a>
 
         </nav>
 
+
         <div class="sidebar-bottom">
 
             <div class="help-box">
-                <div class="help-icon">?</div>
+
+                <div class="help-icon">
+                    ?
+                </div>
 
                 <div>
-                    <strong>Need Help?</strong>
-                    <p>Contact Procurement</p>
+
+                    <strong>
+                        Need Help?
+                    </strong>
+
+                    <p>
+                        Contact Procurement
+                    </p>
+
                 </div>
+
             </div>
 
-            <!-- LOGOUT -->
+
+            <!-- USER -->
+
             <div class="user-card">
 
-                <div class="avatar" id="userAvatar">
+                <div
+                    class="avatar"
+                    id="userAvatar"
+                >
                     EA
                 </div>
 
+
                 <div class="user-details">
+
                     <strong id="sidebarUserName">
                         Employee
                     </strong>
@@ -95,7 +217,9 @@
                     <span id="sidebarUserDepartment">
                         Finance Department
                     </span>
+
                 </div>
+
 
                 <button
                     type="button"
@@ -113,29 +237,61 @@
     </aside>
 
 
-    <!-- Main Content -->
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
     <main class="main-content">
 
-        <!-- Topbar -->
+
+        <!-- TOPBAR -->
+
         <header class="topbar">
 
             <div class="mobile-logo">
-                <div class="logo-mark">P</div>
-                <strong>Safi<span>PO</span></strong>
+
+                <div class="logo-mark">
+                    S
+                </div>
+
+                <strong>
+                    Safi<span>PO</span>
+                </strong>
+
             </div>
 
+
             <div class="breadcrumb">
-                <span>Home</span>
-                <span>/</span>
-                <strong>New Purchase Request</strong>
+
+                <span>
+                    Home
+                </span>
+
+                <span>
+                    /
+                </span>
+
+                <strong>
+                    New Purchase Request
+                </strong>
+
             </div>
+
 
             <div class="topbar-actions">
 
-                <button class="notification" type="button">
+                <button
+                    class="notification"
+                    type="button"
+                >
+
                     🔔
+
                     <span></span>
+
                 </button>
+
 
                 <div class="top-user">
 
@@ -146,7 +302,9 @@
                         EA
                     </div>
 
+
                     <div>
+
                         <strong id="topUserName">
                             Employee
                         </strong>
@@ -154,6 +312,7 @@
                         <span id="topUserDepartment">
                             Finance
                         </span>
+
                     </div>
 
                 </div>
@@ -163,10 +322,16 @@
         </header>
 
 
-        <!-- Page -->
+
+        <!-- =====================================================
+             PAGE
+        ====================================================== -->
+
         <section class="page">
 
-            <!-- Hero -->
+
+            <!-- HERO -->
+
             <div class="page-heading">
 
                 <div>
@@ -175,35 +340,48 @@
                         ＋
                     </div>
 
+
                     <div class="heading-text">
 
                         <p class="eyebrow">
-                            PROCUREMENT PORTAL
+                            SAFISANA PROCUREMENT PORTAL
                         </p>
+
 
                         <h1>
                             Create Purchase Request
                         </h1>
 
+
                         <p>
-                            Submit a request for goods or services and track
-                            it through the approval process.
+                            Submit a request for goods or services and
+                            provide the information required for the
+                            Safisana procurement process.
                         </p>
 
                     </div>
 
                 </div>
 
+
                 <div class="request-status">
+
                     <span class="status-dot"></span>
+
                     System Online
+
                 </div>
 
             </div>
 
 
-            <!-- Progress -->
+
+            <!-- =====================================================
+                 PROGRESS
+            ====================================================== -->
+
             <div class="progress-card">
+
 
                 <div class="progress-step active">
 
@@ -211,7 +389,9 @@
                         1
                     </div>
 
+
                     <div>
+
                         <strong>
                             Request Details
                         </strong>
@@ -219,11 +399,14 @@
                         <span>
                             Enter purchase information
                         </span>
+
                     </div>
 
                 </div>
 
+
                 <div class="progress-line"></div>
+
 
                 <div class="progress-step">
 
@@ -231,7 +414,9 @@
                         2
                     </div>
 
+
                     <div>
+
                         <strong>
                             Review
                         </strong>
@@ -239,11 +424,14 @@
                         <span>
                             Check your request
                         </span>
+
                     </div>
 
                 </div>
 
+
                 <div class="progress-line"></div>
+
 
                 <div class="progress-step">
 
@@ -251,7 +439,9 @@
                         3
                     </div>
 
+
                     <div>
+
                         <strong>
                             Approval
                         </strong>
@@ -259,6 +449,7 @@
                         <span>
                             Manager review
                         </span>
+
                     </div>
 
                 </div>
@@ -266,10 +457,20 @@
             </div>
 
 
-            <!-- Form Card -->
+
+            <!-- =====================================================
+                 CONTENT GRID
+            ====================================================== -->
+
             <div class="content-grid">
 
+
+                <!-- =================================================
+                     FORM
+                ================================================== -->
+
                 <section class="form-card">
+
 
                     <div class="card-header">
 
@@ -279,20 +480,23 @@
                                 01
                             </span>
 
+
                             <div>
 
                                 <h2>
                                     Purchase Information
                                 </h2>
 
+
                                 <p>
-                                    Provide details about the item or service
-                                    you are requesting.
+                                    Complete all required information
+                                    for your purchase request.
                                 </p>
 
                             </div>
 
                         </div>
+
 
                         <span class="required">
                             * Required fields
@@ -301,29 +505,49 @@
                     </div>
 
 
-                    <form id="purchaseRequestForm">
+
+                    <!-- =================================================
+                         FORM
+                    ================================================== -->
+
+                    <form
+                        id="purchaseRequestForm"
+                        enctype="multipart/form-data"
+                    >
+
 
                         <div class="form-grid">
 
-                            <!-- Requester -->
+
+                            <!-- =========================================
+                                 EMAIL
+                            ========================================== -->
+
                             <div class="form-group">
 
-                                <label for="requesterName">
-                                    Requester Name
-                                    <span>*</span>
+                                <label for="email">
+
+                                    Email
+
+                                    <span>
+                                        *
+                                    </span>
+
                                 </label>
+
 
                                 <div class="input-wrapper">
 
                                     <span class="input-icon">
-                                        ♙
+                                        @
                                     </span>
 
+
                                     <input
-                                        type="text"
-                                        id="requesterName"
-                                        name="requesterName"
-                                        placeholder="Enter your full name"
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        placeholder="Enter your email address"
                                         required
                                     >
 
@@ -332,19 +556,73 @@
                             </div>
 
 
-                            <!-- Department -->
+
+                            <!-- =========================================
+                                 APPLICANT / RESPONSIBLE
+                            ========================================== -->
+
+                            <div class="form-group">
+
+                                <label for="requesterName">
+
+                                    Applicant (Responsible)
+
+                                    <span>
+                                        *
+                                    </span>
+
+                                </label>
+
+
+                                <div class="input-wrapper">
+
+                                    <span class="input-icon">
+                                        ♙
+                                    </span>
+
+
+                                    <input
+                                        type="text"
+                                        id="requesterName"
+                                        name="requesterName"
+                                        placeholder="Select or enter your name"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <small>
+                                    Select your name from the dropdown menu.
+                                </small>
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                                 DEPARTMENT
+                            ========================================== -->
+
                             <div class="form-group">
 
                                 <label for="department">
+
                                     Department
-                                    <span>*</span>
+
+                                    <span>
+                                        *
+                                    </span>
+
                                 </label>
+
 
                                 <div class="input-wrapper">
 
                                     <span class="input-icon">
                                         ▦
                                     </span>
+
 
                                     <select
                                         id="department"
@@ -356,35 +634,35 @@
                                             Select department
                                         </option>
 
-                                        <option>
+                                        <option value="Finance">
                                             Finance
                                         </option>
 
-                                        <option>
+                                        <option value="Human Resources">
                                             Human Resources
                                         </option>
 
-                                        <option>
+                                        <option value="Information Technology">
                                             Information Technology
                                         </option>
 
-                                        <option>
+                                        <option value="Operations">
                                             Operations
                                         </option>
 
-                                        <option>
+                                        <option value="Procurement">
                                             Procurement
                                         </option>
 
-                                        <option>
+                                        <option value="Administration">
                                             Administration
                                         </option>
 
-                                        <option>
+                                        <option value="Marketing">
                                             Marketing
                                         </option>
 
-                                        <option>
+                                        <option value="Internal Audit">
                                             Internal Audit
                                         </option>
 
@@ -395,13 +673,23 @@
                             </div>
 
 
-                            <!-- Item -->
+
+                            <!-- =========================================
+                                 REQUESTED PRODUCT / SERVICE
+                            ========================================== -->
+
                             <div class="form-group full">
 
                                 <label for="itemDescription">
-                                    Item / Service Description
-                                    <span>*</span>
+
+                                    Requested Product or Service
+
+                                    <span>
+                                        *
+                                    </span>
+
                                 </label>
+
 
                                 <div class="input-wrapper">
 
@@ -409,15 +697,17 @@
                                         ▤
                                     </span>
 
+
                                     <input
                                         type="text"
                                         id="itemDescription"
                                         name="itemDescription"
-                                        placeholder="e.g. Laptop computers, office furniture, software subscription..."
+                                        placeholder="State the requested product or service"
                                         required
                                     >
 
                                 </div>
+
 
                                 <small>
                                     Be as specific as possible.
@@ -426,13 +716,241 @@
                             </div>
 
 
-                            <!-- Quantity -->
+
+                            <!-- =========================================
+                                 BUDGET CATEGORY
+                            ========================================== -->
+
                             <div class="form-group">
 
-                                <label for="quantity">
-                                    Quantity
-                                    <span>*</span>
+                                <label for="budgetCategory">
+
+                                    Budget Category
+
+                                    <span>
+                                        *
+                                    </span>
+
                                 </label>
+
+
+                                <div class="input-wrapper">
+
+                                    <span class="input-icon">
+                                        ▦
+                                    </span>
+
+
+                                    <select
+                                        id="budgetCategory"
+                                        name="budgetCategory"
+                                        required
+                                    >
+
+                                        <option value="">
+                                            Select budget category
+                                        </option>
+
+                                        <option value="Operational">
+                                            Operational
+                                        </option>
+
+                                        <option value="Capital Expenditure">
+                                            Capital Expenditure
+                                        </option>
+
+                                        <option value="Project">
+                                            Project
+                                        </option>
+
+                                        <option value="Programme">
+                                            Programme
+                                        </option>
+
+                                        <option value="Other">
+                                            Other
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                                 PROJECT / DONOR
+                            ========================================== -->
+
+                            <div class="form-group">
+
+                                <label for="projectDonor">
+
+                                    Project / Donor
+
+                                    <span>
+                                        *
+                                    </span>
+
+                                </label>
+
+
+                                <div class="input-wrapper">
+
+                                    <span class="input-icon">
+                                        ◫
+                                    </span>
+
+
+                                    <input
+                                        type="text"
+                                        id="projectDonor"
+                                        name="projectDonor"
+                                        placeholder="Specify project or donor"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <small>
+                                    Fill in NA if not applicable.
+                                </small>
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                                 ACCOUNTABLE
+                            ========================================== -->
+
+                            <div class="form-group">
+
+                                <label for="accountable">
+
+                                    Accountable
+
+                                    <span>
+                                        *
+                                    </span>
+
+                                </label>
+
+
+                                <div class="input-wrapper">
+
+                                    <span class="input-icon">
+                                        ♙
+                                    </span>
+
+
+                                    <select
+                                        id="accountable"
+                                        name="accountable"
+                                        required
+                                    >
+
+                                        <option value="">
+                                            Select accountable person
+                                        </option>
+
+                                        <option value="Berend Golterman">
+                                            Berend Golterman
+                                        </option>
+
+                                        <option value="Finance Manager">
+                                            Finance Manager
+                                        </option>
+
+                                        <option value="Procurement Manager">
+                                            Procurement Manager
+                                        </option>
+
+                                        <option value="Department Manager">
+                                            Department Manager
+                                        </option>
+
+                                        <option value="Other">
+                                            Other
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                                 ACCOUNTABLE 2
+                            ========================================== -->
+
+                            <div class="form-group">
+
+                                <label for="accountable2">
+
+                                    Accountable 2
+
+                                </label>
+
+
+                                <div class="input-wrapper">
+
+                                    <span class="input-icon">
+                                        ♙
+                                    </span>
+
+
+                                    <select
+                                        id="accountable2"
+                                        name="accountable2"
+                                    >
+
+                                        <option value="">
+                                            Select accountable 2
+                                        </option>
+
+                                        <option value="Berend Golterman">
+                                            Berend Golterman
+                                        </option>
+
+                                        <option value="Other">
+                                            Other
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <small>
+                                    For the GCC or Vitol projects,
+                                    select Berend Golterman as Accountable 2.
+                                </small>
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                                 PROJECT REFERENCE
+                            ========================================== -->
+
+                            <div class="form-group full">
+
+                                <label for="projectReference">
+
+                                    Project Reference / Number
+
+                                    <span>
+                                        *
+                                    </span>
+
+                                </label>
+
 
                                 <div class="input-wrapper">
 
@@ -440,33 +958,50 @@
                                         #
                                     </span>
 
+
                                     <input
-                                        type="number"
-                                        id="quantity"
-                                        name="quantity"
-                                        min="1"
-                                        placeholder="Enter quantity"
+                                        type="text"
+                                        id="projectReference"
+                                        name="projectReference"
+                                        placeholder="Enter project reference / number"
                                         required
                                     >
 
                                 </div>
 
+
+                                <small>
+                                    Specify the project or donor reference /
+                                    number. Fill in NA if not applicable.
+                                </small>
+
                             </div>
 
 
-                            <!-- Cost -->
+
+                            <!-- =========================================
+                                 INDICATIVE PO AMOUNT
+                            ========================================== -->
+
                             <div class="form-group">
 
                                 <label for="estimatedCost">
-                                    Estimated Cost
-                                    <span>*</span>
+
+                                    Indicative PO Amount (GHC)
+
+                                    <span>
+                                        *
+                                    </span>
+
                                 </label>
+
 
                                 <div class="money-input">
 
                                     <span>
-                                        GHS
+                                        GHC
                                     </span>
+
 
                                     <input
                                         type="number"
@@ -480,16 +1015,245 @@
 
                                 </div>
 
+
+                                <small>
+                                    Give an indication of the purchase
+                                    order amount in GHC.
+                                </small>
+
                             </div>
 
 
-                            <!-- Justification -->
+
+                            <!-- =========================================
+                                 BUDGET CONFIRMED
+                            ========================================== -->
+
+                            <div class="form-group">
+
+                                <label>
+
+                                    Budget Confirmed (Responsible)
+
+                                    <span>
+                                        *
+                                    </span>
+
+                                </label>
+
+
+                                <div
+                                    class="checkbox-card"
+                                    style="
+                                        display:flex;
+                                        align-items:center;
+                                        gap:12px;
+                                        padding:15px;
+                                        border:1px solid #ddd;
+                                        border-radius:8px;
+                                    "
+                                >
+
+                                    <input
+                                        type="checkbox"
+                                        id="budgetConfirmed"
+                                        name="budgetConfirmed"
+                                        value="Yes"
+                                        required
+                                    >
+
+
+                                    <label
+                                        for="budgetConfirmed"
+                                        style="margin:0;"
+                                    >
+
+                                        I confirm that budget availability
+                                        has been confirmed by the Finance
+                                        Manager.
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                                 PREFERRED SUPPLIER
+                            ========================================== -->
+
+                            <div class="form-group">
+
+                                <label for="preferredSupplier">
+
+                                    Preferred Supplier (Yes/No)
+
+                                    <span>
+                                        *
+                                    </span>
+
+                                </label>
+
+
+                                <div class="input-wrapper">
+
+                                    <span class="input-icon">
+                                        ✓
+                                    </span>
+
+
+                                    <select
+                                        id="preferredSupplier"
+                                        name="preferredSupplier"
+                                        required
+                                    >
+
+                                        <option value="">
+                                            Select option
+                                        </option>
+
+                                        <option value="Yes">
+                                            Yes
+                                        </option>
+
+                                        <option value="No">
+                                            No
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <small>
+                                    Indicate whether the supplier is from
+                                    the preferred supplier overview.
+                                </small>
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                                 PREFERRED SUPPLIER NAME
+                            ========================================== -->
+
+                            <div class="form-group">
+
+                                <label for="preferredSupplierName">
+
+                                    Preferred Supplier Name
+
+                                </label>
+
+
+                                <div class="input-wrapper">
+
+                                    <span class="input-icon">
+                                        ♙
+                                    </span>
+
+
+                                    <input
+                                        type="text"
+                                        id="preferredSupplierName"
+                                        name="preferredSupplierName"
+                                        placeholder="Enter preferred supplier name"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                                 NEW SUPPLIER
+                            ========================================== -->
+
+                            <div class="form-group">
+
+                                <label for="newSupplierName">
+
+                                    One-time / New Supplier Name
+
+                                </label>
+
+
+                                <div class="input-wrapper">
+
+                                    <span class="input-icon">
+                                        ♙
+                                    </span>
+
+
+                                    <input
+                                        type="text"
+                                        id="newSupplierName"
+                                        name="newSupplierName"
+                                        placeholder="Enter new supplier name"
+                                    >
+
+                                </div>
+
+
+                                <small>
+                                    If the supplier is new, provide their
+                                    name here.
+                                </small>
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                                 ADDITIONAL COMMENTS
+                            ========================================== -->
+
+                            <div class="form-group full">
+
+                                <label for="additionalComments">
+
+                                    Additional Comments
+
+                                </label>
+
+
+                                <textarea
+                                    id="additionalComments"
+                                    name="additionalComments"
+                                    rows="5"
+                                    placeholder="Add any additional comments, such as the justification for your supplier choice..."
+                                ></textarea>
+
+
+                                <small>
+                                    Include any additional information
+                                    relevant to the procurement request.
+                                </small>
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                                 BUSINESS JUSTIFICATION
+                            ========================================== -->
+
                             <div class="form-group full">
 
                                 <label for="justification">
+
                                     Business Justification
-                                    <span>*</span>
+
+                                    <span>
+                                        *
+                                    </span>
+
                                 </label>
+
 
                                 <textarea
                                     id="justification"
@@ -499,6 +1263,7 @@
                                     required
                                 ></textarea>
 
+
                                 <small>
                                     Provide enough information to help the
                                     approver make an informed decision.
@@ -506,31 +1271,185 @@
 
                             </div>
 
+
+
+                            <!-- =========================================
+                                 PROCUREMENT METHOD / DOCUMENT UPLOAD
+                            ========================================== -->
+
+                            <div class="form-group full">
+
+                                <label for="documents">
+
+                                    Document Upload & Applicable
+                                    Procurement Method
+
+                                    <span>
+                                        *
+                                    </span>
+
+                                </label>
+
+
+                                <div
+                                    class="procurement-guidance"
+                                    style="
+                                        padding:18px;
+                                        margin-bottom:15px;
+                                        border-radius:10px;
+                                        background:#f5f7fa;
+                                        border:1px solid #e1e5ea;
+                                    "
+                                >
+
+                                    <strong>
+                                        Procurement Requirements
+                                    </strong>
+
+
+                                    <p style="margin-top:8px;">
+
+                                        Upload <strong>2 quotations</strong>
+                                        for purchase orders below
+                                        <strong>GHC 15,000</strong> unless
+                                        selecting from the preferred supplier
+                                        overview, where
+                                        <strong>1 quotation</strong> will
+                                        suffice.
+
+                                    </p>
+
+
+                                    <p>
+
+                                        Submit <strong>3 quotations</strong>
+                                        for purchase orders above
+                                        <strong>GHC 15,000</strong> unless
+                                        selecting from the preferred supplier
+                                        overview, where
+                                        <strong>1 quotation</strong> will
+                                        suffice.
+
+                                    </p>
+
+
+                                    <p>
+
+                                        Proposals over
+                                        <strong>GHC 50,000</strong> should go
+                                        through a formal tender process.
+
+                                    </p>
+
+                                </div>
+
+
+                                <input
+                                    type="file"
+                                    id="documents"
+                                    name="documents"
+                                    multiple
+                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
+                                >
+
+
+                                <small>
+
+                                    Upload up to 10 supported files.
+                                    Maximum 10 MB per file.
+
+                                </small>
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                                 QUOTATIONS ATTACHED
+                            ========================================== -->
+
+                            <div class="form-group full">
+
+                                <label>
+
+                                    Quotations Attached (Responsible)
+
+                                    <span>
+                                        *
+                                    </span>
+
+                                </label>
+
+
+                                <div
+                                    class="checkbox-card"
+                                    style="
+                                        display:flex;
+                                        align-items:center;
+                                        gap:12px;
+                                        padding:15px;
+                                        border:1px solid #ddd;
+                                        border-radius:8px;
+                                    "
+                                >
+
+                                    <input
+                                        type="checkbox"
+                                        id="quotationsAttached"
+                                        name="quotationsAttached"
+                                        value="Yes"
+                                        required
+                                    >
+
+
+                                    <label
+                                        for="quotationsAttached"
+                                        style="margin:0;"
+                                    >
+
+                                        I confirm that the required
+                                        quotations have been uploaded to
+                                        this purchase request.
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
                         </div>
 
 
-                        <!-- Message -->
+
+                        <!-- MESSAGE -->
+
                         <div
                             id="message"
                             class="message"
                         ></div>
 
 
-                        <!-- Footer -->
+
+                        <!-- FORM FOOTER -->
+
                         <div class="form-footer">
 
                             <button
                                 type="reset"
                                 class="btn btn-secondary"
                             >
+
                                 Clear Form
+
                             </button>
+
 
                             <button
                                 type="submit"
                                 class="btn btn-primary"
                                 id="submitBtn"
                             >
+
                                 <span>
                                     Submit Purchase Request
                                 </span>
@@ -543,13 +1462,21 @@
 
                         </div>
 
+
                     </form>
 
                 </section>
 
 
-                <!-- Right Panel -->
+
+                <!-- =================================================
+                     RIGHT PANEL
+                ================================================== -->
+
                 <aside class="side-panel">
+
+
+                    <!-- WORKFLOW -->
 
                     <div class="info-card blue-card">
 
@@ -557,22 +1484,27 @@
                             ✓
                         </div>
 
+
                         <h3>
                             What happens next?
                         </h3>
 
+
                         <p>
                             Your request will go through the following
-                            procurement workflow:
+                            Safisana procurement workflow:
                         </p>
 
+
                         <div class="workflow">
+
 
                             <div class="workflow-item">
 
                                 <span>
                                     1
                                 </span>
+
 
                                 <div>
 
@@ -589,11 +1521,13 @@
                             </div>
 
 
+
                             <div class="workflow-item">
 
                                 <span>
                                     2
                                 </span>
+
 
                                 <div>
 
@@ -610,11 +1544,13 @@
                             </div>
 
 
+
                             <div class="workflow-item">
 
                                 <span>
                                     3
                                 </span>
+
 
                                 <div>
 
@@ -631,11 +1567,13 @@
                             </div>
 
 
+
                             <div class="workflow-item">
 
                                 <span>
                                     4
                                 </span>
+
 
                                 <div>
 
@@ -651,10 +1589,14 @@
 
                             </div>
 
+
                         </div>
 
                     </div>
 
+
+
+                    <!-- IMPORTANT -->
 
                     <div class="info-card orange-card">
 
@@ -668,13 +1610,21 @@
 
                         </div>
 
+
                         <p>
-                            Make sure your estimated cost and business
-                            justification are accurate before submitting.
+
+                            Make sure your indicative PO amount,
+                            budget confirmation, supplier information,
+                            quotations and business justification are
+                            accurate before submitting.
+
                         </p>
 
                     </div>
 
+
+
+                    <!-- PROCUREMENT POLICY -->
 
                     <div class="info-card red-card">
 
@@ -688,24 +1638,38 @@
 
                         </div>
 
+
                         <p>
-                            Purchases must comply with the organization's
-                            procurement policies and approval thresholds.
+
+                            Purchases must comply with Safisana's
+                            procurement policies and applicable approval
+                            thresholds.
+
                         </p>
 
+
                         <button type="button">
+
                             View Procurement Policy →
+
                         </button>
 
                     </div>
 
+
                 </aside>
+
 
             </div>
 
 
-            <!-- Bottom Statistics -->
+
+            <!-- =====================================================
+                 BOTTOM STATISTICS
+            ====================================================== -->
+
             <div class="stats-row">
+
 
                 <div class="stat-card">
 
@@ -713,15 +1677,20 @@
                         ◫
                     </div>
 
+
                     <div>
+
                         <span>
                             My Requests
                         </span>
 
+
                         <strong id="myRequestsCount">
                             0
                         </strong>
+
                     </div>
+
 
                     <small>
                         View all →
@@ -730,21 +1699,27 @@
                 </div>
 
 
+
                 <div class="stat-card">
 
                     <div class="stat-icon orange">
                         ◷
                     </div>
 
+
                     <div>
+
                         <span>
                             Pending Approval
                         </span>
 
+
                         <strong id="pendingCount">
                             0
                         </strong>
+
                     </div>
+
 
                     <small>
                         Track →
@@ -753,21 +1728,27 @@
                 </div>
 
 
+
                 <div class="stat-card">
 
                     <div class="stat-icon red">
                         !
                     </div>
 
+
                     <div>
+
                         <span>
                             Requires Action
                         </span>
 
+
                         <strong id="actionCount">
                             0
                         </strong>
+
                     </div>
+
 
                     <small>
                         Review →
@@ -775,32 +1756,46 @@
 
                 </div>
 
+
             </div>
 
+
         </section>
+
 
     </main>
 
 
-    <!-- Main application JavaScript -->
+
+    <!-- =====================================================
+         APPLICATION JAVASCRIPT
+    ====================================================== -->
+
     <script src="app.js"></script>
 
 
-    <!-- Logout + User Information -->
+
+    <!-- =====================================================
+         USER INFORMATION + LOGOUT
+    ====================================================== -->
+
     <script>
 
         document.addEventListener(
             "DOMContentLoaded",
             function () {
 
-                // ==========================================
-                // GET LOGGED-IN USER
-                // ==========================================
+
+                /* ==========================================
+                   GET LOGGED-IN USER
+                ========================================== */
 
                 const storedUser =
                     localStorage.getItem("user");
 
+
                 let user = null;
+
 
                 try {
 
@@ -819,14 +1814,16 @@
                 }
 
 
-                // ==========================================
-                // UPDATE USER INFORMATION
-                // ==========================================
+
+                /* ==========================================
+                   UPDATE USER INFORMATION
+                ========================================== */
 
                 if (user) {
 
                     const name =
                         user.name || "Employee";
+
 
                     const department =
                         user.department ||
@@ -845,30 +1842,36 @@
                             .toUpperCase();
 
 
+
                     const userAvatar =
                         document.getElementById(
                             "userAvatar"
                         );
+
 
                     const topUserAvatar =
                         document.getElementById(
                             "topUserAvatar"
                         );
 
+
                     const sidebarUserName =
                         document.getElementById(
                             "sidebarUserName"
                         );
+
 
                     const sidebarUserDepartment =
                         document.getElementById(
                             "sidebarUserDepartment"
                         );
 
+
                     const topUserName =
                         document.getElementById(
                             "topUserName"
                         );
+
 
                     const topUserDepartment =
                         document.getElementById(
@@ -876,43 +1879,145 @@
                         );
 
 
+
                     if (userAvatar) {
+
                         userAvatar.textContent =
                             avatar;
+
                     }
+
 
                     if (topUserAvatar) {
+
                         topUserAvatar.textContent =
                             avatar;
+
                     }
+
 
                     if (sidebarUserName) {
+
                         sidebarUserName.textContent =
                             name;
+
                     }
 
+
                     if (sidebarUserDepartment) {
+
                         sidebarUserDepartment.textContent =
                             department +
                             " Department";
+
                     }
+
 
                     if (topUserName) {
+
                         topUserName.textContent =
                             name;
+
                     }
 
+
                     if (topUserDepartment) {
+
                         topUserDepartment.textContent =
                             department;
+
+                    }
+
+
+                    /* ==========================================
+                       AUTO-FILL EMAIL
+                    ========================================== */
+
+                    const emailInput =
+                        document.getElementById(
+                            "email"
+                        );
+
+
+                    if (
+                        emailInput &&
+                        user.email
+                    ) {
+
+                        emailInput.value =
+                            user.email;
+
+                    }
+
+
+                    /* ==========================================
+                       AUTO-FILL REQUESTER NAME
+                    ========================================== */
+
+                    const requesterInput =
+                        document.getElementById(
+                            "requesterName"
+                        );
+
+
+                    if (
+                        requesterInput &&
+                        user.name
+                    ) {
+
+                        requesterInput.value =
+                            user.name;
+
+                    }
+
+
+                    /* ==========================================
+                       AUTO-FILL DEPARTMENT
+                    ========================================== */
+
+                    const departmentInput =
+                        document.getElementById(
+                            "department"
+                        );
+
+
+                    if (
+                        departmentInput &&
+                        user.department
+                    ) {
+
+                        const options =
+                            Array.from(
+                                departmentInput.options
+                            );
+
+
+                        const matchingOption =
+                            options.find(
+                                option =>
+                                    option.value.toLowerCase() ===
+                                    String(
+                                        user.department
+                                    ).toLowerCase()
+                            );
+
+
+                        if (matchingOption) {
+
+                            departmentInput.value =
+                                matchingOption.value;
+
+                        }
+
                     }
 
                 }
 
 
-                // ==========================================
-                // LOGOUT
-                // ==========================================
+
+                /* ==========================================
+                   LOGOUT
+                ========================================== */
 
                 const logoutButton =
                     document.getElementById(
@@ -926,6 +2031,7 @@
                         "click",
                         function () {
 
+
                             const confirmed =
                                 confirm(
                                     "Are you sure you want to logout?"
@@ -933,25 +2039,27 @@
 
 
                             if (!confirmed) {
+
                                 return;
+
                             }
 
 
-                            // Remove authentication
                             localStorage.removeItem(
                                 "token"
                             );
 
+
                             localStorage.removeItem(
                                 "user"
                             );
+
 
                             localStorage.removeItem(
                                 "authToken"
                             );
 
 
-                            // Redirect to login
                             window.location.href =
                                 "login.html";
 
@@ -960,10 +2068,242 @@
 
                 }
 
+
+            }
+        );
+
+
+
+        /* =====================================================
+           SUPPLIER FIELD LOGIC
+        ====================================================== */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+
+                const preferredSupplier =
+                    document.getElementById(
+                        "preferredSupplier"
+                    );
+
+
+                const preferredSupplierName =
+                    document.getElementById(
+                        "preferredSupplierName"
+                    );
+
+
+                const newSupplierName =
+                    document.getElementById(
+                        "newSupplierName"
+                    );
+
+
+                if (
+                    !preferredSupplier
+                ) {
+
+                    return;
+
+                }
+
+
+                preferredSupplier.addEventListener(
+                    "change",
+                    function () {
+
+
+                        if (
+                            this.value === "Yes"
+                        ) {
+
+                            preferredSupplierName.disabled =
+                                false;
+
+                            newSupplierName.disabled =
+                                true;
+
+                            newSupplierName.value =
+                                "";
+
+                        }
+
+
+                        else if (
+                            this.value === "No"
+                        ) {
+
+                            preferredSupplierName.disabled =
+                                true;
+
+                            preferredSupplierName.value =
+                                "";
+
+                            newSupplierName.disabled =
+                                false;
+
+                        }
+
+
+                        else {
+
+                            preferredSupplierName.disabled =
+                                false;
+
+                            newSupplierName.disabled =
+                                false;
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+
+
+        /* =====================================================
+           PROCUREMENT THRESHOLD WARNING
+        ====================================================== */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+
+                const amountInput =
+                    document.getElementById(
+                        "estimatedCost"
+                    );
+
+
+                if (!amountInput) {
+
+                    return;
+
+                }
+
+
+                amountInput.addEventListener(
+                    "input",
+                    function () {
+
+
+                        const amount =
+                            Number(
+                                this.value
+                            );
+
+
+                        const guidance =
+                            document.querySelector(
+                                ".procurement-guidance"
+                            );
+
+
+                        if (!guidance) {
+
+                            return;
+
+                        }
+
+
+                        let message = "";
+
+
+                        if (
+                            amount > 50000
+                        ) {
+
+                            message =
+                                "<strong>Formal Tender:</strong> " +
+                                "Proposals over GHC 50,000 should " +
+                                "go through a formal tender process.";
+
+                        }
+
+
+                        else if (
+                            amount > 15000
+                        ) {
+
+                            message =
+                                "<strong>Quotation Requirement:</strong> " +
+                                "3 quotations are required unless " +
+                                "selecting from the preferred supplier " +
+                                "overview, where 1 quotation will suffice.";
+
+                        }
+
+
+                        else if (
+                            amount > 0
+                        ) {
+
+                            message =
+                                "<strong>Quotation Requirement:</strong> " +
+                                "2 quotations are required unless " +
+                                "selecting from the preferred supplier " +
+                                "overview, where 1 quotation will suffice.";
+
+                        }
+
+
+                        if (message) {
+
+                            guidance.innerHTML =
+                                message;
+
+                        }
+
+                        else {
+
+                            guidance.innerHTML = `
+                                <strong>
+                                    Procurement Requirements
+                                </strong>
+
+                                <p style="margin-top:8px;">
+                                    Upload <strong>2 quotations</strong>
+                                    for purchase orders below
+                                    <strong>GHC 15,000</strong> unless
+                                    selecting from the preferred supplier
+                                    overview where
+                                    <strong>1 quotation</strong> will
+                                    suffice.
+                                </p>
+
+                                <p>
+                                    Submit <strong>3 quotations</strong>
+                                    for purchase orders above
+                                    <strong>GHC 15,000</strong> unless
+                                    selecting from the preferred supplier
+                                    overview where
+                                    <strong>1 quotation</strong> will
+                                    suffice.
+                                </p>
+
+                                <p>
+                                    Proposals over
+                                    <strong>GHC 50,000</strong> should go
+                                    via a formal tender process.
+                                </p>
+                            `;
+
+                        }
+
+                    }
+                );
+
             }
         );
 
     </script>
 
+
 </body>
+
 </html>
