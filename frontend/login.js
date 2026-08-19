@@ -168,7 +168,7 @@ loginForm.addEventListener("submit", async function (event) {
             // ADMIN
             // --------------------------------------
 
-            if (role === "Admin") {
+            if (role === "admin") {
 
                 window.location.href =
                     "admin.html";
@@ -180,7 +180,7 @@ loginForm.addEventListener("submit", async function (event) {
             // MANAGER
             // --------------------------------------
 
-            if (role === "Manager") {
+            if (role === "manager") {
 
                 window.location.href =
                     "approvals.html";
@@ -192,7 +192,7 @@ loginForm.addEventListener("submit", async function (event) {
             // EMPLOYEE
             // --------------------------------------
 
-            if (role === "Employee") {
+            if (role === "employee") {
 
                 window.location.href =
                     "index.html";

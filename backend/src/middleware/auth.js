@@ -3,63 +3,101 @@ const jwt = require("jsonwebtoken");
 // ==========================================
 // VERIFY JWT TOKEN
 // ==========================================
+
 const authenticate = (req, res, next) => {
     try {
-        const secret = process.env.JWT_SECRET;
+
+        const secret =
+            process.env.JWT_SECRET;
 
         // --------------------------------------
         // SERVER CONFIGURATION CHECK
         // --------------------------------------
-        if (!secret || secret.length < 32) {
+
+        if (
+            !secret ||
+            secret.length < 32
+        ) {
+
             console.error(
                 "JWT_SECRET is missing or too short."
             );
 
             return res.status(500).json({
                 success: false,
-                message: "Authentication service is not properly configured"
+                message:
+                    "Authentication service is not properly configured"
             });
+
         }
 
-        const authHeader = req.headers.authorization;
+        // --------------------------------------
+        // GET AUTHORIZATION HEADER
+        // --------------------------------------
+
+        const authHeader =
+            req.headers.authorization;
 
         // --------------------------------------
         // CHECK AUTHORIZATION HEADER
         // --------------------------------------
+
         if (
             !authHeader ||
             !authHeader.startsWith("Bearer ")
         ) {
+
             return res.status(401).json({
                 success: false,
-                message: "Authentication required"
+                message:
+                    "Authentication required"
             });
+
         }
 
-        const token = authHeader
-            .substring(7)
-            .trim();
+        // --------------------------------------
+        // EXTRACT TOKEN
+        // --------------------------------------
+
+        const token =
+            authHeader
+                .substring(7)
+                .trim();
 
         if (!token) {
+
             return res.status(401).json({
                 success: false,
-                message: "Authentication required"
+                message:
+                    "Authentication required"
             });
+
         }
 
         // --------------------------------------
         // VERIFY TOKEN
         // --------------------------------------
-        const decoded = jwt.verify(
-            token,
-            secret,
-            {
-                issuer: "safi-po",
-                audience: "safi-po-users"
-            }
-        );
 
-        req.user = decoded;
+        const decoded =
+            jwt.verify(
+                token,
+                secret,
+                {
+                    issuer: "safi-po",
+                    audience: "safi-po-users"
+                }
+            );
+
+        // --------------------------------------
+        // ATTACH USER TO REQUEST
+        // --------------------------------------
+
+        req.user = {
+            ...decoded,
+            role:
+                String(decoded.role || "")
+                    .toLowerCase()
+        };
 
         next();
 
@@ -72,49 +110,102 @@ const authenticate = (req, res, next) => {
 
         return res.status(401).json({
             success: false,
-            message: "Invalid or expired token"
+            message:
+                "Invalid or expired token"
         });
+
     }
 };
+
 
 // ==========================================
 // MANAGER ONLY
 // ==========================================
-const requireManager = (req, res, next) => {
+
+const requireManager = (
+    req,
+    res,
+    next
+) => {
 
     if (
         !req.user ||
-        req.user.role !== "Manager"
+        req.user.role !== "manager"
     ) {
+
         return res.status(403).json({
             success: false,
-            message: "Manager access required"
+            message:
+                "Manager access required"
         });
+
     }
 
     next();
 };
+
 
 // ==========================================
 // ADMIN ONLY
 // ==========================================
-const requireAdmin = (req, res, next) => {
+
+const requireAdmin = (
+    req,
+    res,
+    next
+) => {
 
     if (
         !req.user ||
-        req.user.role !== "Admin"
+        req.user.role !== "admin"
     ) {
+
         return res.status(403).json({
             success: false,
-            message: "Admin access required"
+            message:
+                "Admin access required"
         });
+
     }
 
     next();
 };
 
+
+// ==========================================
+// EMPLOYEE ONLY
+// ==========================================
+
+const requireEmployee = (
+    req,
+    res,
+    next
+) => {
+
+    if (
+        !req.user ||
+        req.user.role !== "employee"
+    ) {
+
+        return res.status(403).json({
+            success: false,
+            message:
+                "Employee access required"
+        });
+
+    }
+
+    next();
+};
+
+
+// ==========================================
+// EXPORT
+// ==========================================
+
 module.exports = {
     authenticate,
     requireManager,
-    requireAdmin
+    requireAdmin,
+    requireEmployee
 };

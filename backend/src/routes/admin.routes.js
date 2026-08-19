@@ -28,7 +28,7 @@ router.get(
 
             const activeUsers =
                 await User.countDocuments({
-                    active: true
+                    isActive: true
                 });
 
             const totalRequests =
@@ -59,7 +59,7 @@ router.get(
                     status: "Completed"
                 });
 
-            res.json({
+            return res.json({
                 success: true,
                 data: {
                     totalUsers,
@@ -80,7 +80,7 @@ router.get(
                 error
             );
 
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
                 message:
                     "Failed to load admin summary"
@@ -112,7 +112,7 @@ router.get(
                         createdAt: -1
                     });
 
-            res.json({
+            return res.json({
                 success: true,
                 count: users.length,
                 data: users
@@ -125,7 +125,7 @@ router.get(
                 error
             );
 
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
                 message:
                     "Failed to retrieve users"
@@ -140,6 +140,14 @@ router.get(
 // ==========================================
 // CREATE USER
 // POST /api/admin/users
+// ==========================================
+//
+// Admin-created users are required to change
+// their password after their first login.
+//
+// The password is NOT manually hashed here.
+// User.js handles hashing through its
+// pre-save middleware.
 // ==========================================
 
 router.post(
@@ -166,13 +174,50 @@ router.post(
             if (
                 !name ||
                 !email ||
-                !password
+                !password ||
+                !department ||
+                !department.trim()
             ) {
 
                 return res.status(400).json({
                     success: false,
                     message:
-                        "Name, email and password are required"
+                        "Name, email, password and department are required"
+                });
+
+            }
+
+
+            // ==========================================
+            // PASSWORD VALIDATION
+            // ==========================================
+
+            if (
+                typeof password !== "string" ||
+                password.length < 8
+            ) {
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Password must be at least 8 characters long"
+                });
+
+            }
+
+
+            // ==========================================
+            // NAME VALIDATION
+            // ==========================================
+
+            if (
+                name.trim().length < 2
+            ) {
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Please provide a valid name"
                 });
 
             }
@@ -183,13 +228,14 @@ router.post(
             // ==========================================
 
             const allowedRoles = [
-                "Employee",
-                "Manager",
-                "Admin"
+                "employee",
+                "manager",
+                "admin"
             ];
 
             const selectedRole =
-                role || "Employee";
+                String(role || "employee")
+                    .toLowerCase();
 
 
             if (
@@ -212,7 +258,28 @@ router.post(
             // ==========================================
 
             const normalizedEmail =
-                email.toLowerCase().trim();
+                email.trim().toLowerCase();
+
+
+            // ==========================================
+            // VALIDATE EMAIL
+            // ==========================================
+
+            const isValidEmail =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                    normalizedEmail
+                );
+
+
+            if (!isValidEmail) {
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Please provide a valid email address"
+                });
+
+            }
 
 
             // ==========================================
@@ -237,22 +304,20 @@ router.post(
 
 
             // ==========================================
-            // HASH PASSWORD
-            // ==========================================
-
-            const bcrypt =
-                require("bcryptjs");
-
-
-            const hashedPassword =
-                await bcrypt.hash(
-                    password,
-                    10
-                );
-
-
-            // ==========================================
             // CREATE USER
+            // ==========================================
+            //
+            // IMPORTANT:
+            //
+            // We pass the plain temporary password
+            // to User.create().
+            //
+            // User.js pre-save middleware automatically
+            // hashes it before MongoDB stores it.
+            //
+            // mustChangePassword = true means the user
+            // must change this temporary password after
+            // their first successful login.
             // ==========================================
 
             const user =
@@ -265,7 +330,7 @@ router.post(
                         normalizedEmail,
 
                     password:
-                        hashedPassword,
+                        password,
 
                     role:
                         selectedRole,
@@ -275,7 +340,10 @@ router.post(
                             ? department.trim()
                             : "",
 
-                    active:
+                    mustChangePassword:
+                        true,
+
+                    isActive:
                         true
 
                 });
@@ -285,12 +353,12 @@ router.post(
             // RESPONSE
             // ==========================================
 
-            res.status(201).json({
+            return res.status(201).json({
 
                 success: true,
 
                 message:
-                    "User created successfully",
+                    "User created successfully. The user must change their password after first login.",
 
                 data: {
 
@@ -309,8 +377,16 @@ router.post(
                     department:
                         user.department,
 
+                    // Keep "active" for existing
+                    // frontend compatibility.
                     active:
-                        user.active
+                        user.isActive,
+
+                    isActive:
+                        user.isActive,
+
+                    mustChangePassword:
+                        user.mustChangePassword
 
                 }
 
@@ -323,7 +399,7 @@ router.post(
                 error
             );
 
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
                 message:
                     "Failed to create user"
@@ -362,13 +438,15 @@ router.patch(
 
             if (
                 !name ||
-                !email
+                !email ||
+                !department ||
+                !department.trim()
             ) {
 
                 return res.status(400).json({
                     success: false,
                     message:
-                        "Name and email are required"
+                        "Name, email and department are required"
                 });
 
             }
@@ -379,14 +457,14 @@ router.patch(
             // ==========================================
 
             const allowedRoles = [
-                "Employee",
-                "Manager",
-                "Admin"
+                "employee",
+                "manager",
+                "admin"
             ];
 
-
             const selectedRole =
-                role || "Employee";
+                String(role || "employee")
+                    .toLowerCase();
 
 
             if (
@@ -430,7 +508,28 @@ router.patch(
             // ==========================================
 
             const normalizedEmail =
-                email.toLowerCase().trim();
+                email.trim().toLowerCase();
+
+
+            // ==========================================
+            // VALIDATE EMAIL
+            // ==========================================
+
+            const isValidEmail =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                    normalizedEmail
+                );
+
+
+            if (!isValidEmail) {
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Please provide a valid email address"
+                });
+
+            }
 
 
             // ==========================================
@@ -484,7 +583,7 @@ router.patch(
             // RESPONSE
             // ==========================================
 
-            res.json({
+            return res.json({
 
                 success: true,
 
@@ -509,7 +608,13 @@ router.patch(
                         user.department,
 
                     active:
-                        user.active
+                        user.isActive,
+
+                    isActive:
+                        user.isActive,
+
+                    mustChangePassword:
+                        user.mustChangePassword
 
                 }
 
@@ -522,7 +627,7 @@ router.patch(
                 error
             );
 
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
                 message:
                     "Failed to update user"
@@ -614,7 +719,7 @@ router.patch(
             // UPDATE STATUS
             // ==========================================
 
-            user.active =
+            user.isActive =
                 active;
 
 
@@ -625,7 +730,7 @@ router.patch(
             // RESPONSE
             // ==========================================
 
-            res.json({
+            return res.json({
 
                 success: true,
 
@@ -652,7 +757,13 @@ router.patch(
                         user.department,
 
                     active:
-                        user.active
+                        user.isActive,
+
+                    isActive:
+                        user.isActive,
+
+                    mustChangePassword:
+                        user.mustChangePassword
 
                 }
 
@@ -665,7 +776,7 @@ router.patch(
                 error
             );
 
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
                 message:
                     "Failed to update user status"
@@ -709,7 +820,7 @@ router.get(
                     });
 
 
-            res.json({
+            return res.json({
 
                 success: true,
 
@@ -728,7 +839,7 @@ router.get(
                 error
             );
 
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
                 message:
                     "Failed to retrieve purchase requests"

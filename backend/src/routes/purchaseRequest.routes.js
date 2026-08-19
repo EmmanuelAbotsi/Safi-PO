@@ -22,39 +22,194 @@ const {
 
 const router = express.Router();
 
-
 // ==========================================
 // CREATE PURCHASE REQUEST
 // POST /api/purchase-requests
+//
+// Handles:
+// - All purchase-request form fields
+// - Multiple document uploads
+// - Authentication
+// - User verification
+// - Procurement threshold information
+// ==========================================
+
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+
+// ==========================================
+// UPLOAD CONFIGURATION
+// ==========================================
+
+const uploadDirectory =
+    path.join(__dirname, "../uploads/purchase-requests");
+
+// Create upload directory if it doesn't exist
+if (!fs.existsSync(uploadDirectory)) {
+    fs.mkdirSync(uploadDirectory, {
+        recursive: true
+    });
+}
+
+// Store files on disk
+const storage = multer.diskStorage({
+
+    destination: function (req, file, cb) {
+
+        cb(
+            null,
+            uploadDirectory
+        );
+
+    },
+
+    filename: function (req, file, cb) {
+
+        const extension =
+            path.extname(file.originalname);
+
+        const baseName =
+            path
+                .basename(
+                    file.originalname,
+                    extension
+                )
+                .replace(
+                    /[^a-zA-Z0-9-_]/g,
+                    "_"
+                );
+
+        const uniqueName =
+            `${Date.now()}-${Math.round(
+                Math.random() * 1E9
+            )}-${baseName}${extension}`;
+
+        cb(
+            null,
+            uniqueName
+        );
+
+    }
+
+});
+
+
+// ==========================================
+// ALLOWED FILE TYPES
+// ==========================================
+
+const allowedFileTypes = [
+
+    "application/pdf",
+
+    "application/msword",
+
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+
+    "application/vnd.ms-excel",
+
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+
+    "image/jpeg",
+
+    "image/png"
+
+];
+
+
+// ==========================================
+// MULTER CONFIGURATION
+// ==========================================
+
+const upload = multer({
+
+    storage,
+
+    limits: {
+
+        // Maximum 10 files
+        files: 10,
+
+        // Maximum 10 MB per file
+        fileSize:
+            10 * 1024 * 1024
+
+    },
+
+    fileFilter: function (
+        req,
+        file,
+        cb
+    ) {
+
+        if (
+            allowedFileTypes.includes(
+                file.mimetype
+            )
+        ) {
+
+            cb(
+                null,
+                true
+            );
+
+        } else {
+
+            cb(
+                new Error(
+                    "Unsupported file type. Please upload PDF, Word, Excel, JPG or PNG files."
+                )
+            );
+
+        }
+
+    }
+
+});
+
+
+// ==========================================
+// CREATE REQUEST
 // ==========================================
 
 router.post(
     "/",
     authenticate,
+
+    upload.array(
+        "documents",
+        10
+    ),
+
     async (req, res) => {
 
         try {
-
-            const {
-                itemDescription,
-                quantity,
-                estimatedCost,
-                justification
-            } = req.body;
 
             // ==========================================
             // VERIFY AUTHENTICATED USER
             // ==========================================
 
-            if (!req.user || !req.user.id) {
+            if (
+                !req.user ||
+                !req.user.id
+            ) {
 
                 return res.status(401).json({
+
                     success: false,
+
                     message:
                         "Authenticated user could not be identified"
+
                 });
 
             }
+
+
+            // ==========================================
+            // VALIDATE USER ID
+            // ==========================================
 
             if (
                 !mongoose.Types.ObjectId.isValid(
@@ -63,101 +218,472 @@ router.post(
             ) {
 
                 return res.status(400).json({
+
                     success: false,
+
                     message:
                         "Invalid user ID"
+
                 });
 
             }
 
+
             // ==========================================
             // GET USER FROM DATABASE
-            // NEVER TRUST IDENTITY FIELDS FROM FRONTEND
+            //
+            // Never trust requester identity
+            // information from the browser.
             // ==========================================
 
-            const user = await User.findById(
-                req.user.id
-            );
+            const user =
+                await User.findById(
+                    req.user.id
+                );
 
             if (!user) {
 
                 return res.status(401).json({
+
                     success: false,
+
                     message:
                         "Authenticated user account could not be found"
+
                 });
 
             }
 
-            if (!user.active) {
-
-                return res.status(403).json({
-                    success: false,
-                    message:
-                        "Your account is inactive"
-                });
-
-            }
 
             // ==========================================
-            // VALIDATE REQUEST
+            // CHECK ACCOUNT STATUS
+            // ==========================================
+
+            if (user.isActive === false) {
+
+                return res.status(403).json({
+
+                    success: false,
+
+                    message:
+                        "Your account is inactive"
+
+                });
+
+            }
+
+
+            // ==========================================
+            // READ FORM DATA
+            //
+            // Because this request is multipart/form-data,
+            // fields are available through req.body.
+            // ==========================================
+
+            const {
+
+                email,
+
+                requesterName,
+
+                department,
+
+                itemDescription,
+
+                quantity,
+
+                budgetCategory,
+
+                projectDonor,
+
+                accountable,
+
+                accountable2,
+
+                projectReference,
+
+                estimatedCost,
+
+                budgetConfirmed,
+
+                preferredSupplier,
+
+                preferredSupplierName,
+
+                newSupplierName,
+
+                additionalComments,
+
+                justification,
+
+                quotationsAttached
+
+            } = req.body;
+
+
+            // ==========================================
+            // REQUIRED FIELD VALIDATION
             // ==========================================
 
             if (
+                !email ||
+                !requesterName ||
+                !department ||
                 !itemDescription ||
-                !quantity ||
+                quantity === undefined ||
+                quantity === null ||
+                !budgetCategory ||
+                !projectDonor ||
+                !accountable ||
+                !projectReference ||
                 estimatedCost === undefined ||
                 estimatedCost === null ||
                 !justification
             ) {
 
                 return res.status(400).json({
+
                     success: false,
+
                     message:
-                        "Item description, quantity, estimated cost and justification are required"
+                        "Please complete all required purchase request fields."
+
                 });
 
             }
 
+
             // ==========================================
-            // VALIDATE QUANTITY
+            // VALIDATE EMAIL
             // ==========================================
 
-            const numericQuantity =
-                Number(quantity);
+            const normalizedEmail =
+                String(email)
+                    .trim()
+                    .toLowerCase();
+
+            const emailPattern =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
             if (
-                !Number.isFinite(numericQuantity) ||
-                numericQuantity <= 0
+                !emailPattern.test(
+                    normalizedEmail
+                )
             ) {
 
                 return res.status(400).json({
+
                     success: false,
+
                     message:
-                        "Quantity must be a valid number greater than zero"
+                        "Please provide a valid email address."
+
                 });
 
             }
+
 
             // ==========================================
             // VALIDATE ESTIMATED COST
             // ==========================================
 
             const numericCost =
-                Number(estimatedCost);
+                Number(
+                    estimatedCost
+                );
+
+            const numericQuantity =
+                Number(quantity);
 
             if (
-                !Number.isFinite(numericCost) ||
-                numericCost < 0
+                !Number.isInteger(numericQuantity) ||
+                numericQuantity < 1
             ) {
 
                 return res.status(400).json({
                     success: false,
                     message:
-                        "Estimated cost must be a valid number greater than or equal to zero"
+                        "Quantity must be a whole number greater than or equal to 1."
                 });
 
             }
+
+            if (
+                !Number.isFinite(
+                    numericCost
+                ) ||
+                numericCost < 0
+            ) {
+
+                return res.status(400).json({
+
+                    success: false,
+
+                    message:
+                        "Indicative PO amount must be a valid number greater than or equal to zero."
+
+                });
+
+            }
+
+
+            // ==========================================
+            // BUDGET CONFIRMATION
+            // ==========================================
+
+            if (
+                budgetConfirmed !== "Yes"
+            ) {
+
+                return res.status(400).json({
+
+                    success: false,
+
+                    message:
+                        "You must confirm that budget availability has been confirmed by the Finance Manager."
+
+                });
+
+            }
+
+
+            // ==========================================
+            // QUOTATION CONFIRMATION
+            // ==========================================
+
+            if (
+                quotationsAttached !== "Yes"
+            ) {
+
+                return res.status(400).json({
+
+                    success: false,
+
+                    message:
+                        "You must confirm that the required quotations have been uploaded."
+
+                });
+
+            }
+
+
+            // ==========================================
+            // SUPPLIER VALIDATION
+            // ==========================================
+
+            if (
+                preferredSupplier !== "Yes" &&
+                preferredSupplier !== "No"
+            ) {
+
+                return res.status(400).json({
+
+                    success: false,
+
+                    message:
+                        "Please specify whether the supplier is a preferred supplier."
+
+                });
+
+            }
+
+
+            // ==========================================
+            // PREFERRED SUPPLIER LOGIC
+            // ==========================================
+
+            let finalPreferredSupplierName =
+                null;
+
+            let finalNewSupplierName =
+                null;
+
+
+            if (
+                preferredSupplier === "Yes"
+            ) {
+
+                if (
+                    !preferredSupplierName ||
+                    !String(
+                        preferredSupplierName
+                    ).trim()
+                ) {
+
+                    return res.status(400).json({
+
+                        success: false,
+
+                        message:
+                            "Please provide the preferred supplier name."
+
+                    });
+
+                }
+
+                finalPreferredSupplierName =
+                    String(
+                        preferredSupplierName
+                    ).trim();
+
+            }
+
+
+            if (
+                preferredSupplier === "No"
+            ) {
+
+                if (
+                    !newSupplierName ||
+                    !String(
+                        newSupplierName
+                    ).trim()
+                ) {
+
+                    return res.status(400).json({
+
+                        success: false,
+
+                        message:
+                            "Please provide the one-time / new supplier name."
+
+                    });
+
+                }
+
+                finalNewSupplierName =
+                    String(
+                        newSupplierName
+                    ).trim();
+
+            }
+
+
+            // ==========================================
+            // PROCUREMENT THRESHOLD
+            // ==========================================
+
+            let procurementMethod =
+                "Quotation";
+
+            let requiredQuotations =
+                2;
+
+
+            if (
+                numericCost > 50000
+            ) {
+
+                procurementMethod =
+                    "Formal Tender";
+
+                requiredQuotations =
+                    3;
+
+            }
+
+            else if (
+                numericCost > 15000
+            ) {
+
+                procurementMethod =
+                    "Three Quotations";
+
+                requiredQuotations =
+                    3;
+
+            }
+
+            else {
+
+                procurementMethod =
+                    "Two Quotations";
+
+                requiredQuotations =
+                    2;
+
+            }
+
+
+            // ==========================================
+            // PREFERRED SUPPLIER OVERRIDE
+            // ==========================================
+
+            if (
+                preferredSupplier === "Yes"
+            ) {
+
+                requiredQuotations =
+                    1;
+
+                procurementMethod =
+                    numericCost > 50000
+                        ? "Formal Tender - Preferred Supplier"
+                        : "Preferred Supplier - One Quotation";
+
+            }
+
+
+            // ==========================================
+            // PROCESS UPLOADED FILES
+            // ==========================================
+
+            const uploadedDocuments =
+                Array.isArray(
+                    req.files
+                )
+                    ? req.files.map(
+                        file => ({
+
+                            originalName:
+                                file.originalname,
+
+                            filename:
+                                file.filename,
+
+                            path:
+                                file.path,
+
+                            mimetype:
+                                file.mimetype,
+
+                            size:
+                                file.size,
+
+                            uploadedAt:
+                                new Date()
+
+                        })
+                    )
+                    : [];
+
+
+            // ==========================================
+            // CHECK DOCUMENT COUNT
+            // ==========================================
+            //
+            // Your HTML says quotations must be uploaded.
+            // Require at least one document here.
+            //
+            // You can increase this later to enforce
+            // exactly 2 or 3 quotations.
+            // ==========================================
+
+            if (
+                uploadedDocuments.length === 0
+            ) {
+
+                return res.status(400).json({
+
+                    success: false,
+
+                    message:
+                        "Please upload the required quotation or procurement documents."
+
+                });
+
+            }
+
 
             // ==========================================
             // CREATE REQUEST NUMBER
@@ -166,12 +692,9 @@ router.post(
             const requestNumber =
                 `PR-${Date.now()}`;
 
+
             // ==========================================
             // CREATE PURCHASE REQUEST
-            //
-            // IMPORTANT:
-            // requesterName and department come from
-            // MongoDB rather than the browser.
             // ==========================================
 
             const purchaseRequest =
@@ -182,29 +705,119 @@ router.post(
                     requesterId:
                         user._id,
 
+                    // IMPORTANT:
+                    // These are taken from the database
+                    // rather than trusting the browser.
+
                     requesterName:
                         user.name,
 
                     department:
-                        user.department || "",
+                        user.department ||
+                        String(
+                            department
+                        ).trim(),
+
+                    // ======================================
+                    // NEW FORM FIELDS
+                    // ======================================
+
+                    email:
+                        normalizedEmail,
 
                     itemDescription:
-                        String(itemDescription).trim(),
+                        String(
+                            itemDescription
+                        ).trim(),
 
                     quantity:
                         numericQuantity,
 
+                    budgetCategory:
+                        String(
+                            budgetCategory
+                        ).trim(),
+
+                    projectDonor:
+                        String(
+                            projectDonor
+                        ).trim(),
+
+                    accountable:
+                        String(
+                            accountable
+                        ).trim(),
+
+                    accountable2:
+                        accountable2
+                            ? String(
+                                accountable2
+                            ).trim()
+                            : null,
+
+                    projectReference:
+                        String(
+                            projectReference
+                        ).trim(),
+
                     estimatedCost:
                         numericCost,
 
+                    budgetConfirmed:
+                        true,
+
+                    preferredSupplier:
+                        preferredSupplier,
+
+                    preferredSupplierName:
+                        finalPreferredSupplierName,
+
+                    newSupplierName:
+                        finalNewSupplierName,
+
+                    additionalComments:
+                        additionalComments
+                            ? String(
+                                additionalComments
+                            ).trim()
+                            : "",
+
                     justification:
-                        String(justification).trim()
+                        String(
+                            justification
+                        ).trim(),
+
+                    quotationsAttached:
+                        true,
+
+                    // ======================================
+                    // PROCUREMENT INFORMATION
+                    // ======================================
+
+                    procurementMethod:
+                        procurementMethod,
+
+                    requiredQuotations:
+                        requiredQuotations,
+
+                    documents:
+                        uploadedDocuments
 
                 });
+
+
+            // ==========================================
+            // LOG
+            // ==========================================
 
             console.log(
                 `Purchase request created: ${purchaseRequest.requestNumber} by ${user.email}`
             );
+
+            console.log(
+                `Documents uploaded: ${uploadedDocuments.length}`
+            );
+
 
             // ==========================================
             // FIND ACTIVE MANAGERS
@@ -212,21 +825,32 @@ router.post(
 
             const managers =
                 await User.find({
-                    role: "Manager",
-                    active: true
+
+                    role:
+                        "manager",
+
+                    isActive:
+                        true
+
                 });
+
 
             console.log(
                 `Active managers found: ${managers.length}`
             );
 
+
             // ==========================================
             // SEND EMAIL TO MANAGERS
             // ==========================================
 
-            if (managers.length > 0) {
+            if (
+                managers.length > 0
+            ) {
 
-                for (const manager of managers) {
+                for (
+                    const manager of managers
+                ) {
 
                     try {
 
@@ -239,18 +863,27 @@ router.post(
 
                         });
 
-                    } catch (emailError) {
+                    }
+
+                    catch (
+                        emailError
+                    ) {
 
                         console.error(
+
                             `❌ Failed to send new request email to ${manager.email}:`,
+
                             emailError
+
                         );
 
                     }
 
                 }
 
-            } else {
+            }
+
+            else {
 
                 console.warn(
                     "⚠️ No active managers found. New request email was not sent."
@@ -258,13 +891,15 @@ router.post(
 
             }
 
+
             // ==========================================
             // SUCCESS
             // ==========================================
 
             return res.status(201).json({
 
-                success: true,
+                success:
+                    true,
 
                 message:
                     "Purchase request created successfully",
@@ -274,16 +909,154 @@ router.post(
 
             });
 
-        } catch (error) {
+
+        }
+
+        catch (error) {
 
             console.error(
                 "Purchase request error:",
                 error
             );
 
+
+            // ==========================================
+            // CLEAN UP UPLOADED FILES IF DB SAVE FAILED
+            // ==========================================
+
+            if (
+                req.files &&
+                Array.isArray(
+                    req.files
+                )
+            ) {
+
+                for (
+                    const file of req.files
+                ) {
+
+                    try {
+
+                        if (
+                            fs.existsSync(
+                                file.path
+                            )
+                        ) {
+
+                            fs.unlinkSync(
+                                file.path
+                            );
+
+                        }
+
+                    }
+
+                    catch (
+                        cleanupError
+                    ) {
+
+                        console.error(
+                            "Failed to remove uploaded file:",
+                            cleanupError
+                        );
+
+                    }
+
+                }
+
+            }
+
+
+            // ==========================================
+            // MULTER ERRORS
+            // ==========================================
+
+            if (
+                error instanceof multer.MulterError
+            ) {
+
+                if (
+                    error.code ===
+                    "LIMIT_FILE_SIZE"
+                ) {
+
+                    return res.status(400).json({
+
+                        success:
+                            false,
+
+                        message:
+                            "Each uploaded file must be 10 MB or smaller."
+
+                    });
+
+                }
+
+
+                if (
+                    error.code ===
+                    "LIMIT_FILE_COUNT"
+                ) {
+
+                    return res.status(400).json({
+
+                        success:
+                            false,
+
+                        message:
+                            "You can upload a maximum of 10 files."
+
+                    });
+
+                }
+
+
+                return res.status(400).json({
+
+                    success:
+                        false,
+
+                    message:
+                        error.message
+
+                });
+
+            }
+
+
+            // ==========================================
+            // OTHER UPLOAD ERRORS
+            // ==========================================
+
+            if (
+                error &&
+                error.message &&
+                error.message.includes(
+                    "Unsupported file type"
+                )
+            ) {
+
+                return res.status(400).json({
+
+                    success:
+                        false,
+
+                    message:
+                        error.message
+
+                });
+
+            }
+
+
+            // ==========================================
+            // GENERAL SERVER ERROR
+            // ==========================================
+
             return res.status(500).json({
 
-                success: false,
+                success:
+                    false,
 
                 message:
                     "Failed to create purchase request"
@@ -294,8 +1067,7 @@ router.post(
 
     }
 );
-
-
+ 
 // ==========================================
 // GET PURCHASE REQUESTS
 // GET /api/purchase-requests
@@ -333,11 +1105,22 @@ router.get(
             // EMPLOYEE
             // ==========================================
 
-            if (req.user.role === "Employee") {
+            if (req.user.role === "employee") {
 
                 query = {
                     requesterId: req.user.id
                 };
+
+            } else if (
+                req.user.role !== "manager" &&
+                req.user.role !== "admin"
+            ) {
+
+                return res.status(403).json({
+                    success: false,
+                    message:
+                        "Your account does not have permission to view purchase requests"
+                });
 
             }
 
@@ -540,22 +1323,39 @@ router.get(
 
             }
 
-            // ==========================================
-            // EMPLOYEE OWNERSHIP CHECK
-            // ==========================================
-
             if (
-                req.user.role === "Employee" &&
-                request.requesterId &&
-                request.requesterId._id.toString() !==
-                    req.user.id
+                req.user.role !== "employee" &&
+                req.user.role !== "manager" &&
+                req.user.role !== "admin"
             ) {
 
                 return res.status(403).json({
                     success: false,
                     message:
-                        "You are not authorized to view this purchase request"
+                        "Your account does not have permission to view purchase requests"
                 });
+
+            }
+
+            // ==========================================
+            // EMPLOYEE OWNERSHIP CHECK
+            // ==========================================
+
+            if (req.user.role === "employee") {
+
+                if (
+                    !request.requesterId ||
+                    request.requesterId._id.toString() !==
+                        req.user.id
+                ) {
+
+                    return res.status(403).json({
+                        success: false,
+                        message:
+                            "You are not authorized to view this purchase request"
+                    });
+
+                }
 
             }
 
@@ -814,7 +1614,7 @@ router.patch(
                     req.user.id
                 );
 
-            if (!manager || !manager.active) {
+            if (!manager || manager.isActive === false) {
 
                 return res.status(401).json({
                     success: false,
@@ -1007,7 +1807,7 @@ router.patch(
                     req.user.id
                 );
 
-            if (!manager || !manager.active) {
+            if (!manager || manager.isActive === false) {
 
                 return res.status(401).json({
                     success: false,
@@ -1134,8 +1934,8 @@ router.patch(
             if (
                 !req.user ||
                 (
-                    req.user.role !== "Manager" &&
-                    req.user.role !== "Admin"
+                    req.user.role !== "manager" &&
+                    req.user.role !== "admin"
                 )
             ) {
 

@@ -53,7 +53,7 @@ router.get(
             // belonging to their own purchase requests.
             // ==========================================
 
-            if (req.user.role === "Employee") {
+            if (req.user.role === "employee") {
 
                 const myRequests =
                     await PurchaseRequest.find({
@@ -87,8 +87,8 @@ router.get(
             // ==========================================
 
             else if (
-                req.user.role === "Manager" ||
-                req.user.role === "Admin"
+                req.user.role === "manager" ||
+                req.user.role === "admin"
             ) {
 
                 orders =
@@ -224,7 +224,7 @@ router.get(
             // ==========================================
 
             if (
-                req.user.role === "Employee"
+                req.user.role === "employee"
             ) {
 
                 if (
@@ -268,9 +268,9 @@ router.get(
             // ==========================================
 
             if (
-                req.user.role !== "Employee" &&
-                req.user.role !== "Manager" &&
-                req.user.role !== "Admin"
+                req.user.role !== "employee" &&
+                req.user.role !== "manager" &&
+                req.user.role !== "admin"
             ) {
 
                 return res.status(403).json({

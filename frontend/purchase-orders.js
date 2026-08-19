@@ -1,4 +1,9 @@
 const API_URL = "http://localhost:5001";
+const token = localStorage.getItem("token");
+
+if (!token) {
+    window.location.href = "login.html";
+}
 
 let allPurchaseOrders = [];
 
@@ -18,7 +23,12 @@ async function loadPurchaseOrders() {
 
     try {
         const response = await fetch(
-            `${API_URL}/api/purchase-orders`
+            `${API_URL}/api/purchase-orders`,
+            {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            }
         );
 
         if (!response.ok) {
@@ -287,8 +297,8 @@ function getActionButtons(order) {
             <button
                 class="po-action"
                 style="
-                    background:#fef2f2;
-                    color:#dc2626;
+                    background:#edf3ee;
+                    color:#496052;
                 "
                 onclick="cancelPurchaseOrder('${order._id}')"
             >
@@ -513,7 +523,10 @@ async function issuePurchaseOrder(id) {
         const response = await fetch(
             `${API_URL}/api/purchase-orders/${id}/issue`,
             {
-                method: "PATCH"
+                method: "PATCH",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
             }
         );
 
@@ -577,7 +590,10 @@ async function completePurchaseOrder(id) {
         const response = await fetch(
             `${API_URL}/api/purchase-orders/${id}/complete`,
             {
-                method: "PATCH"
+                method: "PATCH",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
             }
         );
 
@@ -641,7 +657,10 @@ async function cancelPurchaseOrder(id) {
         const response = await fetch(
             `${API_URL}/api/purchase-orders/${id}/cancel`,
             {
-                method: "PATCH"
+                method: "PATCH",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
             }
         );
 

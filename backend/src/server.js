@@ -3,6 +3,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
+const path = require("path");
 
 const connectDB = require("./config/database");
 
@@ -10,7 +11,13 @@ const connectDB = require("./config/database");
 // LOAD ENVIRONMENT VARIABLES
 // ==========================================
 
-dotenv.config();
+dotenv.config({
+    path: path.resolve(__dirname, "../.env")
+});
+
+dotenv.config({
+    path: path.resolve(__dirname, "../../.env")
+});
 
 // ==========================================
 // REQUIRED ENVIRONMENT VARIABLES
@@ -164,12 +171,6 @@ const authLimiter = rateLimit({
 });
 
 // ==========================================
-// DATABASE
-// ==========================================
-
-connectDB();
-
-// ==========================================
 // ROUTES
 // ==========================================
 
@@ -272,13 +273,19 @@ app.use(
 // START SERVER
 // ==========================================
 
-app.listen(
-    PORT,
-    () => {
+const startServer = async () => {
+    await connectDB();
 
-        console.log(
-            `Procurement API listening on port ${PORT}`
-        );
+    app.listen(
+        PORT,
+        () => {
 
-    }
-);
+            console.log(
+                `Procurement API listening on port ${PORT}`
+            );
+
+        }
+    );
+};
+
+startServer();

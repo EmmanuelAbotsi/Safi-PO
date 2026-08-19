@@ -34,8 +34,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #eaf2ff;
-            color: #2563eb;
+            background: #e8f5ed;
+            color: #16804a;
             font-size: 25px;
             font-weight: 700;
         }
@@ -66,8 +66,8 @@
             gap: 8px;
             padding: 9px 14px;
             border-radius: 20px;
-            background: #ecfdf3;
-            color: #15803d;
+            background: #e8f5ed;
+            color: #16804a;
             font-size: 13px;
             font-weight: 600;
         }
@@ -111,23 +111,23 @@
         }
 
         .po-stat-icon.blue {
-            background: #eaf2ff;
-            color: #2563eb;
+            background: #e8f5ed;
+            color: #16804a;
         }
 
         .po-stat-icon.orange {
-            background: #fff7ed;
-            color: #ea580c;
+            background: #eef6f0;
+            color: #4f6f5b;
         }
 
         .po-stat-icon.green {
-            background: #ecfdf3;
-            color: #16a34a;
+            background: #e8f5ed;
+            color: #16804a;
         }
 
         .po-stat-icon.red {
-            background: #fef2f2;
-            color: #dc2626;
+            background: #edf3ee;
+            color: #496052;
         }
 
         .po-stat span {
@@ -196,7 +196,7 @@
         }
 
         .search-box input:focus {
-            border-color: #2563eb;
+            border-color: #16804a;
         }
 
         .search-icon {
@@ -258,7 +258,7 @@
             border: 0;
             background: none;
             padding: 0;
-            color: #2563eb;
+            color: #16804a;
             font-weight: 700;
             cursor: pointer;
         }
@@ -303,23 +303,23 @@
         }
 
         .po-status-issued {
-            background: #eaf2ff;
-            color: #2563eb;
+            background: #e8f5ed;
+            color: #16804a;
         }
 
         .po-status-delivered {
-            background: #ecfdf3;
-            color: #15803d;
+            background: #e8f5ed;
+            color: #16804a;
         }
 
         .po-status-completed {
-            background: #ecfdf3;
-            color: #166534;
+            background: #e8f5ed;
+            color: #16804a;
         }
 
         .po-status-cancelled {
-            background: #fef2f2;
-            color: #dc2626;
+            background: #edf3ee;
+            color: #496052;
         }
 
         /* Buttons */
@@ -334,21 +334,21 @@
         }
 
         .po-view {
-            background: #eff6ff;
-            color: #2563eb;
+            background: #e8f5ed;
+            color: #16804a;
         }
 
         .po-view:hover {
-            background: #dbeafe;
+            background: #d4ecdc;
         }
 
         .po-complete {
-            background: #ecfdf3;
-            color: #15803d;
+            background: #16804a;
+            color: #ffffff;
         }
 
         .po-complete:hover {
-            background: #dcfce7;
+            background: #0f5f37;
         }
 
         .empty-cell,
@@ -363,7 +363,7 @@
         .po-modal {
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, .55);
+            background: rgba(15, 95, 55, .42);
             display: none;
             align-items: center;
             justify-content: center;
@@ -381,8 +381,9 @@
             max-height: 90vh;
             overflow-y: auto;
             background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,.2);
+            border: 1px solid #cfe7d8;
+            border-radius: 14px;
+            box-shadow: 0 24px 70px rgba(15, 95, 55, .22);
         }
 
         .po-modal-header {
@@ -395,7 +396,8 @@
 
         .po-modal-header h2 {
             margin: 4px 0 0;
-            color: #172033;
+            color: #163c29;
+            font-size: 24px;
         }
 
         .close-modal {
@@ -420,20 +422,21 @@
         }
 
         .po-detail {
-            padding: 14px;
-            background: #f8fafc;
+            padding: 16px;
+            background: #f4faf6;
+            border: 1px solid #dceee1;
             border-radius: 10px;
         }
 
         .po-detail span {
             display: block;
-            color: #94a3b8;
+            color: #668172;
             font-size: 11px;
             margin-bottom: 5px;
         }
 
         .po-detail strong {
-            color: #172033;
+            color: #234b34;
             font-size: 14px;
         }
 
@@ -466,9 +469,9 @@
         }
 
         .po-message.error {
-            background: #fef2f2;
-            color: #b91c1c;
-            border: 1px solid #fecaca;
+            background: #edf3ee;
+            color: #496052;
+            border: 1px solid #cfe7d8;
         }
 
         /* Responsive */
@@ -535,7 +538,9 @@
     <aside class="sidebar">
 
         <div class="logo">
-            <div class="logo-mark">P</div>
+            <div class="logo-mark">
+                <img src="../assests/logo.jpeg" alt="Safisana PO logo">
+            </div>
 
             <div class="logo-text">
                 <strong>Safi<span>PO</span></strong>
@@ -622,7 +627,9 @@
         <header class="topbar">
 
             <div class="mobile-logo">
-                <div class="logo-mark">P</div>
+                <div class="logo-mark">
+                    <img src="../assests/logo.jpeg" alt="Safisana PO logo">
+                </div>
                 <strong>Procure<span>Flow</span></strong>
             </div>
 

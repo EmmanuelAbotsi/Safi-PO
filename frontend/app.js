@@ -127,113 +127,601 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
     }
+ 
+// =====================================================
+// PURCHASE REQUEST SUBMISSION
+// =====================================================
 
-    // =====================================================
-    // PURCHASE REQUEST SUBMISSION
-    // =====================================================
+const purchaseRequestForm =
+    document.getElementById("purchaseRequestForm");
 
-    const purchaseRequestForm =
-        document.getElementById(
-            "purchaseRequestForm"
-        );
+if (purchaseRequestForm) {
 
-    if (purchaseRequestForm) {
+    purchaseRequestForm.addEventListener(
+        "submit",
+        async event => {
 
-        purchaseRequestForm.addEventListener(
-            "submit",
-            async event => {
+            event.preventDefault();
 
-                event.preventDefault();
+            const submitButton =
+                document.getElementById("submitBtn");
 
-                const submitButton =
-                    document.getElementById(
-                        "submitBtn"
-                    );
+            const message =
+                document.getElementById("message");
 
-                const message =
-                    document.getElementById(
-                        "message"
-                    );
+            // =================================================
+            // GET FORM VALUES
+            // =================================================
 
-                const requesterName =
-                    document
-                        .getElementById(
-                            "requesterName"
-                        )
-                        .value
-                        .trim();
+            const email =
+                document
+                    .getElementById("email")
+                    .value
+                    .trim();
 
-                const department =
-                    document
-                        .getElementById(
-                            "department"
-                        )
-                        .value;
+            const requesterName =
+                document
+                    .getElementById("requesterName")
+                    .value
+                    .trim();
 
-                const itemDescription =
-                    document
-                        .getElementById(
-                            "itemDescription"
-                        )
-                        .value
-                        .trim();
+            const department =
+                document
+                    .getElementById("department")
+                    .value;
 
-                const quantity =
-                    document
-                        .getElementById(
-                            "quantity"
-                        )
-                        .value;
+            const itemDescription =
+                document
+                    .getElementById("itemDescription")
+                    .value
+                    .trim();
 
-                const estimatedCost =
-                    document
-                        .getElementById(
-                            "estimatedCost"
-                        )
-                        .value;
+            const quantity =
+                document
+                    .getElementById("quantity")
+                    .value;    
 
-                const justification =
-                    document
-                        .getElementById(
-                            "justification"
-                        )
-                        .value
-                        .trim();
+            const budgetCategory =
+                document
+                    .getElementById("budgetCategory")
+                    .value;
 
-                // =================================================
-                // VALIDATION
-                // =================================================
+            const projectDonor =
+                document
+                    .getElementById("projectDonor")
+                    .value
+                    .trim();
+
+            const accountable =
+                document
+                    .getElementById("accountable")
+                    .value;
+
+            const accountable2 =
+                document
+                    .getElementById("accountable2")
+                    .value;
+
+            const projectReference =
+                document
+                    .getElementById("projectReference")
+                    .value
+                    .trim();
+
+            const estimatedCost =
+                document
+                    .getElementById("estimatedCost")
+                    .value;
+
+            const budgetConfirmed =
+                document
+                    .getElementById("budgetConfirmed")
+                    .checked;
+
+            const preferredSupplier =
+                document
+                    .getElementById("preferredSupplier")
+                    .value;
+
+            const preferredSupplierName =
+                document
+                    .getElementById("preferredSupplierName")
+                    .value
+                    .trim();
+
+            const newSupplierName =
+                document
+                    .getElementById("newSupplierName")
+                    .value
+                    .trim();
+
+            const additionalComments =
+                document
+                    .getElementById("additionalComments")
+                    .value
+                    .trim();
+
+            const justification =
+                document
+                    .getElementById("justification")
+                    .value
+                    .trim();
+
+            const quotationsAttached =
+                document
+                    .getElementById("quotationsAttached")
+                    .checked;
+
+            const documentsInput =
+                document.getElementById("documents");
+
+            // =================================================
+            // VALIDATION
+            // =================================================
+
+            if (
+                !email ||
+                !requesterName ||
+                !department ||
+                !itemDescription ||
+                !quantity ||
+                !budgetCategory ||
+                !projectDonor ||
+                !accountable ||
+                !projectReference ||
+                !estimatedCost ||
+                !justification ||
+                !preferredSupplier ||
+                !budgetConfirmed ||
+                !quotationsAttached
+            ) {
+
+                if (message) {
+
+                    message.className =
+                        "message error";
+
+                    message.textContent =
+                        "Please complete all required fields and confirmations.";
+
+                }
+
+                return;
+            }
+
+            // =================================================
+            // VALIDATE EMAIL
+            // =================================================
+
+            const emailPattern =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailPattern.test(email)) {
+
+                if (message) {
+
+                    message.className =
+                        "message error";
+
+                    message.textContent =
+                        "Please enter a valid email address.";
+
+                }
+
+                return;
+            }
+
+            // =================================================
+            // VALIDATE AMOUNT
+            // =================================================
+
+            const cost =
+                Number(estimatedCost);
+
+            if (
+                Number.isNaN(cost) ||
+                cost <= 0
+            ) {
+
+                if (message) {
+
+                    message.className =
+                        "message error";
+
+                    message.textContent =
+                        "Please enter a valid indicative PO amount.";
+
+                }
+
+                return;
+            }
+            const requestedQuantity = Number(quantity);
+
+            if (
+            !Number.isInteger(requestedQuantity) ||
+            requestedQuantity < 1
+            ) {
+
+        if (message) {
+
+            message.className =
+            "message error";
+
+            message.textContent =
+            "Please enter a valid quantity of at least 1.";
+
+                }
+
+    return;
+}
+
+            // =================================================
+            // VALIDATE SUPPLIER INFORMATION
+            // =================================================
+
+            if (
+                preferredSupplier === "Yes" &&
+                !preferredSupplierName
+            ) {
+
+                if (message) {
+
+                    message.className =
+                        "message error";
+
+                    message.textContent =
+                        "Please provide the preferred supplier name.";
+
+                }
+
+                return;
+            }
+
+            if (
+                preferredSupplier === "No" &&
+                !newSupplierName
+            ) {
+
+                if (message) {
+
+                    message.className =
+                        "message error";
+
+                    message.textContent =
+                        "Please provide the one-time / new supplier name.";
+
+                }
+
+                return;
+            }
+
+            // =================================================
+            // CHECK LOGGED-IN USER
+            // =================================================
+
+            if (!user || !user.id) {
+
+                if (message) {
+
+                    message.className =
+                        "message error";
+
+                    message.textContent =
+                        "Your user session is invalid. Please log in again.";
+
+                }
+
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+
+                setTimeout(() => {
+
+                    window.location.href =
+                        "login.html";
+
+                }, 1000);
+
+                return;
+            }
+
+            // =================================================
+            // VALIDATE FILES
+            // =================================================
+
+            const files =
+                documentsInput
+                    ? Array.from(documentsInput.files)
+                    : [];
+
+            const maxFiles = 10;
+
+            const maxFileSize =
+                10 * 1024 * 1024; // 10 MB
+
+            const allowedExtensions = [
+                "pdf",
+                "doc",
+                "docx",
+                "xls",
+                "xlsx",
+                "jpg",
+                "jpeg",
+                "png"
+            ];
+
+            if (files.length > maxFiles) {
+
+                if (message) {
+
+                    message.className =
+                        "message error";
+
+                    message.textContent =
+                        "You can upload a maximum of 10 files.";
+
+                }
+
+                return;
+            }
+
+            for (const file of files) {
+
+                const extension =
+                    file.name
+                        .split(".")
+                        .pop()
+                        .toLowerCase();
 
                 if (
-                    !requesterName ||
-                    !department ||
-                    !itemDescription ||
-                    !quantity ||
-                    !estimatedCost ||
-                    !justification
+                    !allowedExtensions.includes(
+                        extension
+                    )
                 ) {
 
                     if (message) {
+
                         message.className =
                             "message error";
 
                         message.textContent =
-                            "Please complete all required fields.";
+                            `Unsupported file type: ${file.name}`;
+
                     }
 
                     return;
                 }
 
-                // Make sure we have a logged-in user
-                if (!user || !user.id) {
+                if (
+                    file.size >
+                    maxFileSize
+                ) {
 
                     if (message) {
+
                         message.className =
                             "message error";
 
                         message.textContent =
-                            "Your user session is invalid. Please log in again.";
+                            `${file.name} is larger than 10 MB.`;
+
                     }
+
+                    return;
+                }
+            }
+
+            // =================================================
+            // DISABLE SUBMIT BUTTON
+            // =================================================
+
+            if (submitButton) {
+
+                submitButton.disabled =
+                    true;
+
+                submitButton.innerHTML =
+                    "<span>Submitting...</span><b>→</b>";
+
+            }
+
+            if (message) {
+
+                message.className =
+                    "message";
+
+                message.textContent =
+                    "Submitting purchase request...";
+
+            }
+
+            // =================================================
+            // CREATE FORMDATA
+            // =================================================
+
+            const formData =
+                new FormData();
+
+            // User information
+            formData.append(
+                "requesterId",
+                user.id
+            );
+
+            formData.append(
+                "email",
+                email
+            );
+
+            formData.append(
+                "requesterName",
+                requesterName
+            );
+
+            formData.append(
+                "department",
+                department
+            );
+
+            // Purchase information
+            formData.append(
+                "itemDescription",
+                itemDescription
+            );
+            
+            formData.append(
+                "quantity",
+                requestedQuantity
+            );
+            formData.append(
+                "budgetCategory",
+                budgetCategory
+            );
+
+            formData.append(
+                "projectDonor",
+                projectDonor
+            );
+
+            formData.append(
+                "accountable",
+                accountable
+            );
+
+            formData.append(
+                "accountable2",
+                accountable2
+            );
+
+            formData.append(
+                "projectReference",
+                projectReference
+            );
+
+            formData.append(
+                "estimatedCost",
+                cost
+            );
+
+            // Supplier information
+            formData.append(
+                "budgetConfirmed",
+                budgetConfirmed ? "Yes" : "No"
+            );
+
+            formData.append(
+                "preferredSupplier",
+                preferredSupplier
+            );
+
+            formData.append(
+                "preferredSupplierName",
+                preferredSupplierName
+            );
+
+            formData.append(
+                "newSupplierName",
+                newSupplierName
+            );
+
+            // Additional information
+            formData.append(
+                "additionalComments",
+                additionalComments
+            );
+
+            formData.append(
+                "justification",
+                justification
+            );
+
+            formData.append(
+                "quotationsAttached",
+                quotationsAttached ? "Yes" : "No"
+            );
+
+            // =================================================
+            // ADD DOCUMENTS
+            // =================================================
+
+            files.forEach(file => {
+
+                formData.append(
+                    "documents",
+                    file
+                );
+
+            });
+
+            // =================================================
+            // SEND REQUEST
+            // =================================================
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_URL}/api/purchase-requests`,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Authorization":
+                                    `Bearer ${token}`
+                            },
+
+                            body: formData
+                        }
+                    );
+
+                // IMPORTANT:
+                // Do NOT manually set
+                // Content-Type when using FormData.
+                // The browser creates the multipart
+                // boundary automatically.
+
+                // =================================================
+                // READ RESPONSE
+                // =================================================
+
+                const contentType =
+                    response.headers.get(
+                        "content-type"
+                    ) || "";
+
+                let result;
+
+                if (
+                    contentType.includes(
+                        "application/json"
+                    )
+                ) {
+
+                    result =
+                        await response.json();
+
+                } else {
+
+                    const text =
+                        await response.text();
+
+                    throw new Error(
+                        text ||
+                        `Server returned HTTP ${response.status}`
+                    );
+                }
+
+                console.log(
+                    "Purchase request response:",
+                    result
+                );
+
+                // =================================================
+                // AUTHENTICATION ERROR
+                // =================================================
+
+                if (
+                    response.status === 401
+                ) {
 
                     localStorage.removeItem(
                         "token"
@@ -243,257 +731,179 @@ document.addEventListener("DOMContentLoaded", async () => {
                         "user"
                     );
 
-                    setTimeout(() => {
-                        window.location.href =
-                            "login.html";
-                    }, 1000);
+                    window.location.href =
+                        "login.html";
 
                     return;
                 }
 
                 // =================================================
-                // DISABLE SUBMIT BUTTON
+                // REQUEST FAILED
                 // =================================================
 
-                if (submitButton) {
+                if (
+                    !response.ok ||
+                    !result.success
+                ) {
 
-                    submitButton.disabled =
-                        true;
-
-                    submitButton.innerHTML =
-                        "<span>Submitting...</span><b>→</b>";
+                    throw new Error(
+                        result.message ||
+                        "Failed to submit purchase request."
+                    );
                 }
+
+                // =================================================
+                // SUCCESS
+                // =================================================
 
                 if (message) {
 
                     message.className =
-                        "message";
+                        "message success";
 
                     message.textContent =
-                        "";
+                        "Purchase request submitted successfully.";
+
                 }
 
                 // =================================================
-                // SEND REQUEST TO API
+                // RESET FORM
                 // =================================================
 
-                try {
+                purchaseRequestForm.reset();
 
-                    const response =
-                        await fetch(
-                            `${API_URL}/api/purchase-requests`,
-                            {
-                                method: "POST",
+                // =================================================
+                // RESTORE USER INFORMATION
+                // =================================================
 
-                                headers: {
-                                    "Content-Type":
-                                        "application/json",
+                if (user) {
 
-                                    "Authorization":
-                                        `Bearer ${token}`
-                                },
-
-                                body:
-                                    JSON.stringify({
-
-                                        // Requester information
-                                        requesterId:
-                                            user.id,
-
-                                        requesterName:
-                                            requesterName,
-
-                                        department:
-                                            department,
-
-                                        // Purchase information
-                                        itemDescription:
-                                            itemDescription,
-
-                                        quantity:
-                                            Number(
-                                                quantity
-                                            ),
-
-                                        estimatedCost:
-                                            Number(
-                                                estimatedCost
-                                            ),
-
-                                        justification:
-                                            justification
-                                    })
-                            }
+                    const emailInput =
+                        document.getElementById(
+                            "email"
                         );
-
-                    // =================================================
-                    // READ RESPONSE SAFELY
-                    // =================================================
-
-                    const contentType =
-                        response.headers.get(
-                            "content-type"
-                        ) || "";
-
-                    let result;
 
                     if (
-                        contentType.includes(
-                            "application/json"
-                        )
+                        emailInput &&
+                        user.email
                     ) {
 
-                        result =
-                            await response.json();
+                        emailInput.value =
+                            user.email;
 
-                    } else {
-
-                        const text =
-                            await response.text();
-
-                        throw new Error(
-                            text ||
-                            `Server returned HTTP ${response.status}`
-                        );
                     }
 
-                    console.log(
-                        "Purchase request response:",
-                        result
-                    );
-
-                    // =================================================
-                    // AUTHENTICATION ERROR
-                    // =================================================
+                    const requesterNameInput =
+                        document.getElementById(
+                            "requesterName"
+                        );
 
                     if (
-                        response.status === 401
+                        requesterNameInput &&
+                        user.name
                     ) {
 
-                        localStorage.removeItem(
-                            "token"
-                        );
+                        requesterNameInput.value =
+                            user.name;
 
-                        localStorage.removeItem(
-                            "user"
-                        );
-
-                        window.location.href =
-                            "login.html";
-
-                        return;
                     }
 
-                    // =================================================
-                    // REQUEST FAILED
-                    // =================================================
+                    const departmentInput =
+                        document.getElementById(
+                            "department"
+                        );
 
                     if (
-                        !response.ok ||
-                        !result.success
+                        departmentInput &&
+                        user.department
                     ) {
 
-                        throw new Error(
-                            result.message ||
-                            "Failed to submit purchase request."
-                        );
-                    }
-
-                    // =================================================
-                    // SUCCESS
-                    // =================================================
-
-                    if (message) {
-
-                        message.className =
-                            "message success";
-
-                        message.textContent =
-                            "Purchase request submitted successfully.";
-                    }
-
-                    // Clear form
-                    purchaseRequestForm.reset();
-
-                    // Restore logged-in employee details
-                    if (user) {
-
-                        const requesterNameInput =
-                            document.getElementById(
-                                "requesterName"
-                            );
-
-                        if (
-                            requesterNameInput &&
-                            user.name
-                        ) {
-
-                            requesterNameInput.value =
-                                user.name;
-                        }
-
-                        const departmentInput =
-                            document.getElementById(
-                                "department"
-                            );
-
-                        if (
-                            departmentInput &&
-                            user.department
-                        ) {
-
-                            const departmentExists =
-                                Array.from(
-                                    departmentInput.options
-                                ).some(option =>
-                                    option.value ===
-                                        user.department ||
-                                    option.textContent ===
+                        const matchingOption =
+                            Array.from(
+                                departmentInput.options
+                            ).find(
+                                option =>
+                                    option.value
+                                        .toLowerCase() ===
+                                    String(
                                         user.department
-                                );
+                                    ).toLowerCase()
+                            );
 
-                            if (
-                                departmentExists
-                            ) {
+                        if (matchingOption) {
 
-                                departmentInput.value =
-                                    user.department;
-                            }
+                            departmentInput.value =
+                                matchingOption.value;
+
                         }
+
                     }
 
-                } catch (error) {
+                }
 
-                    console.error(
-                        "Purchase request error:",
-                        error
+                // =================================================
+                // RESET SUPPLIER FIELDS
+                // =================================================
+
+                const preferredSupplierNameInput =
+                    document.getElementById(
+                        "preferredSupplierName"
                     );
 
-                    if (message) {
+                const newSupplierNameInput =
+                    document.getElementById(
+                        "newSupplierName"
+                    );
 
-                        message.className =
-                            "message error";
+                if (preferredSupplierNameInput) {
 
-                        message.textContent =
-                            error.message ||
-                            "Unable to submit purchase request. Please try again.";
-                    }
+                    preferredSupplierNameInput.disabled =
+                        false;
 
-                } finally {
-
-                    if (submitButton) {
-
-                        submitButton.disabled =
-                            false;
-
-                        submitButton.innerHTML =
-                            "<span>Submit Purchase Request</span><b>→</b>";
-                    }
                 }
-            }
-        );
-    }
 
+                if (newSupplierNameInput) {
+
+                    newSupplierNameInput.disabled =
+                        false;
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Purchase request error:",
+                    error
+                );
+
+                if (message) {
+
+                    message.className =
+                        "message error";
+
+                    message.textContent =
+                        error.message ||
+                        "Unable to submit purchase request. Please try again.";
+
+                }
+
+            } finally {
+
+                if (submitButton) {
+
+                    submitButton.disabled =
+                        false;
+
+                    submitButton.innerHTML =
+                        "<span>Submit Purchase Request</span><b>→</b>";
+
+                }
+
+            }
+
+        }
+    );
+}
     // =====================================================
     // LOAD DASHBOARD DATA
     // =====================================================

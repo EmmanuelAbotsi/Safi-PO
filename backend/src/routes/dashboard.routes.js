@@ -54,7 +54,7 @@ router.get(
             // relating to their own purchase requests.
             // ==========================================
 
-            if (userRole === "Employee") {
+            if (userRole === "employee") {
 
                 const myRequests =
                     await PurchaseRequest.countDocuments({
@@ -128,8 +128,8 @@ router.get(
             // ==========================================
 
             if (
-                userRole === "Manager" ||
-                userRole === "Admin"
+                userRole === "manager" ||
+                userRole === "admin"
             ) {
 
                 const myRequests =

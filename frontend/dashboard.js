@@ -397,15 +397,15 @@ async function loadRecentRequests() {
                         <tr>
 
                             <td>
-                                ${request.requestNumber || "-"}
+                                ${escapeDashboardHtml(request.requestNumber || "-")}
                             </td>
 
                             <td>
-                                ${request.itemDescription || "-"}
+                                ${escapeDashboardHtml(request.itemDescription || "-")}
                             </td>
 
                             <td>
-                                ${request.department || "-"}
+                                ${escapeDashboardHtml(request.department || "-")}
                             </td>
 
                             <td>
@@ -414,7 +414,7 @@ async function loadRecentRequests() {
 
                             <td>
                                 <span class="status-badge ${statusClass}">
-                                    ${status}
+                                    ${escapeDashboardHtml(status)}
                                 </span>
                             </td>
 
@@ -450,6 +450,15 @@ async function loadRecentRequests() {
             `;
         }
     }
+}
+
+function escapeDashboardHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 

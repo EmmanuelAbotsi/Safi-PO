@@ -34,7 +34,7 @@
         <div class="logo">
 
             <div class="logo-mark">
-                S
+                <img src="../assests/logo.jpeg" alt="Safisana PO logo">
             </div>
 
             <div class="logo-text">
@@ -252,7 +252,7 @@
             <div class="mobile-logo">
 
                 <div class="logo-mark">
-                    S
+                    <img src="../assests/logo.jpeg" alt="Safisana PO logo">
                 </div>
 
                 <strong>
@@ -672,116 +672,149 @@
 
                             </div>
 
+                        <!-- =========================================
+     REQUESTED PRODUCT / SERVICE
+========================================== -->
+
+<div class="form-group full">
+
+    <label for="itemDescription">
+
+        Requested Product or Service
+
+        <span>
+            *
+        </span>
+
+    </label>
+
+    <div class="input-wrapper">
+
+        <span class="input-icon">
+            ▤
+        </span>
+
+        <input
+            type="text"
+            id="itemDescription"
+            name="itemDescription"
+            placeholder="State the requested product or service"
+            required
+        >
+
+    </div>
+
+    <small>
+        Be as specific as possible.
+    </small>
+
+</div>
 
 
-                            <!-- =========================================
-                                 REQUESTED PRODUCT / SERVICE
-                            ========================================== -->
+<!-- =========================================
+     QUANTITY
+========================================== -->
+<!-- =========================================
+     QUANTITY
+========================================== -->
 
-                            <div class="form-group full">
+<div class="form-group">
 
-                                <label for="itemDescription">
+    <label for="quantity">
 
-                                    Requested Product or Service
+        Quantity
 
-                                    <span>
-                                        *
-                                    </span>
+        <span>
+            *
+        </span>
 
-                                </label>
+    </label>
 
+    <div class="input-wrapper">
 
-                                <div class="input-wrapper">
+        <span class="input-icon">
+            #
+        </span>
 
-                                    <span class="input-icon">
-                                        ▤
-                                    </span>
+        <input
+            type="number"
+            id="quantity"
+            name="quantity"
+            min="1"
+            step="1"
+            placeholder="Enter quantity"
+            required
+        >
 
+    </div>
 
-                                    <input
-                                        type="text"
-                                        id="itemDescription"
-                                        name="itemDescription"
-                                        placeholder="State the requested product or service"
-                                        required
-                                    >
+    <small>
+        Enter the number of units required.
+    </small>
 
-                                </div>
+</div>
 
+<!-- =========================================
+     BUDGET CATEGORY
+========================================== -->
 
-                                <small>
-                                    Be as specific as possible.
-                                </small>
+<div class="form-group">
 
-                            </div>
+    <label for="budgetCategory">
 
+        Budget Category
 
+        <span>
+            *
+        </span>
 
-                            <!-- =========================================
-                                 BUDGET CATEGORY
-                            ========================================== -->
+    </label>
 
-                            <div class="form-group">
+    <div class="input-wrapper">
 
-                                <label for="budgetCategory">
+        <span class="input-icon">
+            ▦
+        </span>
 
-                                    Budget Category
+        <select
+            id="budgetCategory"
+            name="budgetCategory"
+            required
+        >
 
-                                    <span>
-                                        *
-                                    </span>
+            <option value="">
+                Select budget category
+            </option>
 
-                                </label>
+            <option value="Operational">
+                Operational
+            </option>
 
+            <option value="Capital Expenditure">
+                Capital Expenditure
+            </option>
 
-                                <div class="input-wrapper">
+            <option value="Project">
+                Project
+            </option>
 
-                                    <span class="input-icon">
-                                        ▦
-                                    </span>
+            <option value="Programme">
+                Programme
+            </option>
 
+            <option value="Other">
+                Other
+            </option>
 
-                                    <select
-                                        id="budgetCategory"
-                                        name="budgetCategory"
-                                        required
-                                    >
+        </select>
 
-                                        <option value="">
-                                            Select budget category
-                                        </option>
+    </div>
 
-                                        <option value="Operational">
-                                            Operational
-                                        </option>
-
-                                        <option value="Capital Expenditure">
-                                            Capital Expenditure
-                                        </option>
-
-                                        <option value="Project">
-                                            Project
-                                        </option>
-
-                                        <option value="Programme">
-                                            Programme
-                                        </option>
-
-                                        <option value="Other">
-                                            Other
-                                        </option>
-
-                                    </select>
-
-                                </div>
-
-                            </div>
-
-
-
-                            <!-- =========================================
-                                 PROJECT / DONOR
-                            ========================================== -->
+</div>        
+ 
+    <!-- =========================================
+       PROJECT / DONOR
+     ========================================== -->
 
                             <div class="form-group">
 
@@ -1853,8 +1886,7 @@
                         document.getElementById(
                             "topUserAvatar"
                         );
-
-
+                    
                     const sidebarUserName =
                         document.getElementById(
                             "sidebarUserName"

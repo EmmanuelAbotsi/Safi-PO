@@ -223,20 +223,20 @@ async function loadRequests() {
 
                 <td>
                     <strong class="request-number">
-                        ${request.requestNumber || "—"}
+                        ${escapeMyRequestsHtml(request.requestNumber || "—")}
                     </strong>
                 </td>
 
                 <td>
-                    ${request.itemDescription || "—"}
+                    ${escapeMyRequestsHtml(request.itemDescription || "—")}
                 </td>
 
                 <td>
-                    ${request.department || "—"}
+                    ${escapeMyRequestsHtml(request.department || "—")}
                 </td>
 
                 <td>
-                    ${request.quantity || 0}
+                    ${escapeMyRequestsHtml(request.quantity || 0)}
                 </td>
 
                 <td>
@@ -252,7 +252,7 @@ async function loadRequests() {
 
                 <td>
                     <span class="status-badge ${statusClass}">
-                        ${status}
+                        ${escapeMyRequestsHtml(status)}
                     </span>
                 </td>
 
@@ -284,6 +284,15 @@ async function loadRequests() {
         loadingMessage.style.display =
             "none";
     }
+}
+
+function escapeMyRequestsHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 // =====================================================

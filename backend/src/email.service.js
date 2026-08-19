@@ -1,39 +1,111 @@
-console.log("📧 email.service.js loaded");
+console.log("Email service loaded");
 
 const nodemailer = require("nodemailer");
+
+const emailEnabled = Boolean(
+    process.env.EMAIL_USER &&
+    process.env.EMAIL_PASSWORD
+);
 
 // ==========================================
 // EMAIL TRANSPORTER
 // ==========================================
+//
+// The Safisana sender account uses Microsoft 365.
+// Recipients can be Gmail, Microsoft, Outlook,
+// Safisana, or other valid email providers.
+// ==========================================
 
 const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: process.env.EMAIL_HOST || "smtp.office365.com",
+
+    port: Number(
+        process.env.EMAIL_PORT || 587
+    ),
+
+    secure: false,
 
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD
+    },
+
+    tls: {
+        minVersion: "TLSv1.2"
     }
 });
+
 
 // ==========================================
 // VERIFY EMAIL CONNECTION
 // ==========================================
 
-transporter.verify((error, success) => {
+if (emailEnabled) {
+    transporter.verify((error) => {
 
-    if (error) {
+        if (error) {
 
-        console.error("❌ Email service connection failed:");
-        console.error(error);
+            console.error(
+                "Email service connection failed:"
+            );
 
-    } else {
+            console.error(
+                error.message
+            );
 
-        console.log("✅ Email service connected successfully");
-        console.log(`📧 Email account: ${process.env.EMAIL_USER}`);
+        } else {
 
+            console.log(
+                "Email service connected successfully"
+            );
+
+            console.log(
+                `Email account: ${process.env.EMAIL_USER}`
+            );
+
+        }
+
+    });
+} else {
+    console.warn(
+        "Email service disabled: EMAIL_USER and EMAIL_PASSWORD are not configured."
+    );
+}
+
+
+// ==========================================
+// FORMAT CURRENCY
+// ==========================================
+
+const formatCurrency = (amount) => {
+
+    return Number(amount || 0).toLocaleString(
+        "en-GH",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
+
+};
+
+
+// ==========================================
+// FORMAT DATE
+// ==========================================
+
+const formatDate = (date) => {
+
+    if (!date) {
+        return "—";
     }
 
-});
+    return new Date(date).toLocaleString(
+        "en-GH"
+    );
+
+};
+
 
 // ==========================================
 // SEND NEW REQUEST EMAIL TO MANAGER
@@ -44,31 +116,62 @@ const sendNewRequestEmail = async ({
     request
 }) => {
 
+    if (!emailEnabled) {
+        throw new Error(
+            "Email service is disabled because SMTP credentials are not configured"
+        );
+    }
+
+    if (!manager || !manager.email) {
+
+        throw new Error(
+            "Manager email address is missing"
+        );
+
+    }
+
+    if (!request) {
+
+        throw new Error(
+            "Purchase request is missing"
+        );
+
+    }
+
     const mailOptions = {
 
-        from: `"Safisana Purchase Ordering System" <${process.env.EMAIL_USER}>`,
+        from:
+            process.env.EMAIL_FROM ||
+            `"Safisana Purchase Ordering System" <${process.env.EMAIL_USER}>`,
 
-        to: manager.email,
+        to:
+            manager.email,
 
         subject:
             `New Purchase Request - ${request.requestNumber}`,
 
         html: `
+
             <div style="
                 font-family: Arial, sans-serif;
                 max-width: 650px;
-                margin: auto;
+                margin: 0 auto;
+                color: #333;
             ">
 
-                <h2 style="color: #1f6feb;">
+                <h2 style="
+                    color: #1f6feb;
+                ">
                     New Purchase Request
                 </h2>
 
-                <p>Hello ${manager.name},</p>
+                <p>
+                    Hello ${manager.name || "Manager"},
+                </p>
 
                 <p>
-                    A new purchase request has been submitted
-                    and is awaiting your review.
+                    A new purchase request has been
+                    submitted and is awaiting your review.
                 </p>
 
                 <div style="
@@ -80,67 +183,68 @@ const sendNewRequestEmail = async ({
 
                     <p>
                         <strong>Request Number:</strong>
-                        ${request.requestNumber}
+                        ${request.requestNumber || "—"}
                     </p>
 
                     <p>
                         <strong>Requester:</strong>
-                        ${request.requesterName}
+                        ${request.requesterName || "—"}
                     </p>
 
                     <p>
                         <strong>Department:</strong>
-                        ${request.department}
+                        ${request.department || "—"}
                     </p>
 
                     <p>
                         <strong>Item / Service:</strong>
-                        ${request.itemDescription}
+                        ${request.itemDescription || "—"}
                     </p>
 
                     <p>
                         <strong>Quantity:</strong>
-                        ${request.quantity}
+                        ${request.quantity || "—"}
                     </p>
 
                     <p>
                         <strong>Estimated Cost:</strong>
-                        GHS ${Number(
+                        GHS ${formatCurrency(
                             request.estimatedCost
-                        ).toLocaleString(
-                            "en-GH",
-                            {
-                                minimumFractionDigits: 2
-                            }
                         )}
                     </p>
 
                     <p>
                         <strong>Justification:</strong>
-                        ${request.justification}
+                        ${request.justification || "—"}
                     </p>
 
                 </div>
 
                 <p>
-                    Please log in to Safisana Purchase Ordering System
-                    to review and take action on this request.
+                    Please log in to the Safisana
+                    Purchase Ordering System to review
+                    and take action on this request.
                 </p>
 
                 <p>
                     Regards,<br>
-                    <strong>Safisana Purchase Ordering System</strong>
+                    <strong>
+                        Safisana Purchase Ordering System
+                    </strong>
                 </p>
 
             </div>
+
         `
     };
 
     const info =
-        await transporter.sendMail(mailOptions);
+        await transporter.sendMail(
+            mailOptions
+        );
 
     console.log(
-        `📧 New request email sent to ${manager.email}`
+        `New request email sent to ${manager.email}`
     );
 
     console.log(
@@ -149,6 +253,7 @@ const sendNewRequestEmail = async ({
 
     return info;
 };
+
 
 // ==========================================
 // SEND APPROVAL EMAIL TO EMPLOYEE
@@ -160,27 +265,58 @@ const sendApprovedEmail = async ({
     manager
 }) => {
 
+    if (!emailEnabled) {
+        throw new Error(
+            "Email service is disabled because SMTP credentials are not configured"
+        );
+    }
+
+    if (!employee || !employee.email) {
+
+        throw new Error(
+            "Employee email address is missing"
+        );
+
+    }
+
+    if (!request) {
+
+        throw new Error(
+            "Purchase request is missing"
+        );
+
+    }
+
     const mailOptions = {
 
-        from: `"Safisana Purchase Ordering System" <${process.env.EMAIL_USER}>`,
+        from:
+            process.env.EMAIL_FROM ||
+            `"Safisana Purchase Ordering System" <${process.env.EMAIL_USER}>`,
 
-        to: employee.email,
+        to:
+            employee.email,
 
         subject:
             `Purchase Request Approved - ${request.requestNumber}`,
 
         html: `
+
             <div style="
                 font-family: Arial, sans-serif;
                 max-width: 650px;
-                margin: auto;
+                margin: 0 auto;
+                color: #333;
             ">
 
-                <h2 style="color: #198754;">
+                <h2 style="
+                    color: #198754;
+                ">
                     Purchase Request Approved
                 </h2>
 
-                <p>Hello ${employee.name},</p>
+                <p>
+                    Hello ${employee.name || "Employee"},
+                </p>
 
                 <p>
                     Your purchase request has been
@@ -199,68 +335,69 @@ const sendApprovedEmail = async ({
 
                     <p>
                         <strong>Request Number:</strong>
-                        ${request.requestNumber}
+                        ${request.requestNumber || "—"}
                     </p>
 
                     <p>
                         <strong>Item / Service:</strong>
-                        ${request.itemDescription}
+                        ${request.itemDescription || "—"}
                     </p>
 
                     <p>
                         <strong>Quantity:</strong>
-                        ${request.quantity}
+                        ${request.quantity || "—"}
                     </p>
 
                     <p>
                         <strong>Estimated Cost:</strong>
-                        GHS ${Number(
+                        GHS ${formatCurrency(
                             request.estimatedCost
-                        ).toLocaleString(
-                            "en-GH",
-                            {
-                                minimumFractionDigits: 2
-                            }
                         )}
                     </p>
 
                     <p>
                         <strong>Approved By:</strong>
-                        ${manager.name}
+                        ${
+                            manager && manager.name
+                                ? manager.name
+                                : "Manager"
+                        }
                     </p>
 
                     <p>
                         <strong>Approval Date:</strong>
-                        ${
+                        ${formatDate(
                             request.approvedAt
-                                ? new Date(
-                                    request.approvedAt
-                                ).toLocaleString("en-GH")
-                                : "—"
-                        }
+                        )}
                     </p>
 
                 </div>
 
                 <p>
-                    You can log in to Safisana Purchase Ordering System
-                    to track the progress of your request.
+                    You can log in to the Safisana
+                    Purchase Ordering System to track
+                    the progress of your request.
                 </p>
 
                 <p>
                     Regards,<br>
-                    <strong>Safisana Purchase Ordering System</strong>
+                    <strong>
+                        Safisana Purchase Ordering System
+                    </strong>
                 </p>
 
             </div>
+
         `
     };
 
     const info =
-        await transporter.sendMail(mailOptions);
+        await transporter.sendMail(
+            mailOptions
+        );
 
     console.log(
-        `📧 Approval email sent to ${employee.email}`
+        `Approval email sent to ${employee.email}`
     );
 
     console.log(
@@ -269,6 +406,7 @@ const sendApprovedEmail = async ({
 
     return info;
 };
+
 
 // ==========================================
 // SEND REJECTION EMAIL TO EMPLOYEE
@@ -280,27 +418,58 @@ const sendRejectedEmail = async ({
     manager
 }) => {
 
+    if (!emailEnabled) {
+        throw new Error(
+            "Email service is disabled because SMTP credentials are not configured"
+        );
+    }
+
+    if (!employee || !employee.email) {
+
+        throw new Error(
+            "Employee email address is missing"
+        );
+
+    }
+
+    if (!request) {
+
+        throw new Error(
+            "Purchase request is missing"
+        );
+
+    }
+
     const mailOptions = {
 
-        from: `"Safisana Purchase Ordering System" <${process.env.EMAIL_USER}>`,
+        from:
+            process.env.EMAIL_FROM ||
+            `"Safisana Purchase Ordering System" <${process.env.EMAIL_USER}>`,
 
-        to: employee.email,
+        to:
+            employee.email,
 
         subject:
             `Purchase Request Rejected - ${request.requestNumber}`,
 
         html: `
+
             <div style="
                 font-family: Arial, sans-serif;
                 max-width: 650px;
-                margin: auto;
+                margin: 0 auto;
+                color: #333;
             ">
 
-                <h2 style="color: #dc3545;">
+                <h2 style="
+                    color: #dc3545;
+                ">
                     Purchase Request Rejected
                 </h2>
 
-                <p>Hello ${employee.name},</p>
+                <p>
+                    Hello ${employee.name || "Employee"},
+                </p>
 
                 <p>
                     Your purchase request has been
@@ -319,34 +488,33 @@ const sendRejectedEmail = async ({
 
                     <p>
                         <strong>Request Number:</strong>
-                        ${request.requestNumber}
+                        ${request.requestNumber || "—"}
                     </p>
 
                     <p>
                         <strong>Item / Service:</strong>
-                        ${request.itemDescription}
+                        ${request.itemDescription || "—"}
                     </p>
 
                     <p>
                         <strong>Quantity:</strong>
-                        ${request.quantity}
+                        ${request.quantity || "—"}
                     </p>
 
                     <p>
                         <strong>Estimated Cost:</strong>
-                        GHS ${Number(
+                        GHS ${formatCurrency(
                             request.estimatedCost
-                        ).toLocaleString(
-                            "en-GH",
-                            {
-                                minimumFractionDigits: 2
-                            }
                         )}
                     </p>
 
                     <p>
                         <strong>Rejected By:</strong>
-                        ${manager.name}
+                        ${
+                            manager && manager.name
+                                ? manager.name
+                                : "Manager"
+                        }
                     </p>
 
                     <p>
@@ -359,36 +527,38 @@ const sendRejectedEmail = async ({
 
                     <p>
                         <strong>Rejection Date:</strong>
-                        ${
+                        ${formatDate(
                             request.rejectedAt
-                                ? new Date(
-                                    request.rejectedAt
-                                ).toLocaleString("en-GH")
-                                : "—"
-                        }
+                        )}
                     </p>
 
                 </div>
 
                 <p>
-                    Please log in to Safisana Purchase Ordering System
-                    to review the request details.
+                    Please log in to the Safisana
+                    Purchase Ordering System to review
+                    the request details.
                 </p>
 
                 <p>
                     Regards,<br>
-                    <strong>Safisana Purchase Ordering System</strong>
+                    <strong>
+                        Safisana Purchase Ordering System
+                    </strong>
                 </p>
 
             </div>
+
         `
     };
 
     const info =
-        await transporter.sendMail(mailOptions);
+        await transporter.sendMail(
+            mailOptions
+        );
 
     console.log(
-        `📧 Rejection email sent to ${employee.email}`
+        `Rejection email sent to ${employee.email}`
     );
 
     console.log(
@@ -398,12 +568,17 @@ const sendRejectedEmail = async ({
     return info;
 };
 
+
 // ==========================================
 // EXPORT
 // ==========================================
 
 module.exports = {
+
     sendNewRequestEmail,
+
     sendApprovedEmail,
+
     sendRejectedEmail
+
 };

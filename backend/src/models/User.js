@@ -1,13 +1,20 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+
+// ==========================================
+// USER SCHEMA
+// ==========================================
 
 const userSchema = new mongoose.Schema(
     {
+        // ==========================================
+        // BASIC USER INFORMATION
+        // ==========================================
+
         name: {
             type: String,
             required: true,
-            trim: true,
-            minlength: 2,
-            maxlength: 100
+            trim: true
         },
 
         email: {
@@ -15,34 +22,49 @@ const userSchema = new mongoose.Schema(
             required: true,
             unique: true,
             lowercase: true,
-            trim: true,
-            maxlength: 254
+            trim: true
         },
 
-        password: {
+        department: {
             type: String,
             required: true,
-            minlength: 60
+            trim: true
         },
 
         role: {
             type: String,
             enum: [
-                "Employee",
-                "Manager",
-                "Admin"
+                "employee",
+                "manager",
+                "admin"
             ],
-            default: "Employee"
+            default: "employee"
         },
 
-        department: {
+        // ==========================================
+        // PASSWORD
+        // ==========================================
+
+        password: {
             type: String,
-            trim: true,
-            maxlength: 100,
-            default: ""
+            required: true,
+            minlength: 6
         },
 
-        active: {
+        // ==========================================
+        // FIRST-LOGIN PASSWORD CHANGE
+        // ==========================================
+
+        mustChangePassword: {
+            type: Boolean,
+            default: false
+        },
+
+        // ==========================================
+        // ACCOUNT STATUS
+        // ==========================================
+
+        isActive: {
             type: Boolean,
             default: true
         }
@@ -52,9 +74,48 @@ const userSchema = new mongoose.Schema(
     }
 );
 
+// ==========================================
+// HASH PASSWORD BEFORE SAVING
+// ==========================================
+
+userSchema.pre("save", async function (next) {
+    // Do not re-hash password if it has not changed
+    if (!this.isModified("password")) {
+        return next();
+    }
+
+    try {
+        const salt = await bcrypt.genSalt(10);
+
+        this.password = await bcrypt.hash(
+            this.password,
+            salt
+        );
+
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
+
+// ==========================================
+// COMPARE PASSWORD
+// ==========================================
+
+userSchema.methods.comparePassword = async function (
+    candidatePassword
+) {
+    return bcrypt.compare(
+        candidatePassword,
+        this.password
+    );
+};
+
+// ==========================================
+// EXPORT MODEL
+// ==========================================
+
 module.exports = mongoose.model(
     "User",
     userSchema
 );
-
-

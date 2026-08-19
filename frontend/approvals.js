@@ -42,7 +42,11 @@ function checkManagerAccess() {
     // ONLY MANAGERS CAN ACCESS APPROVAL PAGE
     // =================================================
 
-    if (user.role !== "Manager") {
+    const role =
+        String(user.role || "")
+            .toLowerCase();
+
+    if (role !== "manager") {
         alert("Manager access required.");
         window.location.href = "index.html";
         return;
@@ -58,7 +62,7 @@ function checkManagerAccess() {
 // =====================================================
 
 function displayManager(user) {
-    const name = user.name || "Manager";
+    const name = "Safi PO";
     const department = user.department || "Management";
     const initials = getInitials(name);
 

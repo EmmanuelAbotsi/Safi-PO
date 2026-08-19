@@ -59,20 +59,24 @@ function checkAdminAccess() {
     }
 
 
-    if (user.role !== "Admin") {
+    const role =
+        String(user.role || "")
+            .toLowerCase();
+
+    if (role !== "admin") {
 
         alert(
             "Administrator access required."
         );
 
 
-        if (user.role === "Manager") {
+        if (role === "manager") {
 
             window.location.href =
                 "approvals.html";
 
         } else if (
-            user.role === "Employee"
+            role === "employee"
         ) {
 
             window.location.href =
@@ -109,15 +113,10 @@ function checkAdminAccess() {
 function displayAdmin(user) {
 
     const name =
-        user.name || "Admin";
+        "Safi PO";
 
     const department =
-        user.department ||
-        "Administrator";
-
-    const initials =
-        getInitials(name);
-
+        "Safisana PO administrator";
 
     setText(
         "sidebarUserName",
@@ -130,11 +129,6 @@ function displayAdmin(user) {
     );
 
     setText(
-        "sidebarAvatar",
-        initials
-    );
-
-    setText(
         "topUserName",
         name
     );
@@ -142,11 +136,6 @@ function displayAdmin(user) {
     setText(
         "topUserDepartment",
         department
-    );
-
-    setText(
-        "topAvatar",
-        initials
     );
 
 }
@@ -637,20 +626,29 @@ function renderUsers() {
         allUsers.map(
             user => {
 
+                const displayName =
+                    String(user.role || "")
+                        .toLowerCase() === "admin"
+                        ? "Safi PO"
+                        : user.name || "Unknown";
+
+                const isActive =
+                    user.isActive === true;
+
                 const statusClass =
-                    user.active
+                    isActive
                         ? "approved"
                         : "rejected";
 
 
                 const statusText =
-                    user.active
+                    isActive
                         ? "Active"
                         : "Inactive";
 
 
                 const actionText =
-                    user.active
+                    isActive
                         ? "Deactivate"
                         : "Activate";
 
@@ -666,7 +664,7 @@ function renderUsers() {
                                     class="requester-avatar"
                                 >
                                     ${getInitials(
-                                        user.name
+                                        displayName
                                     )}
                                 </div>
 
@@ -676,8 +674,7 @@ function renderUsers() {
                                         class="requester-name"
                                     >
                                         ${escapeHtml(
-                                            user.name ||
-                                            "Unknown"
+                                            displayName
                                         )}
                                     </div>
 
@@ -744,13 +741,13 @@ function renderUsers() {
                             <button
                                 type="button"
                                 class="action-btn ${
-                                    user.active
+                                    isActive
                                         ? "reject-btn"
                                         : "approve-btn"
                                 }"
                                 onclick="toggleUserStatus(
                                     '${user._id}',
-                                    ${!user.active}
+                                    ${!isActive}
                                 )"
                                 style="margin-left:6px;"
                             >
@@ -774,14 +771,14 @@ function renderUsers() {
 
 function getRoleClass(role) {
 
-    if (role === "Admin") {
+    if (role === "admin") {
 
         return "approved";
 
     }
 
 
-    if (role === "Manager") {
+    if (role === "manager") {
 
         return "pending";
 
@@ -1091,15 +1088,15 @@ function createEditUserModal() {
                                 required
                             >
 
-                                <option value="Employee">
+                                <option value="employee">
                                     Employee
                                 </option>
 
-                                <option value="Manager">
+                                <option value="manager">
                                     Manager
                                 </option>
 
-                                <option value="Admin">
+                                <option value="admin">
                                     Admin
                                 </option>
 
@@ -1240,7 +1237,8 @@ function openEditUser(id) {
     document.getElementById(
         "editUserRole"
     ).value =
-        user.role || "Employee";
+        String(user.role || "employee")
+            .toLowerCase();
 
 
     document.getElementById(

@@ -22,6 +22,7 @@ Thumbs.db
 coverage/
 dist/
 build/
+backend/src/uploads/
 
 # Temporary files
 *.tmp

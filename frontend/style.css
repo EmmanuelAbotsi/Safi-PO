@@ -9,25 +9,25 @@
 }
 
 :root {
-    --primary: #1769aa;
-    --primary-dark: #0f4f82;
-    --primary-light: #eaf4fb;
+    --primary: #16804a;
+    --primary-dark: #0f5f37;
+    --primary-light: #e8f5ed;
 
     --text: #1f2937;
     --muted: #6b7280;
 
     --border: #e5e7eb;
-    --background: #f7f9fc;
+    --background: #f5faf7;
     --white: #ffffff;
 
-    --success: #16803c;
-    --success-bg: #eaf7ef;
+    --success: #16804a;
+    --success-bg: #e8f5ed;
 
-    --warning: #b56b00;
-    --warning-bg: #fff6e5;
+    --warning: #4f6f5b;
+    --warning-bg: #eef6f0;
 
-    --danger: #c62828;
-    --danger-bg: #fdecec;
+    --danger: #496052;
+    --danger-bg: #edf3ee;
 
     --radius: 8px;
 }
@@ -83,8 +83,9 @@ body {
     align-items: center;
     justify-content: center;
 
-    background: var(--primary);
-    color: white;
+    background: var(--white);
+    border: 1px solid #cfe7d8;
+    padding: 4px;
 
     border-radius: 7px;
 
@@ -92,6 +93,14 @@ body {
     font-weight: 700;
 
     margin-right: 10px;
+}
+
+.logo-mark img,
+.login-mark img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
 }
 
 .logo-text strong {
@@ -239,6 +248,14 @@ body {
 .avatar.small {
     width: 34px;
     height: 34px;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    border-radius: inherit;
 }
 
 .user-details {
@@ -1041,6 +1058,56 @@ textarea::placeholder {
 }
 
 /* =========================================================
+   MODALS
+   ========================================================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+    overflow-y: auto;
+
+    background: rgba(15, 95, 55, .38);
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    width: min(100%, 720px);
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+
+    background: var(--white);
+    border: 1px solid #cfe7d8;
+    border-radius: 12px;
+    box-shadow: 0 24px 70px rgba(15, 95, 55, .22);
+}
+
+.modal-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.close-modal {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+/* =========================================================
    STATISTICS
    ========================================================= */
 
@@ -1133,36 +1200,71 @@ textarea::placeholder {
     align-items: center;
     justify-content: center;
 
-    padding: 25px;
+    padding: 32px 20px;
 
-    background: #f5f7fa;
+    background:
+        radial-gradient(circle at 12% 18%, rgba(22, 128, 74, .12), transparent 30%),
+        radial-gradient(circle at 88% 82%, rgba(22, 128, 74, .08), transparent 28%),
+        var(--background);
 }
 
 .login-card {
     width: 100%;
-    max-width: 410px;
+    max-width: 440px;
 
-    background: white;
+    background: rgba(255, 255, 255, .96);
 
-    border: 1px solid var(--border);
+    border: 1px solid #d7eadc;
 
-    border-radius: 9px;
+    border-radius: 16px;
 
-    padding: 35px;
+    padding: 42px;
 
-    box-shadow: 0 8px 25px rgba(0, 0, 0, .05);
+    box-shadow: 0 24px 70px rgba(15, 95, 55, .14);
 }
 
 .login-header {
     text-align: center;
 
-    margin-bottom: 28px;
+    margin-bottom: 32px;
+}
+
+.login-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+
+    margin-bottom: 24px;
+
+    color: var(--primary);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+}
+
+.login-mark {
+    width: 34px;
+    height: 34px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 9px;
+
+    background: var(--white);
+    border: 1px solid #cfe7d8;
+    padding: 4px;
+
+    font-size: 18px;
+    letter-spacing: 0;
 }
 
 .login-header h1 {
-    font-size: 22px;
+    color: #163c29;
+    font-size: 30px;
+    line-height: 1.15;
 
-    margin-bottom: 5px;
+    margin-bottom: 9px;
 }
 
 .login-header p {
@@ -1172,7 +1274,7 @@ textarea::placeholder {
 }
 
 .login-card .form-group {
-    margin-bottom: 17px;
+    margin-bottom: 20px;
 }
 
 .login-card label {
@@ -1185,31 +1287,69 @@ textarea::placeholder {
 }
 
 .login-card input {
-    height: 45px;
+    width: 100%;
+    height: 48px;
 
-    padding: 0 13px;
+    padding: 0 15px;
+
+    border: 1px solid #cfe0d4;
+    border-radius: 8px;
+    background: #fbfefc;
+
+    color: var(--text);
+    font: inherit;
+    outline: none;
+    transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.login-card input::placeholder {
+    color: #9aaa9f;
+}
+
+.login-card input:focus {
+    border-color: var(--primary);
+    background: var(--white);
+    box-shadow: 0 0 0 4px rgba(22, 128, 74, .12);
 }
 
 .login-card .btn-primary {
     width: 100%;
 
-    height: 44px;
+    height: 48px;
 
     border: none;
 
-    border-radius: 6px;
+    border-radius: 8px;
 
     background: var(--primary);
 
     color: white;
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
     font-weight: 600;
 
     cursor: pointer;
+    transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
 }
 
 .login-card .btn-primary:hover {
     background: var(--primary-dark);
+    box-shadow: 0 10px 22px rgba(15, 95, 55, .2);
+    transform: translateY(-1px);
+}
+
+.login-card .btn-primary:active {
+    transform: translateY(0);
+}
+
+.login-card .btn-primary:disabled {
+    cursor: wait;
+    opacity: .7;
+    transform: none;
 }
 
 /* =========================================================
@@ -1426,4 +1566,82 @@ tr:hover td {
 }.status-badge.approved {
     background: #dcfce7;
     color: #15803d;
+}
+
+/* =========================================================
+   GREEN + WHITE BRAND OVERRIDES
+   ========================================================= */
+
+body {
+    background: var(--background);
+}
+
+.blue-card,
+.orange-card,
+.red-card {
+    background: var(--white) !important;
+    border-color: #cfe7d8 !important;
+}
+
+.blue-card,
+.blue-card .info-icon,
+.blue-card h3,
+.blue-card strong,
+.blue-card .workflow-item > span {
+    color: var(--primary) !important;
+}
+
+.orange-card,
+.red-card,
+.orange-title,
+.red-title {
+    color: #356247 !important;
+}
+
+.title-icon,
+.info-icon,
+.po-view,
+.po-status-issued,
+.po-status-delivered,
+.po-status-completed,
+.system-status {
+    background: var(--primary-light) !important;
+    color: var(--primary) !important;
+}
+
+.status-dot,
+.po-complete {
+    background: var(--primary) !important;
+    color: var(--white) !important;
+}
+
+.po-status-cancelled,
+.po-status-draft,
+.orange-card,
+.red-card {
+    background: #f0f7f2 !important;
+    color: #496052 !important;
+}
+
+.po-search:focus,
+.filter-select:focus,
+.search-box:focus-within,
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(22, 128, 74, .12) !important;
+}
+
+[style*="#2563eb"],
+[style*="#1d4ed8"],
+[style*="#0f4f82"] {
+    color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+[style*="#eaf2ff"],
+[style*="#eef4ff"],
+[style*="#eff6ff"] {
+    background: var(--primary-light) !important;
 }
