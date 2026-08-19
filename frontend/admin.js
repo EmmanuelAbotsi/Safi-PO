@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     checkAdminAccess();
 
 });
-
+ 
 
 // =====================================================
 // CHECK ADMIN ACCESS

@@ -78,24 +78,30 @@ const userSchema = new mongoose.Schema(
 // HASH PASSWORD BEFORE SAVING
 // ==========================================
 
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function () {
+
     // Do not re-hash password if it has not changed
     if (!this.isModified("password")) {
-        return next();
+        return;
     }
 
     try {
-        const salt = await bcrypt.genSalt(10);
 
-        this.password = await bcrypt.hash(
-            this.password,
-            salt
-        );
+        const salt =
+            await bcrypt.genSalt(10);
 
-        next();
+        this.password =
+            await bcrypt.hash(
+                this.password,
+                salt
+            );
+
     } catch (error) {
-        next(error);
+
+        throw error;
+
     }
+
 });
 
 // ==========================================
@@ -105,10 +111,12 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.comparePassword = async function (
     candidatePassword
 ) {
+
     return bcrypt.compare(
         candidatePassword,
         this.password
     );
+
 };
 
 // ==========================================
