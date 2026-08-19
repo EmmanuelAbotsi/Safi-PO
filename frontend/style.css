@@ -844,6 +844,13 @@ textarea::placeholder {
     border-top: 1px solid var(--border);
 }
 
+.export-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0 24px 24px;
+}
+
 .btn {
     min-height: 42px;
 

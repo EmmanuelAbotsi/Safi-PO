@@ -236,6 +236,11 @@ function setupEvents() {
         "create-user"
     );
 
+    setupNavigation(
+        "exportsNav",
+        "exports"
+    );
+
 
     const settingsNav =
         document.getElementById(
@@ -258,6 +263,36 @@ function setupEvents() {
             }
         );
 
+    }
+
+    const exportUsersButton =
+        document.getElementById("exportUsersBtn");
+
+    if (exportUsersButton) {
+        exportUsersButton.addEventListener(
+            "click",
+            () => exportCsv("users", allUsers)
+        );
+    }
+
+    const exportRequestsButton =
+        document.getElementById("exportRequestsBtn");
+
+    if (exportRequestsButton) {
+        exportRequestsButton.addEventListener(
+            "click",
+            () => exportCsv("purchase-requests", allRequests)
+        );
+    }
+
+    const exportAllButton =
+        document.getElementById("exportAllBtn");
+
+    if (exportAllButton) {
+        exportAllButton.addEventListener(
+            "click",
+            exportAllData
+        );
     }
 
 
@@ -2512,4 +2547,87 @@ function logout() {
     window.location.href =
         "login.html";
 
+}
+
+// =====================================================
+// DATA EXPORTS
+// =====================================================
+
+function exportCsv(fileName, records) {
+    if (!Array.isArray(records) || records.length === 0) {
+        showAdminMessage("error", "There is no data available to export yet.");
+        return;
+    }
+
+    const keys = Array.from(
+        new Set(
+            records.flatMap(record => Object.keys(record))
+        )
+    );
+
+    const rows = [
+        keys,
+        ...records.map(record =>
+            keys.map(key => flattenExportValue(record[key]))
+        )
+    ];
+
+    const csv = rows
+        .map(row => row.map(csvEscape).join(","))
+        .join("\r\n");
+
+    downloadFile(
+        `safi-po-${fileName}-${new Date().toISOString().slice(0, 10)}.csv`,
+        csv,
+        "text/csv;charset=utf-8"
+    );
+}
+
+function exportAllData() {
+    if (!allUsers.length && !allRequests.length) {
+        showAdminMessage("error", "There is no data available to export yet.");
+        return;
+    }
+
+    downloadFile(
+        `safi-po-all-data-${new Date().toISOString().slice(0, 10)}.json`,
+        JSON.stringify({
+            exportedAt: new Date().toISOString(),
+            users: allUsers,
+            purchaseRequests: allRequests
+        }, null, 2),
+        "application/json;charset=utf-8"
+    );
+}
+
+function flattenExportValue(value) {
+    if (value === null || value === undefined) {
+        return "";
+    }
+
+    if (typeof value === "object") {
+        return JSON.stringify(value);
+    }
+
+    return String(value);
+}
+
+function csvEscape(value) {
+    const text = String(value ?? "");
+    return /[",\r\n]/.test(text)
+        ? `"${text.replace(/"/g, '""')}"`
+        : text;
+}
+
+function downloadFile(fileName, content, type) {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
 }
