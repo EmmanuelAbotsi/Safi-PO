@@ -1757,4 +1757,12 @@ textarea:focus {
 [style*="#eef4ff"],
 [style*="#eff6ff"] {
     background: var(--primary-light) !important;
+}.delete-user-btn {
+    color: #b42318;
+    border: 1px solid rgba(180, 35, 24, 0.25);
+    background: rgba(180, 35, 24, 0.06);
+}
+
+.delete-user-btn:hover {
+    background: rgba(180, 35, 24, 0.12);
 }

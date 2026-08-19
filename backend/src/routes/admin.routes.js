@@ -104,13 +104,14 @@ router.get(
     async (req, res) => {
 
         try {
-
             const users =
-                await User.find()
-                    .select("-password")
-                    .sort({
-                        createdAt: -1
-                    });
+       await User.find({
+        isActive: true
+    })
+        .select("-password")
+        .sort({
+            createdAt: -1
+        });
 
             return res.json({
                 success: true,
@@ -140,14 +141,6 @@ router.get(
 // ==========================================
 // CREATE USER
 // POST /api/admin/users
-// ==========================================
-//
-// Admin-created users are required to change
-// their password after their first login.
-//
-// The password is NOT manually hashed here.
-// User.js handles hashing through its
-// pre-save middleware.
 // ==========================================
 
 router.post(
@@ -188,10 +181,6 @@ router.post(
             }
 
 
-            // ==========================================
-            // PASSWORD VALIDATION
-            // ==========================================
-
             if (
                 typeof password !== "string" ||
                 password.length < 8
@@ -205,10 +194,6 @@ router.post(
 
             }
 
-
-            // ==========================================
-            // NAME VALIDATION
-            // ==========================================
 
             if (
                 name.trim().length < 2
@@ -224,7 +209,7 @@ router.post(
 
 
             // ==========================================
-            // VALIDATE ROLE
+            // ROLE
             // ==========================================
 
             const allowedRoles = [
@@ -254,16 +239,12 @@ router.post(
 
 
             // ==========================================
-            // NORMALIZE EMAIL
+            // EMAIL
             // ==========================================
 
             const normalizedEmail =
                 email.trim().toLowerCase();
 
-
-            // ==========================================
-            // VALIDATE EMAIL
-            // ==========================================
 
             const isValidEmail =
                 /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
@@ -281,10 +262,6 @@ router.post(
 
             }
 
-
-            // ==========================================
-            // CHECK EMAIL
-            // ==========================================
 
             const existingUser =
                 await User.findOne({
@@ -306,19 +283,6 @@ router.post(
             // ==========================================
             // CREATE USER
             // ==========================================
-            //
-            // IMPORTANT:
-            //
-            // We pass the plain temporary password
-            // to User.create().
-            //
-            // User.js pre-save middleware automatically
-            // hashes it before MongoDB stores it.
-            //
-            // mustChangePassword = true means the user
-            // must change this temporary password after
-            // their first successful login.
-            // ==========================================
 
             const user =
                 await User.create({
@@ -336,9 +300,7 @@ router.post(
                         selectedRole,
 
                     department:
-                        department
-                            ? department.trim()
-                            : "",
+                        department.trim(),
 
                     mustChangePassword:
                         true,
@@ -348,10 +310,6 @@ router.post(
 
                 });
 
-
-            // ==========================================
-            // RESPONSE
-            // ==========================================
 
             return res.status(201).json({
 
@@ -377,8 +335,6 @@ router.post(
                     department:
                         user.department,
 
-                    // Keep "active" for existing
-                    // frontend compatibility.
                     active:
                         user.isActive,
 
@@ -432,10 +388,6 @@ router.patch(
             } = req.body;
 
 
-            // ==========================================
-            // VALIDATION
-            // ==========================================
-
             if (
                 !name ||
                 !email ||
@@ -451,10 +403,6 @@ router.patch(
 
             }
 
-
-            // ==========================================
-            // VALIDATE ROLE
-            // ==========================================
 
             const allowedRoles = [
                 "employee",
@@ -482,10 +430,6 @@ router.patch(
             }
 
 
-            // ==========================================
-            // FIND USER
-            // ==========================================
-
             const user =
                 await User.findById(
                     req.params.id
@@ -503,17 +447,9 @@ router.patch(
             }
 
 
-            // ==========================================
-            // NORMALIZE EMAIL
-            // ==========================================
-
             const normalizedEmail =
                 email.trim().toLowerCase();
 
-
-            // ==========================================
-            // VALIDATE EMAIL
-            // ==========================================
 
             const isValidEmail =
                 /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
@@ -531,11 +467,6 @@ router.patch(
 
             }
 
-
-            // ==========================================
-            // CHECK WHETHER EMAIL BELONGS
-            // TO ANOTHER USER
-            // ==========================================
 
             const existingUser =
                 await User.findOne({
@@ -557,19 +488,22 @@ router.patch(
             }
 
 
-            // ==========================================
-            // UPDATE USER
-            // ==========================================
-
             const updatedUser =
                 await User.findByIdAndUpdate(
                     user._id,
                     {
                         $set: {
-                            name: name.trim(),
-                            email: normalizedEmail,
-                            department: department.trim(),
-                            role: selectedRole
+                            name:
+                                name.trim(),
+
+                            email:
+                                normalizedEmail,
+
+                            department:
+                                department.trim(),
+
+                            role:
+                                selectedRole
                         }
                     },
                     {
@@ -578,10 +512,6 @@ router.patch(
                     }
                 ).select("-password");
 
-
-            // ==========================================
-            // RESPONSE
-            // ==========================================
 
             return res.json({
 
@@ -640,12 +570,21 @@ router.patch(
 
 
 // ==========================================
-// ACTIVATE / DEACTIVATE USER
-// PATCH /api/admin/users/:id/status
+// RESET USER PASSWORD
+// PATCH /api/admin/users/:id/password
+// ==========================================
+//
+// The admin sets a temporary password.
+//
+// User.js automatically hashes the password
+// when user.save() is called.
+//
+// The user will be required to change the
+// temporary password after logging in.
 // ==========================================
 
 router.patch(
-    "/users/:id/status",
+    "/users/:id/password",
     authenticate,
     requireAdmin,
     async (req, res) => {
@@ -653,22 +592,23 @@ router.patch(
         try {
 
             const {
-                active
+                password
             } = req.body;
 
 
             // ==========================================
-            // VALIDATE ACTIVE VALUE
+            // VALIDATE PASSWORD
             // ==========================================
 
             if (
-                typeof active !== "boolean"
+                typeof password !== "string" ||
+                password.length < 8
             ) {
 
                 return res.status(400).json({
                     success: false,
                     message:
-                        "Active status must be true or false"
+                        "Password must be at least 8 characters long"
                 });
 
             }
@@ -696,8 +636,120 @@ router.patch(
 
 
             // ==========================================
-            // PREVENT ADMIN FROM DEACTIVATING
-            // THEMSELVES
+            // SET PASSWORD
+            // ==========================================
+
+            user.password =
+                password;
+
+            user.mustChangePassword =
+                true;
+
+
+            // ==========================================
+            // SAVE
+            // ==========================================
+
+            // User.js pre-save middleware
+            // automatically hashes the password.
+
+            await user.save();
+
+
+            return res.json({
+
+                success: true,
+
+                message:
+                    "Password reset successfully. The user must change the temporary password after login.",
+
+                data: {
+
+                    id:
+                        user._id,
+
+                    name:
+                        user.name,
+
+                    email:
+                        user.email,
+
+                    mustChangePassword:
+                        user.mustChangePassword
+
+                }
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "Admin password reset error:",
+                error
+            );
+
+            return res.status(500).json({
+                success: false,
+                message:
+                    "Failed to reset user password"
+            });
+
+        }
+
+    }
+);
+
+
+// ==========================================
+// ACTIVATE / DEACTIVATE USER
+// PATCH /api/admin/users/:id/status
+// ==========================================
+
+router.patch(
+    "/users/:id/status",
+    authenticate,
+    requireAdmin,
+    async (req, res) => {
+
+        try {
+
+            const {
+                active
+            } = req.body;
+
+
+            if (
+                typeof active !== "boolean"
+            ) {
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Active status must be true or false"
+                });
+
+            }
+
+
+            const user =
+                await User.findById(
+                    req.params.id
+                );
+
+
+            if (!user) {
+
+                return res.status(404).json({
+                    success: false,
+                    message:
+                        "User not found"
+                });
+
+            }
+
+
+            // ==========================================
+            // PREVENT SELF-DEACTIVATION
             // ==========================================
 
             if (
@@ -715,16 +767,13 @@ router.patch(
             }
 
 
-            // ==========================================
-            // UPDATE STATUS
-            // ==========================================
-
             const updatedUser =
                 await User.findByIdAndUpdate(
                     user._id,
                     {
                         $set: {
-                            isActive: active
+                            isActive:
+                                active
                         }
                     },
                     {
@@ -733,10 +782,6 @@ router.patch(
                     }
                 ).select("-password");
 
-
-            // ==========================================
-            // RESPONSE
-            // ==========================================
 
             return res.json({
 
@@ -857,7 +902,131 @@ router.get(
 
     }
 );
+// ==========================================
+// DELETE USER
+// DELETE /api/admin/users/:id
+// ==========================================
+//
+// Permanently deletes a user only if they
+// have no purchase requests associated with them.
+//
+// Admin cannot delete their own account.
+// ==========================================
 
+router.delete(
+    "/users/:id",
+    authenticate,
+    requireAdmin,
+    async (req, res) => {
+
+        try {
+
+            // ==========================================
+            // PREVENT ADMIN FROM DELETING THEMSELVES
+            // ==========================================
+
+            if (
+                req.params.id === req.user.id
+            ) {
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "You cannot delete your own account"
+                });
+
+            }
+
+
+            // ==========================================
+            // FIND USER
+            // ==========================================
+
+            const user =
+                await User.findById(
+                    req.params.id
+                );
+
+
+            if (!user) {
+
+                return res.status(404).json({
+                    success: false,
+                    message:
+                        "User not found"
+                });
+
+            }
+
+
+            // ==========================================
+            // CHECK PURCHASE REQUESTS
+            // ==========================================
+
+            const purchaseRequestCount =
+                await PurchaseRequest.countDocuments({
+                    requesterId: user._id
+                });
+
+
+            if (
+                purchaseRequestCount > 0
+            ) {
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        `This user cannot be deleted because they have ${purchaseRequestCount} purchase request(s). Deactivate the account instead.`
+                });
+
+            }
+
+
+            // ==========================================
+            // DELETE USER
+            // ==========================================
+
+            await User.findByIdAndDelete(
+                user._id
+            );
+
+
+            // ==========================================
+            // RESPONSE
+            // ==========================================
+
+            return res.json({
+
+                success: true,
+
+                message:
+                    `User ${user.name} deleted successfully`,
+
+                data: {
+                    id: user._id,
+                    name: user.name,
+                    email: user.email
+                }
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "Admin delete user error:",
+                error
+            );
+
+            return res.status(500).json({
+                success: false,
+                message:
+                    "Failed to delete user"
+            });
+
+        }
+
+    }
+);
 
 // ==========================================
 // EXPORT ROUTER

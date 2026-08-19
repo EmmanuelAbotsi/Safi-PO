@@ -9,11 +9,9 @@ let allRequests = [];
 // =====================================================
 
 document.addEventListener("DOMContentLoaded", () => {
-
     checkAdminAccess();
-
 });
- 
+
 
 // =====================================================
 // CHECK ADMIN ACCESS
@@ -21,88 +19,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function checkAdminAccess() {
 
-    const token =
-        localStorage.getItem("token");
-
-    const userData =
-        localStorage.getItem("user");
-
+    const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user");
 
     if (!token || !userData) {
-
-        window.location.href =
-            "login.html";
-
+        window.location.href = "login.html";
         return;
-
     }
-
 
     let user;
 
     try {
-
-        user =
-            JSON.parse(userData);
-
+        user = JSON.parse(userData);
     } catch (error) {
 
-        console.error(
-            "User data error:",
-            error
-        );
+        console.error("User data error:", error);
 
         logout();
 
         return;
-
     }
 
-
-    const role =
-        String(user.role || "")
-            .toLowerCase();
+    const role = String(user.role || "").toLowerCase();
 
     if (role !== "admin") {
 
-        alert(
-            "Administrator access required."
-        );
-
+        alert("Administrator access required.");
 
         if (role === "manager") {
 
-            window.location.href =
-                "approvals.html";
+            window.location.href = "approvals.html";
 
-        } else if (
-            role === "employee"
-        ) {
+        } else if (role === "employee") {
 
-            window.location.href =
-                "index.html";
+            window.location.href = "index.html";
 
         } else {
 
             logout();
-
         }
 
         return;
-
     }
-
 
     displayAdmin(user);
 
     setupEvents();
 
     loadAdminSummary();
-
     loadUsers();
-
     loadPurchaseRequests();
-
 }
 
 
@@ -112,32 +78,14 @@ function checkAdminAccess() {
 
 function displayAdmin(user) {
 
-    const name =
-        "Safi PO";
+    const name = "Safi PO";
+    const department = "Safisana PO administrator";
 
-    const department =
-        "Safisana PO administrator";
+    setText("sidebarUserName", name);
+    setText("sidebarDepartment", department);
 
-    setText(
-        "sidebarUserName",
-        name
-    );
-
-    setText(
-        "sidebarDepartment",
-        department
-    );
-
-    setText(
-        "topUserName",
-        name
-    );
-
-    setText(
-        "topUserDepartment",
-        department
-    );
-
+    setText("topUserName", name);
+    setText("topUserDepartment", department);
 }
 
 
@@ -148,10 +96,7 @@ function displayAdmin(user) {
 function setupEvents() {
 
     const logoutButton =
-        document.getElementById(
-            "logoutBtn"
-        );
-
+        document.getElementById("logoutBtn");
 
     if (logoutButton) {
 
@@ -159,15 +104,11 @@ function setupEvents() {
             "click",
             logout
         );
-
     }
 
 
     const createUserForm =
-        document.getElementById(
-            "createUserForm"
-        );
-
+        document.getElementById("createUserForm");
 
     if (createUserForm) {
 
@@ -175,15 +116,11 @@ function setupEvents() {
             "submit",
             createUser
         );
-
     }
 
 
     const refreshRequests =
-        document.getElementById(
-            "refreshRequests"
-        );
-
+        document.getElementById("refreshRequests");
 
     if (refreshRequests) {
 
@@ -191,15 +128,11 @@ function setupEvents() {
             "click",
             loadPurchaseRequests
         );
-
     }
 
 
     const openCreateUser =
-        document.getElementById(
-            "openCreateUser"
-        );
-
+        document.getElementById("openCreateUser");
 
     if (openCreateUser) {
 
@@ -208,16 +141,13 @@ function setupEvents() {
             () => {
 
                 document
-                    .getElementById(
-                        "create-user"
-                    )
+                    .getElementById("create-user")
                     ?.scrollIntoView({
                         behavior: "smooth"
                     });
 
             }
         );
-
     }
 
 
@@ -243,10 +173,7 @@ function setupEvents() {
 
 
     const settingsNav =
-        document.getElementById(
-            "settingsNav"
-        );
-
+        document.getElementById("settingsNav");
 
     if (settingsNav) {
 
@@ -259,36 +186,52 @@ function setupEvents() {
                 alert(
                     "System settings will be available here."
                 );
-
             }
         );
-
     }
+
+
+    // =================================================
+    // EXPORT BUTTONS
+    // =================================================
 
     const exportUsersButton =
         document.getElementById("exportUsersBtn");
 
     if (exportUsersButton) {
+
         exportUsersButton.addEventListener(
             "click",
-            () => exportCsv("users", allUsers)
+            () =>
+                exportCsv(
+                    "users",
+                    allUsers
+                )
         );
     }
+
 
     const exportRequestsButton =
         document.getElementById("exportRequestsBtn");
 
     if (exportRequestsButton) {
+
         exportRequestsButton.addEventListener(
             "click",
-            () => exportCsv("purchase-requests", allRequests)
+            () =>
+                exportCsv(
+                    "purchase-requests",
+                    allRequests
+                )
         );
     }
+
 
     const exportAllButton =
         document.getElementById("exportAllBtn");
 
     if (exportAllButton) {
+
         exportAllButton.addEventListener(
             "click",
             exportAllData
@@ -296,8 +239,13 @@ function setupEvents() {
     }
 
 
+    // =================================================
+    // CREATE MODALS
+    // =================================================
+
     createEditUserModal();
 
+    createResetPasswordModal();
 }
 
 
@@ -305,23 +253,14 @@ function setupEvents() {
 // NAVIGATION
 // =====================================================
 
-function setupNavigation(
-    buttonId,
-    targetId
-) {
+function setupNavigation(buttonId, targetId) {
 
     const button =
-        document.getElementById(
-            buttonId
-        );
-
+        document.getElementById(buttonId);
 
     if (!button) {
-
         return;
-
     }
-
 
     button.addEventListener(
         "click",
@@ -330,16 +269,13 @@ function setupNavigation(
             event.preventDefault();
 
             document
-                .getElementById(
-                    targetId
-                )
+                .getElementById(targetId)
                 ?.scrollIntoView({
                     behavior: "smooth"
                 });
 
         }
     );
-
 }
 
 
@@ -350,10 +286,7 @@ function setupNavigation(
 function getAuthHeaders() {
 
     const token =
-        localStorage.getItem(
-            "token"
-        );
-
+        localStorage.getItem("token");
 
     return {
 
@@ -362,9 +295,7 @@ function getAuthHeaders() {
 
         "Content-Type":
             "application/json"
-
     };
-
 }
 
 
@@ -386,20 +317,15 @@ async function loadAdminSummary() {
             );
 
 
-        if (
-            response.status === 401
-        ) {
+        if (response.status === 401) {
 
             logout();
 
             return;
-
         }
 
 
-        if (
-            response.status === 403
-        ) {
+        if (response.status === 403) {
 
             alert(
                 "Administrator access required."
@@ -409,7 +335,6 @@ async function loadAdminSummary() {
                 "index.html";
 
             return;
-
         }
 
 
@@ -426,7 +351,6 @@ async function loadAdminSummary() {
                 result.message ||
                 "Unable to load admin summary."
             );
-
         }
 
 
@@ -485,9 +409,7 @@ async function loadAdminSummary() {
             "error",
             error.message
         );
-
     }
-
 }
 
 
@@ -502,11 +424,8 @@ async function loadUsers() {
             "usersTableBody"
         );
 
-
     if (!tableBody) {
-
         return;
-
     }
 
 
@@ -531,20 +450,15 @@ async function loadUsers() {
             );
 
 
-        if (
-            response.status === 401
-        ) {
+        if (response.status === 401) {
 
             logout();
 
             return;
-
         }
 
 
-        if (
-            response.status === 403
-        ) {
+        if (response.status === 403) {
 
             alert(
                 "Administrator access required."
@@ -554,7 +468,6 @@ async function loadUsers() {
                 "index.html";
 
             return;
-
         }
 
 
@@ -571,13 +484,22 @@ async function loadUsers() {
                 result.message ||
                 "Unable to load users."
             );
-
         }
 
 
+        /*
+         * Only active users are displayed.
+         *
+         * Deactivated accounts remain in the
+         * database but are hidden from this table.
+         */
+
         allUsers =
             Array.isArray(result.data)
-                ? result.data
+                ? result.data.filter(
+                    user =>
+                        user.isActive === true
+                )
                 : [];
 
 
@@ -593,7 +515,10 @@ async function loadUsers() {
 
         tableBody.innerHTML = `
             <tr>
-                <td colspan="6" class="empty-state">
+                <td
+                    colspan="6"
+                    class="empty-state"
+                >
 
                     <div class="empty-icon">
                         ⚠
@@ -612,9 +537,7 @@ async function loadUsers() {
                 </td>
             </tr>
         `;
-
     }
-
 }
 
 
@@ -629,11 +552,8 @@ function renderUsers() {
             "usersTableBody"
         );
 
-
     if (!tableBody) {
-
         return;
-
     }
 
 
@@ -645,15 +565,20 @@ function renderUsers() {
                     colspan="6"
                     class="empty-state"
                 >
+
+                    <div class="empty-icon">
+                        ✓
+                    </div>
+
                     <strong>
-                        No users found
+                        No active users found
                     </strong>
+
                 </td>
             </tr>
         `;
 
         return;
-
     }
 
 
@@ -666,26 +591,6 @@ function renderUsers() {
                         .toLowerCase() === "admin"
                         ? "Safi PO"
                         : user.name || "Unknown";
-
-                const isActive =
-                    user.isActive === true;
-
-                const statusClass =
-                    isActive
-                        ? "approved"
-                        : "rejected";
-
-
-                const statusText =
-                    isActive
-                        ? "Active"
-                        : "Inactive";
-
-
-                const actionText =
-                    isActive
-                        ? "Deactivate"
-                        : "Activate";
 
 
                 return `
@@ -755,9 +660,9 @@ function renderUsers() {
                         <td>
 
                             <span
-                                class="status ${statusClass}"
+                                class="status approved"
                             >
-                                ${statusText}
+                                Active
                             </span>
 
                         </td>
@@ -773,20 +678,34 @@ function renderUsers() {
                                 Edit
                             </button>
 
+
                             <button
                                 type="button"
-                                class="action-btn ${
-                                    isActive
-                                        ? "reject-btn"
-                                        : "approve-btn"
-                                }"
-                                onclick="toggleUserStatus(
-                                    '${user._id}',
-                                    ${!isActive}
-                                )"
+                                class="action-btn"
+                                onclick="openResetPassword('${user._id}')"
                                 style="margin-left:6px;"
                             >
-                                ${actionText}
+                                Reset Password
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="action-btn delete-user-btn"
+                                onclick="deleteUser('${user._id}')"
+                                style="margin-left:6px;"
+                            >
+                                Delete
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="action-btn reject-btn"
+                                onclick="toggleUserStatus('${user._id}', false)"
+                                style="margin-left:6px;"
+                            >
+                                Deactivate
                             </button>
 
                         </td>
@@ -796,7 +715,6 @@ function renderUsers() {
 
             }
         ).join("");
-
 }
 
 
@@ -806,22 +724,19 @@ function renderUsers() {
 
 function getRoleClass(role) {
 
-    if (role === "admin") {
+    const normalizedRole =
+        String(role || "")
+            .toLowerCase();
 
+    if (normalizedRole === "admin") {
         return "approved";
-
     }
 
-
-    if (role === "manager") {
-
+    if (normalizedRole === "manager") {
         return "pending";
-
     }
-
 
     return "procurement";
-
 }
 
 
@@ -873,7 +788,8 @@ async function createUser(event) {
     if (
         !name ||
         !email ||
-        !password
+        !password ||
+        !department
     ) {
 
         showUserMessage(
@@ -882,7 +798,17 @@ async function createUser(event) {
         );
 
         return;
+    }
 
+
+    if (password.length < 8) {
+
+        showUserMessage(
+            "error",
+            "Password must be at least 8 characters long."
+        );
+
+        return;
     }
 
 
@@ -892,7 +818,6 @@ async function createUser(event) {
 
         button.innerHTML =
             "<span>Creating...</span><b>→</b>";
-
     }
 
 
@@ -904,6 +829,7 @@ async function createUser(event) {
                 {
                     method: "POST",
                     headers: getAuthHeaders(),
+
                     body:
                         JSON.stringify({
                             name,
@@ -916,14 +842,11 @@ async function createUser(event) {
             );
 
 
-        if (
-            response.status === 401
-        ) {
+        if (response.status === 401) {
 
             logout();
 
             return;
-
         }
 
 
@@ -940,7 +863,6 @@ async function createUser(event) {
                 result.message ||
                 "Unable to create user."
             );
-
         }
 
 
@@ -981,11 +903,8 @@ async function createUser(event) {
 
             button.innerHTML =
                 "<span>Create User</span><b>→</b>";
-
         }
-
     }
-
 }
 
 
@@ -1000,23 +919,16 @@ function createEditUserModal() {
             "editUserModal"
         )
     ) {
-
         return;
-
     }
 
 
     const modal =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
 
-    modal.id =
-        "editUserModal";
-
-    modal.className =
-        "modal";
+    modal.id = "editUserModal";
+    modal.className = "modal";
 
 
     modal.innerHTML = `
@@ -1056,9 +968,7 @@ function createEditUserModal() {
 
             <div class="modal-body">
 
-                <form
-                    id="editUserForm"
-                >
+                <form id="editUserForm">
 
                     <input
                         type="hidden"
@@ -1186,13 +1096,10 @@ function createEditUserModal() {
             </div>
 
         </div>
-
     `;
 
 
-    document.body.appendChild(
-        modal
-    );
+    document.body.appendChild(modal);
 
 
     const form =
@@ -1211,17 +1118,12 @@ function createEditUserModal() {
         "click",
         event => {
 
-            if (
-                event.target === modal
-            ) {
-
+            if (event.target === modal) {
                 closeEditUser();
-
             }
 
         }
     );
-
 }
 
 
@@ -1239,9 +1141,7 @@ function openEditUser(id) {
 
 
     if (!user) {
-
         return;
-
     }
 
 
@@ -1272,22 +1172,20 @@ function openEditUser(id) {
     document.getElementById(
         "editUserRole"
     ).value =
-        String(user.role || "employee")
-            .toLowerCase();
+        String(
+            user.role ||
+            "employee"
+        ).toLowerCase();
 
 
     document.getElementById(
         "editUserMessage"
-    ).textContent =
-        "";
+    ).textContent = "";
 
 
     document.getElementById(
         "editUserModal"
-    ).classList.add(
-        "show"
-    );
-
+    ).classList.add("show");
 }
 
 
@@ -1305,12 +1203,8 @@ function closeEditUser() {
 
     if (modal) {
 
-        modal.classList.remove(
-            "show"
-        );
-
+        modal.classList.remove("show");
     }
-
 }
 
 
@@ -1362,16 +1256,16 @@ async function saveEditedUser(event) {
     if (
         !id ||
         !name ||
-        !email
+        !email ||
+        !department
     ) {
 
         showEditUserMessage(
             "error",
-            "Name and email are required."
+            "Name, email and department are required."
         );
 
         return;
-
     }
 
 
@@ -1381,7 +1275,6 @@ async function saveEditedUser(event) {
 
         button.innerHTML =
             "<span>Saving...</span><b>...</b>";
-
     }
 
 
@@ -1398,26 +1291,20 @@ async function saveEditedUser(event) {
 
                     body:
                         JSON.stringify({
-
                             name,
                             email,
                             department,
                             role
-
                         })
-
                 }
             );
 
 
-        if (
-            response.status === 401
-        ) {
+        if (response.status === 401) {
 
             logout();
 
             return;
-
         }
 
 
@@ -1434,7 +1321,6 @@ async function saveEditedUser(event) {
                 result.message ||
                 "Unable to update user."
             );
-
         }
 
 
@@ -1445,15 +1331,12 @@ async function saveEditedUser(event) {
 
 
         await loadUsers();
-
         await loadAdminSummary();
 
 
         setTimeout(
             () => {
-
                 closeEditUser();
-
             },
             800
         );
@@ -1479,11 +1362,8 @@ async function saveEditedUser(event) {
 
             button.innerHTML =
                 "<span>Save Changes</span><b>✓</b>";
-
         }
-
     }
-
 }
 
 
@@ -1491,10 +1371,7 @@ async function saveEditedUser(event) {
 // EDIT USER MESSAGE
 // =====================================================
 
-function showEditUserMessage(
-    type,
-    text
-) {
+function showEditUserMessage(type, text) {
 
     const message =
         document.getElementById(
@@ -1503,9 +1380,7 @@ function showEditUserMessage(
 
 
     if (!message) {
-
         return;
-
     }
 
 
@@ -1515,18 +1390,306 @@ function showEditUserMessage(
 
     message.textContent =
         text;
-
 }
 
 
 // =====================================================
-// ACTIVATE / DEACTIVATE USER
+// CREATE RESET PASSWORD MODAL
 // =====================================================
 
-async function toggleUserStatus(
-    id,
-    active
-) {
+function createResetPasswordModal() {
+
+    if (
+        document.getElementById(
+            "resetPasswordModal"
+        )
+    ) {
+        return;
+    }
+
+
+    const modal =
+        document.createElement("div");
+
+
+    modal.id =
+        "resetPasswordModal";
+
+    modal.className =
+        "modal";
+
+
+    modal.innerHTML = `
+
+        <div
+            class="modal-content"
+            style="
+                max-width:520px;
+                padding:28px;
+            "
+        >
+
+            <div class="modal-top">
+
+                <div>
+
+                    <small>
+                        USER MANAGEMENT
+                    </small>
+
+                    <h2>
+                        Reset Password
+                    </h2>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="close-modal"
+                    onclick="closeResetPassword()"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <div
+                    style="
+                        margin-bottom:20px;
+                        padding:14px;
+                        border-radius:10px;
+                        background:rgba(0,0,0,0.04);
+                    "
+                >
+
+                    <div
+                        style="
+                            font-size:12px;
+                            opacity:0.65;
+                            margin-bottom:5px;
+                        "
+                    >
+                        USER
+                    </div>
+
+                    <strong id="resetPasswordUserName">
+                        —
+                    </strong>
+
+                    <div
+                        id="resetPasswordUserEmail"
+                        style="
+                            font-size:13px;
+                            margin-top:3px;
+                            opacity:0.7;
+                        "
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <form id="resetPasswordForm">
+
+                    <input
+                        type="hidden"
+                        id="resetPasswordUserId"
+                    >
+
+
+                    <div class="form-group">
+
+                        <label for="resetNewPassword">
+                            New Temporary Password
+                        </label>
+
+                        <div
+                            style="
+                                position:relative;
+                            "
+                        >
+
+                            <input
+                                type="password"
+                                id="resetNewPassword"
+                                minlength="8"
+                                autocomplete="new-password"
+                                required
+                                style="
+                                    padding-right:85px;
+                                "
+                            >
+
+                            <button
+                                type="button"
+                                id="toggleResetPassword"
+                                style="
+                                    position:absolute;
+                                    right:8px;
+                                    top:50%;
+                                    transform:translateY(-50%);
+                                    border:none;
+                                    background:transparent;
+                                    cursor:pointer;
+                                    font-size:12px;
+                                    opacity:0.7;
+                                "
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                        <small
+                            style="
+                                display:block;
+                                margin-top:6px;
+                                opacity:0.65;
+                            "
+                        >
+                            Minimum 8 characters.
+                        </small>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="resetConfirmPassword">
+                            Confirm Temporary Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="resetConfirmPassword"
+                            minlength="8"
+                            autocomplete="new-password"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div
+                        style="
+                            margin:16px 0;
+                            padding:14px;
+                            border-radius:10px;
+                            border:1px solid rgba(0,0,0,0.08);
+                            font-size:13px;
+                            line-height:1.5;
+                        "
+                    >
+
+                        <strong>
+                            Important
+                        </strong>
+
+                        <div style="margin-top:5px;">
+                            The user will be required to change
+                            this temporary password after
+                            logging in.
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="resetPasswordMessage"
+                        class="message"
+                    >
+                    </div>
+
+
+                    <div
+                        class="form-actions"
+                        style="margin-top:20px;"
+                    >
+
+                        <button
+                            type="button"
+                            class="dashboard-link"
+                            onclick="closeResetPassword()"
+                        >
+                            Cancel
+                        </button>
+
+
+                        <button
+                            type="submit"
+                            class="submit-btn"
+                            id="resetPasswordBtn"
+                        >
+
+                            <span>
+                                Reset Password
+                            </span>
+
+                            <b>
+                                ✓
+                            </b>
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    `;
+
+
+    document.body.appendChild(modal);
+
+
+    const form =
+        document.getElementById(
+            "resetPasswordForm"
+        );
+
+
+    form.addEventListener(
+        "submit",
+        resetUserPassword
+    );
+
+
+    const toggleButton =
+        document.getElementById(
+            "toggleResetPassword"
+        );
+
+
+    toggleButton.addEventListener(
+        "click",
+        toggleResetPasswordVisibility
+    );
+
+
+    modal.addEventListener(
+        "click",
+        event => {
+
+            if (event.target === modal) {
+                closeResetPassword();
+            }
+
+        }
+    );
+}
+
+
+// =====================================================
+// OPEN RESET PASSWORD
+// =====================================================
+
+function openResetPassword(id) {
 
     const user =
         allUsers.find(
@@ -1537,8 +1700,445 @@ async function toggleUserStatus(
 
     if (!user) {
 
-        return;
+        showAdminMessage(
+            "error",
+            "User could not be found."
+        );
 
+        return;
+    }
+
+
+    const currentUser =
+        JSON.parse(
+            localStorage.getItem("user") ||
+            "{}"
+        );
+
+
+    if (
+        currentUser._id &&
+        String(currentUser._id) ===
+            String(user._id)
+    ) {
+
+        showAdminMessage(
+            "error",
+            "You cannot reset your own password from this screen."
+        );
+
+        return;
+    }
+
+
+    document.getElementById(
+        "resetPasswordUserId"
+    ).value =
+        user._id;
+
+
+    document.getElementById(
+        "resetPasswordUserName"
+    ).textContent =
+        user.name || "Unknown User";
+
+
+    document.getElementById(
+        "resetPasswordUserEmail"
+    ).textContent =
+        user.email || "No email";
+
+
+    document.getElementById(
+        "resetNewPassword"
+    ).value = "";
+
+
+    document.getElementById(
+        "resetConfirmPassword"
+    ).value = "";
+
+
+    document.getElementById(
+        "resetPasswordMessage"
+    ).className =
+        "message";
+
+
+    document.getElementById(
+        "resetPasswordMessage"
+    ).textContent = "";
+
+
+    document.getElementById(
+        "toggleResetPassword"
+    ).textContent =
+        "Show";
+
+
+    document.getElementById(
+        "resetNewPassword"
+    ).type =
+        "password";
+
+
+    document.getElementById(
+        "resetConfirmPassword"
+    ).type =
+        "password";
+
+
+    document.getElementById(
+        "resetPasswordModal"
+    ).classList.add("show");
+
+
+    setTimeout(
+        () => {
+
+            document
+                .getElementById(
+                    "resetNewPassword"
+                )
+                ?.focus();
+
+        },
+        100
+    );
+}
+
+
+// =====================================================
+// CLOSE RESET PASSWORD
+// =====================================================
+
+function closeResetPassword() {
+
+    const modal =
+        document.getElementById(
+            "resetPasswordModal"
+        );
+
+
+    if (modal) {
+
+        modal.classList.remove("show");
+    }
+}
+
+
+// =====================================================
+// TOGGLE PASSWORD VISIBILITY
+// =====================================================
+
+function toggleResetPasswordVisibility() {
+
+    const password =
+        document.getElementById(
+            "resetNewPassword"
+        );
+
+
+    const confirmPassword =
+        document.getElementById(
+            "resetConfirmPassword"
+        );
+
+
+    const button =
+        document.getElementById(
+            "toggleResetPassword"
+        );
+
+
+    if (password.type === "password") {
+
+        password.type = "text";
+
+        confirmPassword.type = "text";
+
+        button.textContent = "Hide";
+
+    } else {
+
+        password.type = "password";
+
+        confirmPassword.type = "password";
+
+        button.textContent = "Show";
+    }
+}
+
+
+// =====================================================
+// RESET USER PASSWORD
+// =====================================================
+
+async function resetUserPassword(event) {
+
+    event.preventDefault();
+
+
+    const id =
+        document.getElementById(
+            "resetPasswordUserId"
+        ).value;
+
+
+    const newPassword =
+        document.getElementById(
+            "resetNewPassword"
+        ).value;
+
+
+    const confirmPassword =
+        document.getElementById(
+            "resetConfirmPassword"
+        ).value;
+
+
+    const button =
+        document.getElementById(
+            "resetPasswordBtn"
+        );
+
+
+    if (!id) {
+
+        showResetPasswordMessage(
+            "error",
+            "User ID is missing."
+        );
+
+        return;
+    }
+
+
+    if (newPassword.length < 8) {
+
+        showResetPasswordMessage(
+            "error",
+            "Password must be at least 8 characters long."
+        );
+
+        return;
+    }
+
+
+    if (newPassword !== confirmPassword) {
+
+        showResetPasswordMessage(
+            "error",
+            "Passwords do not match."
+        );
+
+        return;
+    }
+
+
+    const user =
+        allUsers.find(
+            item =>
+                item._id === id
+        );
+
+
+    const userName =
+        user?.name ||
+        "this user";
+
+
+    const confirmed =
+        confirm(
+            `Reset the password for ${userName}?\n\nThe user will be required to change this password after logging in.`
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    if (button) {
+
+        button.disabled = true;
+
+        button.innerHTML =
+            "<span>Resetting...</span><b>...</b>";
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/api/admin/users/${id}/reset-password`,
+                {
+                    method: "PATCH",
+
+                    headers:
+                        getAuthHeaders(),
+
+                    body:
+                        JSON.stringify({
+                            newPassword
+                        })
+                }
+            );
+
+
+        if (response.status === 401) {
+
+            logout();
+
+            return;
+        }
+
+
+        if (response.status === 403) {
+
+            showResetPasswordMessage(
+                "error",
+                "Administrator access required."
+            );
+
+            return;
+        }
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            throw new Error(
+                result.message ||
+                "Unable to reset password."
+            );
+        }
+
+
+        showResetPasswordMessage(
+            "success",
+            "✓ Password reset successfully."
+        );
+
+
+        showAdminMessage(
+            "success",
+            `Password reset successfully for ${userName}.`
+        );
+
+
+        await loadUsers();
+
+
+        setTimeout(
+            () => {
+                closeResetPassword();
+            },
+            1000
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Reset password error:",
+            error
+        );
+
+
+        showResetPasswordMessage(
+            "error",
+            error.message
+        );
+
+    } finally {
+
+        if (button) {
+
+            button.disabled = false;
+
+            button.innerHTML =
+                "<span>Reset Password</span><b>✓</b>";
+        }
+    }
+}
+
+
+// =====================================================
+// RESET PASSWORD MESSAGE
+// =====================================================
+
+function showResetPasswordMessage(type, text) {
+
+    const message =
+        document.getElementById(
+            "resetPasswordMessage"
+        );
+
+
+    if (!message) {
+        return;
+    }
+
+
+    message.className =
+        `message ${type}`;
+
+
+    message.textContent =
+        text;
+}
+
+
+// =====================================================
+// ACTIVATE / DEACTIVATE USER
+// =====================================================
+
+async function toggleUserStatus(id, active) {
+
+    const user =
+        allUsers.find(
+            item =>
+                item._id === id
+        );
+
+
+    if (!user) {
+        return;
+    }
+
+
+    /*
+     * Prevent admin from accidentally deactivating
+     * their own account.
+     */
+
+    const currentUser =
+        JSON.parse(
+            localStorage.getItem("user") ||
+            "{}"
+        );
+
+
+    if (
+        currentUser._id &&
+        String(currentUser._id) ===
+            String(user._id) &&
+        !active
+    ) {
+
+        showAdminMessage(
+            "error",
+            "You cannot deactivate your own account."
+        );
+
+        return;
     }
 
 
@@ -1556,9 +2156,7 @@ async function toggleUserStatus(
 
 
     if (!confirmed) {
-
         return;
-
     }
 
 
@@ -1581,14 +2179,22 @@ async function toggleUserStatus(
             );
 
 
-        if (
-            response.status === 401
-        ) {
+        if (response.status === 401) {
 
             logout();
 
             return;
+        }
 
+
+        if (response.status === 403) {
+
+            showAdminMessage(
+                "error",
+                "Administrator access required."
+            );
+
+            return;
         }
 
 
@@ -1605,7 +2211,6 @@ async function toggleUserStatus(
                 result.message ||
                 "Unable to update user status."
             );
-
         }
 
 
@@ -1617,7 +2222,6 @@ async function toggleUserStatus(
 
 
         await loadUsers();
-
         await loadAdminSummary();
 
     } catch (error) {
@@ -1627,13 +2231,152 @@ async function toggleUserStatus(
             error
         );
 
+
         showAdminMessage(
             "error",
             error.message
         );
+    }
+}
 
+
+// =====================================================
+// DELETE USER
+// =====================================================
+
+async function deleteUser(id) {
+
+    const user =
+        allUsers.find(
+            item =>
+                item._id === id
+        );
+
+
+    if (!user) {
+
+        showAdminMessage(
+            "error",
+            "User could not be found."
+        );
+
+        return;
     }
 
+
+    // =================================================
+    // PREVENT ADMIN FROM DELETING THEMSELVES
+    // =================================================
+
+    const currentUser =
+        JSON.parse(
+            localStorage.getItem("user") ||
+            "{}"
+        );
+
+
+    if (
+        currentUser._id &&
+        String(currentUser._id) ===
+            String(user._id)
+    ) {
+
+        showAdminMessage(
+            "error",
+            "You cannot delete your own administrator account."
+        );
+
+        return;
+    }
+
+
+    // =================================================
+    // CONFIRM DELETE
+    // =================================================
+
+    const confirmed =
+        confirm(
+            `Delete ${user.name || "this user"} permanently?\n\nThis action cannot be undone.\n\nIf this user has purchase requests, the system will prevent the deletion.`
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/api/admin/users/${id}`,
+                {
+                    method: "DELETE",
+
+                    headers:
+                        getAuthHeaders()
+                }
+            );
+
+
+        if (response.status === 401) {
+
+            logout();
+
+            return;
+        }
+
+
+        if (response.status === 403) {
+
+            showAdminMessage(
+                "error",
+                "Administrator access required."
+            );
+
+            return;
+        }
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            throw new Error(
+                result.message ||
+                "Unable to delete user."
+            );
+        }
+
+
+        showAdminMessage(
+            "success",
+            result.message ||
+            "User deleted successfully."
+        );
+
+
+        await loadUsers();
+        await loadAdminSummary();
+
+    } catch (error) {
+
+        console.error(
+            "Delete user error:",
+            error
+        );
+
+
+        showAdminMessage(
+            "error",
+            error.message
+        );
+    }
 }
 
 
@@ -1650,9 +2393,7 @@ async function loadPurchaseRequests() {
 
 
     if (!tableBody) {
-
         return;
-
     }
 
 
@@ -1677,20 +2418,15 @@ async function loadPurchaseRequests() {
             );
 
 
-        if (
-            response.status === 401
-        ) {
+        if (response.status === 401) {
 
             logout();
 
             return;
-
         }
 
 
-        if (
-            response.status === 403
-        ) {
+        if (response.status === 403) {
 
             alert(
                 "Administrator access required."
@@ -1700,7 +2436,6 @@ async function loadPurchaseRequests() {
                 "index.html";
 
             return;
-
         }
 
 
@@ -1717,7 +2452,6 @@ async function loadPurchaseRequests() {
                 result.message ||
                 "Unable to load purchase requests."
             );
-
         }
 
 
@@ -1770,9 +2504,7 @@ async function loadPurchaseRequests() {
                 </td>
             </tr>
         `;
-
     }
-
 }
 
 
@@ -1789,9 +2521,7 @@ function renderPurchaseRequests() {
 
 
     if (!tableBody) {
-
         return;
-
     }
 
 
@@ -1817,7 +2547,6 @@ function renderPurchaseRequests() {
         `;
 
         return;
-
     }
 
 
@@ -1827,8 +2556,7 @@ function renderPurchaseRequests() {
 
                 const requester =
                     request.requesterId &&
-                    typeof request.requesterId ===
-                        "object"
+                    typeof request.requesterId === "object"
                         ? request.requesterId
                         : null;
 
@@ -1847,8 +2575,7 @@ function renderPurchaseRequests() {
 
                 const cost =
                     Number(
-                        request.estimatedCost ||
-                        0
+                        request.estimatedCost || 0
                     ).toLocaleString(
                         "en-GH",
                         {
@@ -1866,16 +2593,12 @@ function renderPurchaseRequests() {
                             <button
                                 type="button"
                                 class="request-id"
-                                onclick="viewRequest(
-                                    '${request._id}'
-                                )"
+                                onclick="viewRequest('${request._id}')"
                             >
-
                                 ${escapeHtml(
                                     request.requestNumber ||
                                     "REQUEST"
                                 )}
-
                             </button>
 
                         </td>
@@ -1944,9 +2667,7 @@ function renderPurchaseRequests() {
                         <td>
 
                             <span class="amount">
-
                                 GHS ${cost}
-
                             </span>
 
                         </td>
@@ -1959,12 +2680,10 @@ function renderPurchaseRequests() {
                                     request.status
                                 )}"
                             >
-
                                 ${escapeHtml(
                                     request.status ||
                                     "Unknown"
                                 )}
-
                             </span>
 
                         </td>
@@ -1975,9 +2694,7 @@ function renderPurchaseRequests() {
                             <button
                                 type="button"
                                 class="action-btn view-btn"
-                                onclick="viewRequest(
-                                    '${request._id}'
-                                )"
+                                onclick="viewRequest('${request._id}')"
                             >
                                 View
                             </button>
@@ -1986,10 +2703,8 @@ function renderPurchaseRequests() {
 
                     </tr>
                 `;
-
             }
         ).join("");
-
 }
 
 
@@ -2007,35 +2722,30 @@ function viewRequest(id) {
 
 
     if (!request) {
-
         return;
-
     }
 
 
-    let modal =
+    const modal =
         document.getElementById(
             "requestModal"
         );
 
 
-    let content =
+    const content =
         document.getElementById(
             "modalContent"
         );
 
 
     if (!modal || !content) {
-
         return;
-
     }
 
 
     const requester =
         request.requesterId &&
-        typeof request.requesterId ===
-            "object"
+        typeof request.requesterId === "object"
             ? request.requesterId
             : null;
 
@@ -2054,8 +2764,7 @@ function viewRequest(id) {
 
     const cost =
         Number(
-            request.estimatedCost ||
-            0
+            request.estimatedCost || 0
         ).toLocaleString(
             "en-GH",
             {
@@ -2069,24 +2778,20 @@ function viewRequest(id) {
         request.createdAt
             ? new Date(
                 request.createdAt
-            ).toLocaleString(
-                "en-GH"
-            )
+            ).toLocaleString("en-GH")
             : "—";
 
 
     const approvedBy =
         request.approvedBy &&
-        typeof request.approvedBy ===
-            "object"
+        typeof request.approvedBy === "object"
             ? request.approvedBy.name
             : "—";
 
 
     const rejectedBy =
         request.rejectedBy &&
-        typeof request.rejectedBy ===
-            "object"
+        typeof request.rejectedBy === "object"
             ? request.rejectedBy.name
             : "—";
 
@@ -2283,10 +2988,7 @@ function viewRequest(id) {
     `;
 
 
-    modal.classList.add(
-        "show"
-    );
-
+    modal.classList.add("show");
 }
 
 
@@ -2304,12 +3006,8 @@ function closeRequestModal() {
 
     if (modal) {
 
-        modal.classList.remove(
-            "show"
-        );
-
+        modal.classList.remove("show");
     }
-
 }
 
 
@@ -2338,9 +3036,7 @@ function getStatusClass(status) {
 
         default:
             return "";
-
     }
-
 }
 
 
@@ -2351,9 +3047,7 @@ function getStatusClass(status) {
 function getInitials(name) {
 
     if (!name) {
-
         return "U";
-
     }
 
 
@@ -2367,7 +3061,6 @@ function getInitials(name) {
         .slice(0, 2)
         .join("")
         .toUpperCase();
-
 }
 
 
@@ -2375,10 +3068,7 @@ function getInitials(name) {
 // SET TEXT
 // =====================================================
 
-function setText(
-    elementId,
-    value
-) {
+function setText(elementId, value) {
 
     const element =
         document.getElementById(
@@ -2390,9 +3080,7 @@ function setText(
 
         element.textContent =
             value;
-
     }
-
 }
 
 
@@ -2408,32 +3096,15 @@ function escapeHtml(value) {
     ) {
 
         return "";
-
     }
 
 
     return String(value)
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 
@@ -2441,10 +3112,7 @@ function escapeHtml(value) {
 // USER MESSAGE
 // =====================================================
 
-function showUserMessage(
-    type,
-    text
-) {
+function showUserMessage(type, text) {
 
     const message =
         document.getElementById(
@@ -2453,9 +3121,7 @@ function showUserMessage(
 
 
     if (!message) {
-
         return;
-
     }
 
 
@@ -2479,7 +3145,6 @@ function showUserMessage(
         },
         5000
     );
-
 }
 
 
@@ -2487,10 +3152,7 @@ function showUserMessage(
 // ADMIN MESSAGE
 // =====================================================
 
-function showAdminMessage(
-    type,
-    text
-) {
+function showAdminMessage(type, text) {
 
     const message =
         document.getElementById(
@@ -2499,9 +3161,7 @@ function showAdminMessage(
 
 
     if (!message) {
-
         return;
-
     }
 
 
@@ -2525,7 +3185,6 @@ function showAdminMessage(
         },
         5000
     );
-
 }
 
 
@@ -2535,46 +3194,71 @@ function showAdminMessage(
 
 function logout() {
 
-    localStorage.removeItem(
-        "token"
-    );
+    localStorage.removeItem("token");
 
-    localStorage.removeItem(
-        "user"
-    );
-
+    localStorage.removeItem("user");
 
     window.location.href =
         "login.html";
-
 }
+
 
 // =====================================================
 // DATA EXPORTS
 // =====================================================
 
 function exportCsv(fileName, records) {
-    if (!Array.isArray(records) || records.length === 0) {
-        showAdminMessage("error", "There is no data available to export yet.");
+
+    if (
+        !Array.isArray(records) ||
+        records.length === 0
+    ) {
+
+        showAdminMessage(
+            "error",
+            "There is no data available to export yet."
+        );
+
         return;
     }
 
-    const keys = Array.from(
-        new Set(
-            records.flatMap(record => Object.keys(record))
-        )
-    );
+
+    const keys =
+        Array.from(
+            new Set(
+                records.flatMap(
+                    record =>
+                        Object.keys(record)
+                )
+            )
+        );
+
 
     const rows = [
         keys,
-        ...records.map(record =>
-            keys.map(key => flattenExportValue(record[key]))
+
+        ...records.map(
+            record =>
+                keys.map(
+                    key =>
+                        flattenExportValue(
+                            record[key]
+                        )
+                )
         )
     ];
 
-    const csv = rows
-        .map(row => row.map(csvEscape).join(","))
-        .join("\r\n");
+
+    const csv =
+        rows
+            .map(
+                row =>
+                    row
+                        .map(csvEscape)
+                        .join(",")
+            )
+            .join("\r\n");
+
 
     downloadFile(
         `safi-po-${fileName}-${new Date().toISOString().slice(0, 10)}.csv`,
@@ -2583,51 +3267,136 @@ function exportCsv(fileName, records) {
     );
 }
 
+
+// =====================================================
+// EXPORT ALL DATA
+// =====================================================
+
 function exportAllData() {
-    if (!allUsers.length && !allRequests.length) {
-        showAdminMessage("error", "There is no data available to export yet.");
+
+    if (
+        !allUsers.length &&
+        !allRequests.length
+    ) {
+
+        showAdminMessage(
+            "error",
+            "There is no data available to export yet."
+        );
+
         return;
     }
 
+
     downloadFile(
         `safi-po-all-data-${new Date().toISOString().slice(0, 10)}.json`,
-        JSON.stringify({
-            exportedAt: new Date().toISOString(),
-            users: allUsers,
-            purchaseRequests: allRequests
-        }, null, 2),
+
+        JSON.stringify(
+            {
+                exportedAt:
+                    new Date().toISOString(),
+
+                users:
+                    allUsers,
+
+                purchaseRequests:
+                    allRequests
+            },
+            null,
+            2
+        ),
+
         "application/json;charset=utf-8"
     );
 }
 
+
+// =====================================================
+// FLATTEN EXPORT VALUE
+// =====================================================
+
 function flattenExportValue(value) {
-    if (value === null || value === undefined) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
         return "";
     }
 
-    if (typeof value === "object") {
+
+    if (
+        typeof value === "object"
+    ) {
+
         return JSON.stringify(value);
     }
+
 
     return String(value);
 }
 
+
+// =====================================================
+// CSV ESCAPE
+// =====================================================
+
 function csvEscape(value) {
-    const text = String(value ?? "");
+
+    const text =
+        String(
+            value ?? ""
+        );
+
+
     return /[",\r\n]/.test(text)
-        ? `"${text.replace(/"/g, '""')}"`
+
+        ? `"${text.replace(
+            /"/g,
+            '""'
+        )}"`
+
         : text;
 }
 
-function downloadFile(fileName, content, type) {
-    const blob = new Blob([content], { type });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
+
+// =====================================================
+// DOWNLOAD FILE
+// =====================================================
+
+function downloadFile(
+    fileName,
+    content,
+    type
+) {
+
+    const blob =
+        new Blob(
+            [content],
+            { type }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const link =
+        document.createElement("a");
+
 
     link.href = url;
+
     link.download = fileName;
+
+
     document.body.appendChild(link);
+
     link.click();
+
     link.remove();
+
+
     URL.revokeObjectURL(url);
 }
