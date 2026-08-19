@@ -561,22 +561,22 @@ router.patch(
             // UPDATE USER
             // ==========================================
 
-            user.name =
-                name.trim();
-
-            user.email =
-                normalizedEmail;
-
-            user.department =
-                department
-                    ? department.trim()
-                    : "";
-
-            user.role =
-                selectedRole;
-
-
-            await user.save();
+            const updatedUser =
+                await User.findByIdAndUpdate(
+                    user._id,
+                    {
+                        $set: {
+                            name: name.trim(),
+                            email: normalizedEmail,
+                            department: department.trim(),
+                            role: selectedRole
+                        }
+                    },
+                    {
+                        new: true,
+                        runValidators: true
+                    }
+                ).select("-password");
 
 
             // ==========================================
@@ -593,28 +593,28 @@ router.patch(
                 data: {
 
                     id:
-                        user._id,
+                        updatedUser._id,
 
                     name:
-                        user.name,
+                        updatedUser.name,
 
                     email:
-                        user.email,
+                        updatedUser.email,
 
                     role:
-                        user.role,
+                        updatedUser.role,
 
                     department:
-                        user.department,
+                        updatedUser.department,
 
                     active:
-                        user.isActive,
+                        updatedUser.isActive,
 
                     isActive:
-                        user.isActive,
+                        updatedUser.isActive,
 
                     mustChangePassword:
-                        user.mustChangePassword
+                        updatedUser.mustChangePassword
 
                 }
 
@@ -719,11 +719,19 @@ router.patch(
             // UPDATE STATUS
             // ==========================================
 
-            user.isActive =
-                active;
-
-
-            await user.save();
+            const updatedUser =
+                await User.findByIdAndUpdate(
+                    user._id,
+                    {
+                        $set: {
+                            isActive: active
+                        }
+                    },
+                    {
+                        new: true,
+                        runValidators: true
+                    }
+                ).select("-password");
 
 
             // ==========================================
@@ -742,28 +750,28 @@ router.patch(
                 data: {
 
                     id:
-                        user._id,
+                        updatedUser._id,
 
                     name:
-                        user.name,
+                        updatedUser.name,
 
                     email:
-                        user.email,
+                        updatedUser.email,
 
                     role:
-                        user.role,
+                        updatedUser.role,
 
                     department:
-                        user.department,
+                        updatedUser.department,
 
                     active:
-                        user.isActive,
+                        updatedUser.isActive,
 
                     isActive:
-                        user.isActive,
+                        updatedUser.isActive,
 
                     mustChangePassword:
-                        user.mustChangePassword
+                        updatedUser.mustChangePassword
 
                 }
 
