@@ -1114,6 +1114,112 @@ textarea::placeholder {
     cursor: pointer;
 }
 
+#modalContent {
+    width: min(100%, 760px);
+    padding: 28px;
+}
+
+#modalContent .modal-top {
+    padding-bottom: 20px;
+    border-bottom: 1px solid #dceee1;
+}
+
+#modalContent .modal-top small {
+    color: var(--primary);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+}
+
+#modalContent .modal-top h2 {
+    margin-top: 6px;
+    color: #163c29;
+    font-size: 25px;
+}
+
+#modalContent .modal-body {
+    padding-top: 22px;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.detail-item {
+    min-width: 0;
+    padding: 15px 16px;
+    background: #f4faf6;
+    border: 1px solid #dceee1;
+    border-radius: 9px;
+}
+
+.detail-item.full {
+    grid-column: 1 / -1;
+}
+
+.detail-item span,
+.justification > span {
+    display: block;
+    margin-bottom: 6px;
+    color: #668172;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .7px;
+    text-transform: uppercase;
+}
+
+.detail-item strong {
+    display: block;
+    overflow-wrap: anywhere;
+    color: #234b34;
+    font-size: 14px;
+}
+
+.justification {
+    margin-top: 16px;
+    padding: 17px 18px;
+    background: #ffffff;
+    border: 1px solid #cfe7d8;
+    border-left: 4px solid var(--primary);
+    border-radius: 9px;
+}
+
+.justification p {
+    margin: 0;
+    color: #456250;
+    font-size: 13px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+}
+
+.action-btn.view-btn {
+    border: 1px solid #b9ddc5;
+    background: #e8f5ed;
+    color: var(--primary);
+    transition: background .2s ease, border-color .2s ease;
+}
+
+.action-btn.view-btn:hover {
+    border-color: var(--primary);
+    background: #d4ecdc;
+}
+
+@media (max-width: 600px) {
+    #modalContent {
+        padding: 20px;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-item.full {
+        grid-column: auto;
+    }
+}
+
 /* =========================================================
    STATISTICS
    ========================================================= */

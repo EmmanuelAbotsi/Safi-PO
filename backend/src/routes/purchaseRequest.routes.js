@@ -117,6 +117,63 @@ const allowedFileTypes = [
 
 ];
 
+const fileSignatures = {
+    "application/pdf": buffer =>
+        buffer.subarray(0, 5).toString() === "%PDF-",
+    "image/jpeg": buffer =>
+        buffer[0] === 0xff &&
+        buffer[1] === 0xd8 &&
+        buffer[2] === 0xff,
+    "image/png": buffer =>
+        buffer.subarray(0, 8).equals(
+            Buffer.from([
+                0x89, 0x50, 0x4e, 0x47,
+                0x0d, 0x0a, 0x1a, 0x0a
+            ])
+        ),
+    "application/msword": buffer =>
+        buffer.subarray(0, 8).equals(
+            Buffer.from([
+                0xd0, 0xcf, 0x11, 0xe0,
+                0xa1, 0xb1, 0x1a, 0xe1
+            ])
+        ),
+    "application/vnd.ms-excel": buffer =>
+        buffer.subarray(0, 8).equals(
+            Buffer.from([
+                0xd0, 0xcf, 0x11, 0xe0,
+                0xa1, 0xb1, 0x1a, 0xe1
+            ])
+        ),
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": buffer =>
+        buffer[0] === 0x50 && buffer[1] === 0x4b &&
+        buffer[2] === 0x03 && buffer[3] === 0x04,
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": buffer =>
+        buffer[0] === 0x50 && buffer[1] === 0x4b &&
+        buffer[2] === 0x03 && buffer[3] === 0x04
+};
+
+const removeUploadedFiles = files => {
+    for (const file of files || []) {
+        if (file.path && fs.existsSync(file.path)) {
+            fs.unlinkSync(file.path);
+        }
+    }
+};
+
+const uploadedFilesMatchSignatures = files => {
+    return files.every(file => {
+        const signatureCheck = fileSignatures[file.mimetype];
+
+        if (!signatureCheck) {
+            return false;
+        }
+
+        const header = fs.readFileSync(file.path).subarray(0, 8);
+        return signatureCheck(header);
+    });
+};
+
 
 // ==========================================
 // MULTER CONFIGURATION
@@ -656,6 +713,19 @@ router.post(
                         })
                     )
                     : [];
+
+            if (
+                !uploadedFilesMatchSignatures(req.files || [])
+            ) {
+                removeUploadedFiles(req.files || []);
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "One or more uploaded files do not match their declared file type."
+                });
+
+            }
 
 
             // ==========================================
