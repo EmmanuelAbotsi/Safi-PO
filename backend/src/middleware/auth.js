@@ -38,6 +38,21 @@ const authenticate = (req, res, next) => {
         const authHeader =
             req.headers.authorization;
 
+        console.log(
+            "AUTH HEADER RECEIVED:",
+            authHeader ? "YES" : "NO"
+        );
+
+        console.log(
+            "JWT SECRET EXISTS:",
+            !!secret
+        );
+
+        console.log(
+            "JWT SECRET LENGTH:",
+            secret.length
+        );
+
         // --------------------------------------
         // CHECK AUTHORIZATION HEADER
         // --------------------------------------
@@ -88,6 +103,18 @@ const authenticate = (req, res, next) => {
                 }
             );
 
+        console.log(
+            "JWT DECODED SUCCESSFULLY:",
+            {
+                id: decoded.id,
+                role: decoded.role,
+                email: decoded.email,
+                issuer: decoded.iss,
+                audience: decoded.aud,
+                expiresAt: decoded.exp
+            }
+        );
+
         // --------------------------------------
         // ATTACH USER TO REQUEST
         // --------------------------------------
@@ -104,7 +131,12 @@ const authenticate = (req, res, next) => {
     } catch (error) {
 
         console.error(
-            "Authentication error:",
+            "JWT ERROR:",
+            error.name
+        );
+
+        console.error(
+            "JWT MESSAGE:",
             error.message
         );
 
