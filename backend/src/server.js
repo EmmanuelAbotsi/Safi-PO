@@ -275,7 +275,7 @@ app.get(
 // /index.html
 // /manager/approvals.html
 // /style.css
-// /assests/logo.jpeg
+// /assets/logo.jpeg
 // etc.
 //
 // ==========================================
