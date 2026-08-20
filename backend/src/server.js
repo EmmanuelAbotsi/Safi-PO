@@ -69,38 +69,77 @@ const PORT =
     process.env.PORT || 5001;
 
 // ==========================================
+// FRONTEND PATH
+// ==========================================
+//
+// Project structure:
+//
+// Safi PO/
+// ├── backend/
+// │   └── src/
+// │       └── server.js
+// │
+// └── frontend/
+//     ├── login.html
+//     └── ...
+//
+// ==========================================
+
+const frontendPath =
+    path.resolve(__dirname, "../../frontend");
+
+console.log(
+    "Frontend path:",
+    frontendPath
+);
+
+// ==========================================
 // SECURITY HEADERS
 // ==========================================
 
 app.use(
-    helmet()
+    helmet({
+        contentSecurityPolicy: false
+    })
 );
 
 // ==========================================
 // CORS
 // ==========================================
+//
+// Render frontend and API are on the same
+// domain, but we still allow local development.
+//
+// ==========================================
 
 const allowedOrigins = [
     "http://127.0.0.1:5500",
-    "http://localhost:5500"
+    "http://localhost:5500",
+
+    // Render frontend
+    "https://safi-po.onrender.com"
 ];
 
 app.use(
     cors({
         origin: function (origin, callback) {
 
-            // Allow requests without an Origin header
-            // such as curl/Postman/server-to-server requests.
+            // Allow requests without Origin header
+            // such as Postman/curl/server requests.
             if (!origin) {
                 return callback(null, true);
             }
 
-            if (allowedOrigins.includes(origin)) {
+            if (
+                allowedOrigins.includes(origin)
+            ) {
                 return callback(null, true);
             }
 
             return callback(
-                new Error("CORS policy: Origin not allowed")
+                new Error(
+                    "CORS policy: Origin not allowed"
+                )
             );
         },
 
@@ -136,14 +175,17 @@ app.use(
 
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
+
     max: 300,
 
     standardHeaders: true,
+
     legacyHeaders: false,
 
     message: {
         success: false,
-        message: "Too many requests. Please try again later."
+        message:
+            "Too many requests. Please try again later."
     }
 });
 
@@ -158,9 +200,11 @@ app.use(
 
 const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
+
     max: 10,
 
     standardHeaders: true,
+
     legacyHeaders: false,
 
     message: {
@@ -171,7 +215,7 @@ const authLimiter = rateLimit({
 });
 
 // ==========================================
-// ROUTES
+// API ROUTES
 // ==========================================
 
 app.use(
@@ -210,9 +254,58 @@ app.get(
 
         res.status(200).json({
             success: true,
+
             message:
                 "Procurement Management System API is running"
         });
+
+    }
+);
+
+// ==========================================
+// SERVE FRONTEND STATIC FILES
+// ==========================================
+//
+// IMPORTANT:
+// This must come AFTER /api routes.
+//
+// It allows Render to serve:
+//
+// /login.html
+// /index.html
+// /manager/approvals.html
+// /style.css
+// /assests/logo.jpeg
+// etc.
+//
+// ==========================================
+
+app.use(
+    express.static(frontendPath)
+);
+
+// ==========================================
+// ROOT WEBSITE
+// ==========================================
+//
+// Opening:
+//
+// https://safi-po.onrender.com/
+//
+// will load login.html
+//
+// ==========================================
+
+app.get(
+    "/",
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                frontendPath,
+                "login.html"
+            )
+        );
 
     }
 );
@@ -224,10 +317,22 @@ app.get(
 app.use(
     (req, res) => {
 
-        res.status(404).json({
-            success: false,
-            message: "Route not found"
-        });
+        // API routes return JSON
+        if (
+            req.originalUrl.startsWith("/api/")
+        ) {
+
+            return res.status(404).json({
+                success: false,
+                message: "Route not found"
+            });
+
+        }
+
+        // Non-API routes return a normal 404 page
+        res.status(404).send(
+            "Safi PO page not found."
+        );
 
     }
 );
@@ -246,12 +351,15 @@ app.use(
 
         if (
             error.message &&
-            error.message.startsWith("CORS policy")
+            error.message.startsWith(
+                "CORS policy"
+            )
         ) {
 
             return res.status(403).json({
                 success: false,
-                message: "Origin not allowed"
+                message:
+                    "Origin not allowed"
             });
 
         }
@@ -259,11 +367,14 @@ app.use(
         res.status(
             error.status || 500
         ).json({
+
             success: false,
+
             message:
                 error.status
                     ? error.message
                     : "Internal server error"
+
         });
 
     }
@@ -274,18 +385,36 @@ app.use(
 // ==========================================
 
 const startServer = async () => {
-    await connectDB();
 
-    app.listen(
-        PORT,
-        () => {
+    try {
 
-            console.log(
-                `Procurement API listening on port ${PORT}`
-            );
+        await connectDB();
 
-        }
-    );
+        app.listen(
+            PORT,
+            "0.0.0.0",
+            () => {
+
+                console.log(
+                    `Procurement API listening on port ${PORT}`
+                );
+
+                console.log(
+                    `Frontend available from: ${frontendPath}`
+                );
+
+            }
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Server startup failed:",
+            error
+        );
+
+        process.exit(1);
+    }
 };
 
 startServer();
