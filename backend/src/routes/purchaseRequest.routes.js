@@ -357,6 +357,8 @@ router.post(
 
                 accountable2,
 
+                accountable3,
+
                 projectReference,
 
                 estimatedCost,
@@ -387,12 +389,9 @@ router.post(
                 !requesterName ||
                 !department ||
                 !itemDescription ||
-                quantity === undefined ||
-                quantity === null ||
                 !budgetCategory ||
                 !projectDonor ||
                 !accountable ||
-                !projectReference ||
                 estimatedCost === undefined ||
                 estimatedCost === null ||
                 !justification
@@ -450,11 +449,14 @@ router.post(
                 );
 
             const numericQuantity =
-                Number(quantity);
+                quantity === undefined || quantity === null || quantity === ""
+                    ? undefined
+                    : Number(quantity);
 
             if (
-                !Number.isInteger(numericQuantity) ||
-                numericQuantity < 1
+                numericQuantity !== undefined &&
+                (!Number.isInteger(numericQuantity) ||
+                numericQuantity < 1)
             ) {
 
                 return res.status(400).json({
@@ -481,6 +483,34 @@ router.post(
 
                 });
 
+            }
+
+            const normalizedAccountable =
+                String(accountable).trim().toLowerCase();
+
+            const expectedAccountable = numericCost <= 15000
+                ? "francis.owusu@safisana.org"
+                : numericCost <= 30000
+                ? "berend@safisana.org"
+                : "aart@safisana.org";
+
+            if (normalizedAccountable !== expectedAccountable) {
+                return res.status(400).json({
+                    success: false,
+                    message: "The accountable person does not match the indicative PO amount."
+                });
+            }
+
+            const normalizedAccountable3 = accountable3
+                ? String(accountable3).trim().toLowerCase()
+                : "";
+
+            if (numericCost > 30000 &&
+                normalizedAccountable3 !== "aart@safisana.org") {
+                return res.status(400).json({
+                    success: false,
+                    message: "aart@safisana.org must be selected as Accountable 3 for amounts above GHS 30,000."
+                });
             }
 
 
@@ -801,7 +831,9 @@ router.post(
                         ).trim(),
 
                     quantity:
-                        numericQuantity,
+                        numericQuantity === undefined
+                            ? 1
+                            : numericQuantity,
 
                     budgetCategory:
                         String(
@@ -825,10 +857,13 @@ router.post(
                             ).trim()
                             : null,
 
+                    accountable3:
+                        normalizedAccountable3,
+
                     projectReference:
-                        String(
-                            projectReference
-                        ).trim(),
+                        projectReference
+                            ? String(projectReference).trim()
+                            : "",
 
                     estimatedCost:
                         numericCost,

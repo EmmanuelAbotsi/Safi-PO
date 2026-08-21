@@ -18,7 +18,7 @@
         <div class="logo">
 
             <div class="logo-mark">
-                <img src="../assests/logo.jpeg" alt="Safisana PO logo">
+                <img src="assets/logo.jpeg" alt="Safisana PO logo">
             </div>
 
             <div class="logo-text">
@@ -163,7 +163,7 @@
                     class="avatar"
                     id="sidebarAvatar">
 
-                    <img src="../assests/logo.jpeg" alt="Safisana PO logo">
+                    <img src="assets/logo.jpeg" alt="Safisana PO logo">
 
                 </div>
 
@@ -208,7 +208,7 @@
             <div class="mobile-logo">
 
                 <div class="logo-mark">
-                    <img src="../assests/logo.jpeg" alt="Safisana PO logo">
+                    <img src="assets/logo.jpeg" alt="Safisana PO logo">
                 </div>
 
                 <strong>
@@ -254,7 +254,7 @@
                         class="avatar small"
                         id="topAvatar">
 
-                        <img src="../assests/logo.jpeg" alt="Safisana PO logo">
+                        <img src="assets/logo.jpeg" alt="Safisana PO logo">
 
                     </div>
 
@@ -557,6 +557,30 @@
                     </table>
 
                 </div>
+
+                <form
+                    id="deactivateUserForm"
+                    class="form-actions"
+                    style="margin-top: 16px;">
+
+                    <label for="deactivateUserIdentifier">
+                        Deactivate by employee email or full name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="deactivateUserIdentifier"
+                        list="activeUsersList"
+                        placeholder="e.g. employee@safisana.com or Jane Doe"
+                        required>
+
+                    <datalist id="activeUsersList"></datalist>
+
+                    <button type="submit" class="action-btn reject-btn">
+                        Deactivate account
+                    </button>
+
+                </form>
 
             </section>
 
@@ -1032,7 +1056,7 @@
 
 
 
-    <script src="admin.js?v=5"></script>
+    <script src="admin.js?v=6"></script>
 
 </body>
 

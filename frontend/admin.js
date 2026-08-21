@@ -1,5 +1,4 @@
-const API_URL = "http://localhost:5001";
-
+const API_URL = "https://safi-po.onrender.com";
 let allUsers = [];
 let allRequests = [];
 
@@ -115,6 +114,17 @@ function setupEvents() {
         createUserForm.addEventListener(
             "submit",
             createUser
+        );
+    }
+
+    const deactivateUserForm =
+        document.getElementById("deactivateUserForm");
+
+    if (deactivateUserForm) {
+
+        deactivateUserForm.addEventListener(
+            "submit",
+            deactivateUserByIdentifier
         );
     }
 
@@ -501,6 +511,22 @@ async function loadUsers() {
                         user.isActive === true
                 )
                 : [];
+
+
+        const activeUsersList =
+            document.getElementById("activeUsersList");
+
+        if (activeUsersList) {
+            activeUsersList.innerHTML = allUsers.map(
+                user => `
+                    <option
+                        value="${escapeHtml(user.email || "")}" label="${escapeHtml(
+                            `${user.name || "Unknown"} — ${user.department || "No department"}`
+                        )}">
+                    </option>
+                `
+            ).join("");
+        }
 
 
         renderUsers();
@@ -2972,13 +2998,13 @@ function viewRequest(id) {
             <div class="justification">
 
                 <span>
-                    BUSINESS JUSTIFICATION
+                    PURPOSE
                 </span>
 
                 <p>
                     ${escapeHtml(
                         request.justification ||
-                        "No justification provided."
+                        "No purpose provided."
                     )}
                 </p>
 
@@ -3399,4 +3425,82 @@ function downloadFile(
 
 
     URL.revokeObjectURL(url);
+}
+
+
+// =====================================================
+// DEACTIVATE USER BY EMAIL OR NAME
+// =====================================================
+
+async function deactivateUserByIdentifier(event) {
+
+    event.preventDefault();
+
+    const input =
+        document.getElementById("deactivateUserIdentifier");
+
+    const identifier = input?.value.trim();
+
+    if (!identifier) {
+
+        showAdminMessage(
+            "error",
+            "Enter the employee's email address or full name."
+        );
+
+        return;
+    }
+
+    const confirmed = confirm(
+        `Deactivate the account matching "${identifier}"?`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `${API_URL}/api/admin/users/status`,
+            {
+                method: "PATCH",
+                headers: getAuthHeaders(),
+                body: JSON.stringify({
+                    identifier,
+                    active: false
+                })
+            }
+        );
+
+        if (response.status === 401) {
+            logout();
+            return;
+        }
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(
+                result.message ||
+                "Unable to deactivate the user."
+            );
+        }
+
+        input.value = "";
+
+        showAdminMessage(
+            "success",
+            result.message || "User deactivated successfully."
+        );
+
+        await loadUsers();
+        await loadAdminSummary();
+
+    } catch (error) {
+
+        console.error("Deactivate user by identifier error:", error);
+
+        showAdminMessage("error", error.message);
+    }
 }

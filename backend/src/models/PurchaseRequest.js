@@ -94,10 +94,17 @@ const purchaseRequestSchema = new mongoose.Schema(
             maxlength: 200
         },
 
+        accountable3: {
+            type: String,
+            trim: true,
+            default: "",
+            maxlength: 200
+        },
+
         projectReference: {
             type: String,
-            required: true,
             trim: true,
+            default: "",
             maxlength: 200
         },
 

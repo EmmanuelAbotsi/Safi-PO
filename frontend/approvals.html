@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -323,6 +324,7 @@
             white-space: nowrap;
         }
 
+        /* Status */
         .status {
             display: inline-flex;
             align-items: center;
@@ -411,6 +413,33 @@
             color: #334155;
             font-size: 15px;
             margin-bottom: 5px;
+        }
+
+        .empty-state span {
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* Messages */
+        .message {
+            display: none;
+            padding: 12px 24px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .message.success {
+            display: block;
+            background: #ecfdf5;
+            color: #15803d;
+            border-bottom: 1px solid #bbf7d0;
+        }
+
+        .message.error {
+            display: block;
+            background: #fef2f2;
+            color: #b91c1c;
+            border-bottom: 1px solid #fecaca;
         }
 
         /* Modal */
@@ -553,6 +582,7 @@
 
         /* Responsive */
         @media (max-width: 850px) {
+
             .approval-summary {
                 grid-template-columns: 1fr;
             }
@@ -584,63 +614,120 @@
 
 <body>
 
-    <!-- Sidebar -->
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
     <aside class="sidebar">
 
         <div class="logo">
+
             <div class="logo-mark">
-                <img src="../assests/logo.jpeg" alt="Safisana PO logo">
+                <img
+                    src="assets/logo.jpeg"
+                    alt="Safisana PO logo"
+                >
             </div>
 
             <div class="logo-text">
                 <strong>Safi<span>PO</span></strong>
-                <small>Safisana Purchase Ordering System</small>
+                <small>
+                    Safisana Purchase Ordering System
+                </small>
             </div>
+
         </div>
+
 
         <nav class="navigation">
 
-            <p class="nav-label">MANAGER</p>
+            <p class="nav-label">
+                MANAGER
+            </p>
 
-            <a href="index.html" class="nav-item">
+            <a
+                href="index.html"
+                class="nav-item"
+            >
                 <span class="nav-icon">▦</span>
                 Dashboard
             </a>
 
-            <a href="approvals.html" class="nav-item active">
+            <a
+                href="approvals.html"
+                class="nav-item active"
+            >
                 <span class="nav-icon">✓</span>
                 Purchase Approvals
-                <span class="badge" id="pendingBadge">0</span>
+
+                <span
+                    class="badge"
+                    id="pendingBadge"
+                >
+                    0
+                </span>
             </a>
 
-            <a href="my-requests.html" class="nav-item">
+            <a
+                href="my-requests.html"
+                class="nav-item"
+            >
                 <span class="nav-icon">◫</span>
                 My Requests
             </a>
 
         </nav>
 
+
         <div class="sidebar-bottom">
 
             <div class="help-box">
-                <div class="help-icon">?</div>
+
+                <div class="help-icon">
+                    ?
+                </div>
 
                 <div>
-                    <strong>Need Help?</strong>
-                    <p>Contact Procurement</p>
+                    <strong>
+                        Need Help?
+                    </strong>
+
+                    <p>
+                        Contact Procurement
+                    </p>
                 </div>
+
             </div>
+
 
             <div class="user-card">
 
-                <div class="avatar" id="sidebarAvatar">M</div>
-
-                <div class="user-details">
-                    <strong id="sidebarName">Safi PO</strong>
-                    <span id="sidebarDepartment">Management</span>
+                <div
+                    class="avatar"
+                    id="sidebarAvatar"
+                >
+                    M
                 </div>
 
-                <span class="logout" id="logoutButton">↪</span>
+                <div class="user-details">
+
+                    <strong id="sidebarName">
+                        Safi PO
+                    </strong>
+
+                    <span id="sidebarDepartment">
+                        Management
+                    </span>
+
+                </div>
+
+                <span
+                    class="logout"
+                    id="logoutButton"
+                    title="Logout"
+                >
+                    ↪
+                </span>
 
             </div>
 
@@ -649,35 +736,70 @@
     </aside>
 
 
-    <!-- Main -->
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
     <main class="main-content">
+
+        <!-- Topbar -->
 
         <header class="topbar">
 
             <div class="mobile-logo">
+
                 <div class="logo-mark">
-                    <img src="../assests/logo.jpeg" alt="Safisana PO logo">
+                    <img
+                        src="assets/logo.jpeg"
+                        alt="Safisana PO logo"
+                    >
                 </div>
-                <strong>Safi<span>PO</span></strong>
+
+                <strong>
+                    Safi<span>PO</span>
+                </strong>
+
             </div>
 
+
             <div class="breadcrumb">
-                <span>Management</span>
-                <span>/</span>
-                <strong>Purchase Approvals</strong>
+
+                <span>
+                    Management
+                </span>
+
+                <span>
+                    /
+                </span>
+
+                <strong>
+                    Purchase Approvals
+                </strong>
+
             </div>
+
 
             <div class="topbar-actions">
 
                 <div class="top-user">
 
-                    <div class="avatar small" id="topAvatar">
+                    <div
+                        class="avatar small"
+                        id="topAvatar"
+                    >
                         M
                     </div>
 
                     <div>
-                        <strong id="topName">Safi PO</strong>
-                        <span id="topDepartment">Management</span>
+
+                        <strong id="topName">
+                            Safi PO
+                        </strong>
+
+                        <span id="topDepartment">
+                            Management
+                        </span>
+
                     </div>
 
                 </div>
@@ -687,11 +809,16 @@
         </header>
 
 
+        <!-- Page -->
+
         <section class="page">
 
             <div class="manager-page">
 
-                <!-- Heading -->
+                <!-- =================================================
+                     PAGE HEADING
+                ================================================== -->
+
                 <div class="approval-header">
 
                     <div class="approval-header-left">
@@ -701,25 +828,39 @@
                         </div>
 
                         <div>
-                            <h1>Purchase Approvals</h1>
+
+                            <h1>
+                                Purchase Approvals
+                            </h1>
 
                             <p>
-                                Review and make decisions on employee purchase requests.
+                                Review and make decisions on employee
+                                purchase requests.
                             </p>
+
                         </div>
 
                     </div>
 
+
                     <div class="manager-status">
+
                         <span class="manager-status-dot"></span>
+
                         Manager Portal
+
                     </div>
 
                 </div>
 
 
-                <!-- Summary -->
+                <!-- =================================================
+                     SUMMARY CARDS
+                ================================================== -->
+
                 <div class="approval-summary">
+
+                    <!-- Pending -->
 
                     <div class="summary-card">
 
@@ -728,12 +869,21 @@
                         </div>
 
                         <div>
-                            <span>Pending Approval</span>
-                            <strong id="pendingRequests">0</strong>
+
+                            <span>
+                                Pending Approval
+                            </span>
+
+                            <strong id="pendingRequests">
+                                0
+                            </strong>
+
                         </div>
 
                     </div>
 
+
+                    <!-- Approved -->
 
                     <div class="summary-card">
 
@@ -742,12 +892,21 @@
                         </div>
 
                         <div>
-                            <span>Approved</span>
-                            <strong id="approvedRequests">0</strong>
+
+                            <span>
+                                Approved
+                            </span>
+
+                            <strong id="approvedRequests">
+                                0
+                            </strong>
+
                         </div>
 
                     </div>
 
+
+                    <!-- Rejected -->
 
                     <div class="summary-card">
 
@@ -756,8 +915,15 @@
                         </div>
 
                         <div>
-                            <span>Rejected</span>
-                            <strong id="rejectedRequests">0</strong>
+
+                            <span>
+                                Rejected
+                            </span>
+
+                            <strong id="rejectedRequests">
+                                0
+                            </strong>
+
                         </div>
 
                     </div>
@@ -765,18 +931,28 @@
                 </div>
 
 
-                <!-- Requests -->
+                <!-- =================================================
+                     REQUESTS CARD
+                ================================================== -->
+
                 <section class="requests-card">
 
                     <div class="requests-card-header">
 
                         <div>
-                            <h2>Requests Requiring Review</h2>
+
+                            <h2>
+                                Purchase Requests
+                            </h2>
 
                             <p>
-                                Select a request to view its full details.
+                                View and manage all purchase requests.
+                                Approved and rejected requests remain
+                                visible for reference.
                             </p>
+
                         </div>
+
 
                         <button
                             type="button"
@@ -789,16 +965,23 @@
                     </div>
 
 
+                    <!-- =================================================
+                         SEARCH + FILTER
+                    ================================================== -->
+
                     <div class="approval-toolbar">
 
                         <div class="search-box">
 
-                            <span>⌕</span>
+                            <span>
+                                ⌕
+                            </span>
 
                             <input
                                 type="text"
                                 id="searchInput"
                                 placeholder="Search requests or employees..."
+                                autocomplete="off"
                             >
 
                         </div>
@@ -809,12 +992,18 @@
                             class="status-filter"
                         >
 
-                            <option value="Pending">
-                                Pending
+                            <!-- IMPORTANT:
+                                 ALL IS NOW DEFAULT -->
+
+                            <option
+                                value="All"
+                                selected
+                            >
+                                All Requests
                             </option>
 
-                            <option value="All">
-                                All Requests
+                            <option value="Pending">
+                                Pending
                             </option>
 
                             <option value="Approved">
@@ -838,11 +1027,20 @@
                     </div>
 
 
+                    <!-- =================================================
+                         MESSAGE
+                    ================================================== -->
+
                     <div
                         id="approvalMessage"
                         class="message"
+                        role="alert"
                     ></div>
 
+
+                    <!-- =================================================
+                         TABLE
+                    ================================================== -->
 
                     <div class="table-container">
 
@@ -851,26 +1049,64 @@
                             <thead>
 
                                 <tr>
-                                    <th>REQUEST</th>
-                                    <th>REQUESTER</th>
-                                    <th>ITEM / SERVICE</th>
-                                    <th>AMOUNT</th>
-                                    <th>DATE</th>
-                                    <th>STATUS</th>
-                                    <th>ACTION</th>
+
+                                    <th>
+                                        REQUEST
+                                    </th>
+
+                                    <th>
+                                        REQUESTER
+                                    </th>
+
+                                    <th>
+                                        ITEM / SERVICE
+                                    </th>
+
+                                    <th>
+                                        AMOUNT
+                                    </th>
+
+                                    <th>
+                                        DATE
+                                    </th>
+
+                                    <th>
+                                        STATUS
+                                    </th>
+
+                                    <th>
+                                        ACTION
+                                    </th>
+
                                 </tr>
 
                             </thead>
 
+
                             <tbody id="requestsTableBody">
 
                                 <tr>
+
                                     <td
                                         colspan="7"
                                         class="empty-state"
                                     >
-                                        Loading requests...
+
+                                        <div class="empty-icon">
+                                            ◷
+                                        </div>
+
+                                        <strong>
+                                            Loading requests...
+                                        </strong>
+
+                                        <span>
+                                            Please wait while the purchase
+                                            requests are loaded.
+                                        </span>
+
                                     </td>
+
                                 </tr>
 
                             </tbody>
@@ -888,24 +1124,37 @@
     </main>
 
 
-    <!-- Request Details Modal -->
+    <!-- =====================================================
+         REQUEST DETAILS MODAL
+    ====================================================== -->
+
     <div
         id="requestModal"
         class="modal-overlay"
+        aria-hidden="true"
     >
 
-        <div class="request-modal">
+        <div
+            class="request-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="requestModalTitle"
+        >
 
-            <div
-                id="modalContent"
-            ></div>
+            <div id="modalContent"></div>
 
         </div>
 
     </div>
 
 
-    <script src="approvals.js?v=2"></script>
+    <!-- =====================================================
+         JAVASCRIPT
+         v=3 forces browser to load the latest version.
+    ====================================================== -->
+
+    <script src="approvals.js?v=3"></script>
 
 </body>
+
 </html>

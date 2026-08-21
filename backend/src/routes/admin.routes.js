@@ -702,8 +702,107 @@ router.patch(
 
 // ==========================================
 // ACTIVATE / DEACTIVATE USER
+// PATCH /api/admin/users/status
+//
+// Allows an administrator to identify an account by
+// its id, email address, or an unambiguous full name.
 // PATCH /api/admin/users/:id/status
 // ==========================================
+
+router.patch(
+    "/users/status",
+    authenticate,
+    requireAdmin,
+    async (req, res) => {
+
+        try {
+
+            const { identifier, active } = req.body;
+
+            if (typeof active !== "boolean") {
+                return res.status(400).json({
+                    success: false,
+                    message: "Active status must be true or false"
+                });
+            }
+
+            if (!identifier || !String(identifier).trim()) {
+                return res.status(400).json({
+                    success: false,
+                    message: "An employee email address or full name is required"
+                });
+            }
+
+            const value = String(identifier).trim();
+            const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+            const mongoose = require("mongoose");
+            let matches;
+
+            if (isEmail) {
+                matches = await User.find({
+                    email: value.toLowerCase()
+                });
+            } else if (mongoose.Types.ObjectId.isValid(value)) {
+                matches = await User.find({ _id: value });
+            } else {
+                matches = await User.find({
+                    name: {
+                        $regex: `^${value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,
+                        $options: "i"
+                    }
+                });
+            }
+
+            if (!matches.length) {
+                return res.status(404).json({
+                    success: false,
+                    message: "No user matches that email address or full name"
+                });
+            }
+
+            if (matches.length > 1) {
+                return res.status(409).json({
+                    success: false,
+                    message: "More than one user has that name. Use the employee's email address instead."
+                });
+            }
+
+            const user = matches[0];
+
+            if (user._id.toString() === req.user.id && active === false) {
+                return res.status(400).json({
+                    success: false,
+                    message: "You cannot deactivate your own account"
+                });
+            }
+
+            user.isActive = active;
+            await user.save();
+
+            return res.json({
+                success: true,
+                message: active
+                    ? "User activated successfully"
+                    : "User deactivated successfully",
+                data: {
+                    id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    isActive: user.isActive
+                }
+            });
+
+        } catch (error) {
+
+            console.error("Admin user status lookup error:", error);
+
+            return res.status(500).json({
+                success: false,
+                message: "Failed to update user status"
+            });
+        }
+    }
+);
 
 router.patch(
     "/users/:id/status",

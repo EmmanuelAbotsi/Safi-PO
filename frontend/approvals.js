@@ -1,5 +1,9 @@
-const API_URL = "http://localhost:5001"; // Update this to your backend API URL
- 
+ // =====================================================
+// SAFI PO - MANAGER PURCHASE APPROVALS
+// =====================================================
+
+const API_URL = "https://safi-po.onrender.com";
+
 let allRequests = [];
 
 // =====================================================
@@ -18,7 +22,6 @@ function checkManagerAccess() {
     const token = localStorage.getItem("token");
     const userData = localStorage.getItem("user");
 
-    // No login information
     if (!token || !userData) {
         window.location.href = "index.html";
         return;
@@ -29,7 +32,7 @@ function checkManagerAccess() {
     try {
         user = JSON.parse(userData);
     } catch (error) {
-        console.error("User data error:", error);
+        console.error("Invalid user data:", error);
 
         localStorage.removeItem("token");
         localStorage.removeItem("user");
@@ -38,13 +41,7 @@ function checkManagerAccess() {
         return;
     }
 
-    // =================================================
-    // ONLY MANAGERS CAN ACCESS APPROVAL PAGE
-    // =================================================
-
-    const role =
-        String(user.role || "")
-            .toLowerCase();
+    const role = String(user.role || "").toLowerCase();
 
     if (role !== "manager") {
         alert("Manager access required.");
@@ -62,100 +59,71 @@ function checkManagerAccess() {
 // =====================================================
 
 function displayManager(user) {
-    const name = "Safi PO";
+    const name = user.name || user.fullName || "Safi PO";
     const department = user.department || "Management";
     const initials = getInitials(name);
 
-    const sidebarName =
-        document.getElementById("sidebarName");
+    const elements = {
+        sidebarName: document.getElementById("sidebarName"),
+        sidebarDepartment: document.getElementById("sidebarDepartment"),
+        sidebarAvatar: document.getElementById("sidebarAvatar"),
+        topName: document.getElementById("topName"),
+        topDepartment: document.getElementById("topDepartment"),
+        topAvatar: document.getElementById("topAvatar")
+    };
 
-    const sidebarDepartment =
-        document.getElementById("sidebarDepartment");
-
-    const sidebarAvatar =
-        document.getElementById("sidebarAvatar");
-
-    const topName =
-        document.getElementById("topName");
-
-    const topDepartment =
-        document.getElementById("topDepartment");
-
-    const topAvatar =
-        document.getElementById("topAvatar");
-
-    if (sidebarName) {
-        sidebarName.textContent = name;
+    if (elements.sidebarName) {
+        elements.sidebarName.textContent = name;
     }
 
-    if (sidebarDepartment) {
-        sidebarDepartment.textContent = department;
+    if (elements.sidebarDepartment) {
+        elements.sidebarDepartment.textContent = department;
     }
 
-    if (sidebarAvatar) {
-        sidebarAvatar.textContent = initials;
+    if (elements.sidebarAvatar) {
+        elements.sidebarAvatar.textContent = initials;
     }
 
-    if (topName) {
-        topName.textContent = name;
+    if (elements.topName) {
+        elements.topName.textContent = name;
     }
 
-    if (topDepartment) {
-        topDepartment.textContent = department;
+    if (elements.topDepartment) {
+        elements.topDepartment.textContent = department;
     }
 
-    if (topAvatar) {
-        topAvatar.textContent = initials;
+    if (elements.topAvatar) {
+        elements.topAvatar.textContent = initials;
     }
 }
 
 // =====================================================
-// EVENTS
+// SETUP EVENTS
 // =====================================================
 
 function setupEvents() {
-    const searchInput =
-        document.getElementById("searchInput");
-
-    const statusFilter =
-        document.getElementById("statusFilter");
-
-    const refreshButton =
-        document.getElementById("refreshButton");
-
-    const logoutButton =
-        document.getElementById("logoutButton");
+    const searchInput = document.getElementById("searchInput");
+    const statusFilter = document.getElementById("statusFilter");
+    const refreshButton = document.getElementById("refreshButton");
+    const logoutButton = document.getElementById("logoutButton");
 
     if (searchInput) {
-        searchInput.addEventListener(
-            "input",
-            filterRequests
-        );
+        searchInput.addEventListener("input", filterRequests);
     }
 
     if (statusFilter) {
-        statusFilter.addEventListener(
-            "change",
-            filterRequests
-        );
+        statusFilter.addEventListener("change", filterRequests);
     }
 
     if (refreshButton) {
-        refreshButton.addEventListener(
-            "click",
-            loadRequests
-        );
+        refreshButton.addEventListener("click", loadRequests);
     }
 
     if (logoutButton) {
-        logoutButton.addEventListener(
-            "click",
-            logout
-        );
+        logoutButton.addEventListener("click", logout);
     }
 
-    const modal =
-        document.getElementById("requestModal");
+    const modal = document.getElementById("requestModal");
 
     if (modal) {
         modal.addEventListener("click", (event) => {
@@ -167,14 +135,12 @@ function setupEvents() {
 }
 
 // =====================================================
-// LOAD REQUESTS
+// LOAD PURCHASE REQUESTS
 // =====================================================
 
 async function loadRequests() {
     const tableBody =
-        document.getElementById(
-            "requestsTableBody"
-        );
+        document.getElementById("requestsTableBody");
 
     if (!tableBody) {
         return;
@@ -183,13 +149,14 @@ async function loadRequests() {
     tableBody.innerHTML = `
         <tr>
             <td colspan="7" class="empty-state">
-                Loading purchase requests...
+                <div class="empty-icon">◷</div>
+                <strong>Loading requests...</strong>
+                <span>Please wait...</span>
             </td>
         </tr>
     `;
 
-    const token =
-        localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
     if (!token) {
         logout();
@@ -202,8 +169,8 @@ async function loadRequests() {
             {
                 method: "GET",
                 headers: {
-                    Authorization:
-                        `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
                 }
             }
         );
@@ -214,44 +181,30 @@ async function loadRequests() {
         }
 
         if (response.status === 403) {
-            alert(
-                "You do not have permission to access purchase approvals."
-            );
-
-            window.location.href =
-                "index.html";
-
-            return;
-        }
-
-        let result;
-
-        try {
-            result = await response.json();
-        } catch (jsonError) {
             throw new Error(
-                "The server returned an invalid response."
+                "You do not have permission to view purchase requests."
             );
         }
 
-        if (
-            !response.ok ||
-            !result.success
-        ) {
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
             throw new Error(
                 result.message ||
                 "Unable to load purchase requests."
             );
         }
 
-        allRequests =
-            Array.isArray(result.data)
-                ? result.data
-                : [];
+        allRequests = Array.isArray(result.data)
+            ? result.data
+            : [];
 
-        updateStatistics(
+        console.log(
+            "Manager purchase requests:",
             allRequests
         );
+
+        updateStatistics(allRequests);
 
         filterRequests();
 
@@ -263,10 +216,8 @@ async function loadRequests() {
 
         tableBody.innerHTML = `
             <tr>
-                <td
-                    colspan="7"
-                    class="empty-state"
-                >
+                <td colspan="7" class="empty-state">
+
                     <div class="empty-icon">
                         ⚠
                     </div>
@@ -276,18 +227,18 @@ async function loadRequests() {
                     </strong>
 
                     <span>
-                        ${escapeHtml(
-                            error.message
-                        )}
+                        ${escapeHtml(error.message)}
                     </span>
 
                     <button
+                        type="button"
                         class="action-btn view-btn"
                         onclick="loadRequests()"
-                        style="margin-top: 12px;"
+                        style="margin-top:12px;"
                     >
                         Try Again
                     </button>
+
                 </td>
             </tr>
         `;
@@ -302,59 +253,50 @@ function updateStatistics(requests) {
     const pending =
         requests.filter(
             request =>
-                request.status === "Pending"
+                String(request.status || "").toLowerCase() ===
+                "pending"
         ).length;
 
     const approved =
         requests.filter(
             request =>
-                request.status === "Approved"
+                String(request.status || "").toLowerCase() ===
+                "approved"
         ).length;
 
     const rejected =
         requests.filter(
             request =>
-                request.status === "Rejected"
+                String(request.status || "").toLowerCase() ===
+                "rejected"
         ).length;
 
     const pendingElement =
-        document.getElementById(
-            "pendingRequests"
-        );
+        document.getElementById("pendingRequests");
 
     const approvedElement =
-        document.getElementById(
-            "approvedRequests"
-        );
+        document.getElementById("approvedRequests");
 
     const rejectedElement =
-        document.getElementById(
-            "rejectedRequests"
-        );
+        document.getElementById("rejectedRequests");
 
     const pendingBadge =
-        document.getElementById(
-            "pendingBadge"
-        );
+        document.getElementById("pendingBadge");
 
     if (pendingElement) {
-        pendingElement.textContent =
-            pending;
+        pendingElement.textContent = pending;
     }
 
     if (approvedElement) {
-        approvedElement.textContent =
-            approved;
+        approvedElement.textContent = approved;
     }
 
     if (rejectedElement) {
-        rejectedElement.textContent =
-            rejected;
+        rejectedElement.textContent = rejected;
     }
 
     if (pendingBadge) {
-        pendingBadge.textContent =
-            pending;
+        pendingBadge.textContent = pending;
     }
 }
 
@@ -364,79 +306,67 @@ function updateStatistics(requests) {
 
 function filterRequests() {
     const searchInput =
-        document.getElementById(
-            "searchInput"
-        );
+        document.getElementById("searchInput");
 
     const statusFilter =
-        document.getElementById(
-            "statusFilter"
-        );
+        document.getElementById("statusFilter");
 
     const search =
         searchInput
-            ? searchInput.value
-                .trim()
-                .toLowerCase()
+            ? searchInput.value.trim().toLowerCase()
             : "";
 
+    // IMPORTANT:
+    // Dashboard defaults to ALL requests.
+    // Approved and rejected requests therefore remain visible.
     const status =
-        statusFilter
+        statusFilter && statusFilter.value
             ? statusFilter.value
-            : "Pending";
+            : "All";
 
     const filtered =
-        allRequests.filter(
-            request => {
+        allRequests.filter(request => {
 
-                const requestNumber =
-                    String(
-                        request.requestNumber ||
-                        ""
-                    ).toLowerCase();
+            const requestNumber =
+                String(
+                    request.requestNumber || ""
+                ).toLowerCase();
 
-                const requester =
-                    String(
-                        request.requesterName ||
-                        ""
-                    ).toLowerCase();
+            const requester =
+                String(
+                    request.requesterName || ""
+                ).toLowerCase();
 
-                const department =
-                    String(
-                        request.department ||
-                        ""
-                    ).toLowerCase();
+            const department =
+                String(
+                    request.department || ""
+                ).toLowerCase();
 
-                const item =
-                    String(
-                        request.itemDescription ||
-                        ""
-                    ).toLowerCase();
+            const item =
+                String(
+                    request.itemDescription || ""
+                ).toLowerCase();
 
-                const matchesSearch =
-                    requestNumber.includes(
-                        search
-                    ) ||
-                    requester.includes(
-                        search
-                    ) ||
-                    department.includes(
-                        search
-                    ) ||
-                    item.includes(
-                        search
-                    );
+            const matchesSearch =
+                requestNumber.includes(search) ||
+                requester.includes(search) ||
+                department.includes(search) ||
+                item.includes(search);
 
-                const matchesStatus =
-                    status === "All" ||
-                    request.status === status;
-
-                return (
-                    matchesSearch &&
-                    matchesStatus
+            const requestStatus =
+                String(
+                    request.status || ""
                 );
-            }
-        );
+
+            const matchesStatus =
+                status === "All" ||
+                requestStatus === status;
+
+            return (
+                matchesSearch &&
+                matchesStatus
+            );
+        });
 
     renderRequests(filtered);
 }
@@ -458,10 +388,8 @@ function renderRequests(requests) {
     if (!requests.length) {
         tableBody.innerHTML = `
             <tr>
-                <td
-                    colspan="7"
-                    class="empty-state"
-                >
+                <td colspan="7" class="empty-state">
+
                     <div class="empty-icon">
                         ✓
                     </div>
@@ -473,6 +401,7 @@ function renderRequests(requests) {
                     <span>
                         There are no requests matching your current filter.
                     </span>
+
                 </td>
             </tr>
         `;
@@ -481,8 +410,8 @@ function renderRequests(requests) {
     }
 
     tableBody.innerHTML =
-        requests.map(
-            request => {
+        requests
+            .map(request => {
 
                 const cost =
                     Number(
@@ -509,11 +438,18 @@ function renderRequests(requests) {
                         )
                         : "—";
 
+                const status =
+                    request.status || "Unknown";
+
+                const statusClass =
+                    getStatusClass(status);
+
                 return `
                     <tr>
 
                         <td>
                             <button
+                                type="button"
                                 class="request-id"
                                 onclick="viewRequest('${request._id}')"
                             >
@@ -525,6 +461,7 @@ function renderRequests(requests) {
                         </td>
 
                         <td>
+
                             <div class="requester">
 
                                 <div class="requester-avatar">
@@ -552,6 +489,7 @@ function renderRequests(requests) {
                                 </div>
 
                             </div>
+
                         </td>
 
                         <td>
@@ -566,7 +504,7 @@ function renderRequests(requests) {
                             <span class="item-quantity">
                                 Quantity:
                                 ${escapeHtml(
-                                    request.quantity ||
+                                    request.quantity ??
                                     "—"
                                 )}
                             </span>
@@ -580,20 +518,17 @@ function renderRequests(requests) {
                         </td>
 
                         <td>
-                            ${date}
+                            ${escapeHtml(date)}
                         </td>
 
                         <td>
+
                             <span
-                                class="status ${getStatusClass(
-                                    request.status
-                                )}"
+                                class="status ${statusClass}"
                             >
-                                ${escapeHtml(
-                                    request.status ||
-                                    "Unknown"
-                                )}
+                                ${escapeHtml(status)}
                             </span>
+
                         </td>
 
                         <td>
@@ -601,6 +536,7 @@ function renderRequests(requests) {
                             <div class="actions">
 
                                 <button
+                                    type="button"
                                     class="action-btn view-btn"
                                     onclick="viewRequest('${request._id}')"
                                 >
@@ -608,9 +544,10 @@ function renderRequests(requests) {
                                 </button>
 
                                 ${
-                                    request.status === "Pending"
+                                    status === "Pending"
                                         ? `
                                             <button
+                                                type="button"
                                                 class="action-btn approve-btn"
                                                 onclick="approveRequest('${request._id}')"
                                                 title="Approve"
@@ -619,6 +556,7 @@ function renderRequests(requests) {
                                             </button>
 
                                             <button
+                                                type="button"
                                                 class="action-btn reject-btn"
                                                 onclick="rejectRequest('${request._id}')"
                                                 title="Reject"
@@ -635,8 +573,8 @@ function renderRequests(requests) {
 
                     </tr>
                 `;
-            }
-        ).join("");
+            })
+            .join("");
 }
 
 // =====================================================
@@ -650,6 +588,11 @@ function viewRequest(id) {
         );
 
     if (!request) {
+        showMessage(
+            "error",
+            "Purchase request could not be found."
+        );
+
         return;
     }
 
@@ -682,9 +625,7 @@ function viewRequest(id) {
         request.createdAt
             ? new Date(
                 request.createdAt
-            ).toLocaleString(
-                "en-GH"
-            )
+            ).toLocaleString("en-GH")
             : "—";
 
     content.innerHTML = `
@@ -697,7 +638,7 @@ function viewRequest(id) {
                     PURCHASE REQUEST
                 </small>
 
-                <h2>
+                <h2 id="requestModalTitle">
                     ${escapeHtml(
                         request.requestNumber ||
                         "Request"
@@ -707,13 +648,16 @@ function viewRequest(id) {
             </div>
 
             <button
+                type="button"
                 class="close-modal"
                 onclick="closeRequestModal()"
+                aria-label="Close"
             >
                 ×
             </button>
 
         </div>
+
 
         <div class="modal-body">
 
@@ -734,6 +678,7 @@ function viewRequest(id) {
 
                 </div>
 
+
                 <div class="detail-item">
 
                     <span>
@@ -748,6 +693,7 @@ function viewRequest(id) {
                     </strong>
 
                 </div>
+
 
                 <div class="detail-item">
 
@@ -764,6 +710,7 @@ function viewRequest(id) {
 
                 </div>
 
+
                 <div class="detail-item">
 
                     <span>
@@ -772,12 +719,13 @@ function viewRequest(id) {
 
                     <strong>
                         ${escapeHtml(
-                            request.quantity ||
+                            request.quantity ??
                             "—"
                         )}
                     </strong>
 
                 </div>
+
 
                 <div class="detail-item">
 
@@ -790,6 +738,7 @@ function viewRequest(id) {
                     </strong>
 
                 </div>
+
 
                 <div class="detail-item">
 
@@ -806,6 +755,7 @@ function viewRequest(id) {
 
                 </div>
 
+
                 <div class="detail-item full">
 
                     <span>
@@ -820,16 +770,17 @@ function viewRequest(id) {
 
             </div>
 
+
             <div class="justification">
 
                 <span>
-                    BUSINESS JUSTIFICATION
+                    PURPOSE
                 </span>
 
                 <p>
                     ${escapeHtml(
                         request.justification ||
-                        "No justification provided."
+                        "No purpose provided."
                     )}
                 </p>
 
@@ -837,12 +788,14 @@ function viewRequest(id) {
 
         </div>
 
+
         ${
             request.status === "Pending"
                 ? `
                     <div class="modal-actions">
 
                         <button
+                            type="button"
                             class="modal-action modal-reject"
                             onclick="rejectFromModal('${request._id}')"
                         >
@@ -850,6 +803,7 @@ function viewRequest(id) {
                         </button>
 
                         <button
+                            type="button"
                             class="modal-action modal-approve"
                             onclick="approveFromModal('${request._id}')"
                         >
@@ -864,6 +818,10 @@ function viewRequest(id) {
     `;
 
     modal.classList.add("show");
+    modal.setAttribute(
+        "aria-hidden",
+        "false"
+    );
 }
 
 // =====================================================
@@ -897,6 +855,20 @@ async function approveRequest(id) {
         );
 
     if (!request) {
+        showMessage(
+            "error",
+            "Purchase request could not be found."
+        );
+
+        return;
+    }
+
+    if (request.status !== "Pending") {
+        showMessage(
+            "error",
+            "This request has already been processed."
+        );
+
         return;
     }
 
@@ -939,30 +911,10 @@ async function approveRequest(id) {
             return;
         }
 
-        if (response.status === 403) {
-            showMessage(
-                "error",
-                "You do not have permission to approve this request."
-            );
+        const result =
+            await response.json();
 
-            return;
-        }
-
-        let result;
-
-        try {
-            result =
-                await response.json();
-        } catch (jsonError) {
-            throw new Error(
-                "The server returned an invalid response."
-            );
-        }
-
-        if (
-            !response.ok ||
-            !result.success
-        ) {
+        if (!response.ok || !result.success) {
             throw new Error(
                 result.message ||
                 "Unable to approve request."
@@ -974,6 +926,11 @@ async function approveRequest(id) {
             "✓ Purchase request approved successfully."
         );
 
+        // IMPORTANT:
+        // Reload the complete request list.
+        // The approved request remains in MongoDB
+        // and will remain visible because the default
+        // filter is now "All".
         await loadRequests();
 
     } catch (error) {
@@ -1000,6 +957,20 @@ async function rejectRequest(id) {
         );
 
     if (!request) {
+        showMessage(
+            "error",
+            "Purchase request could not be found."
+        );
+
+        return;
+    }
+
+    if (request.status !== "Pending") {
+        showMessage(
+            "error",
+            "This request has already been processed."
+        );
+
         return;
     }
 
@@ -1042,30 +1013,10 @@ async function rejectRequest(id) {
             return;
         }
 
-        if (response.status === 403) {
-            showMessage(
-                "error",
-                "You do not have permission to reject this request."
-            );
+        const result =
+            await response.json();
 
-            return;
-        }
-
-        let result;
-
-        try {
-            result =
-                await response.json();
-        } catch (jsonError) {
-            throw new Error(
-                "The server returned an invalid response."
-            );
-        }
-
-        if (
-            !response.ok ||
-            !result.success
-        ) {
+        if (!response.ok || !result.success) {
             throw new Error(
                 result.message ||
                 "Unable to reject request."
@@ -1077,6 +1028,7 @@ async function rejectRequest(id) {
             "Purchase request rejected."
         );
 
+        // Keep rejected requests visible.
         await loadRequests();
 
     } catch (error) {
@@ -1103,8 +1055,11 @@ function closeRequestModal() {
         );
 
     if (modal) {
-        modal.classList.remove(
-            "show"
+        modal.classList.remove("show");
+
+        modal.setAttribute(
+            "aria-hidden",
+            "true"
         );
     }
 }
@@ -1114,7 +1069,7 @@ function closeRequestModal() {
 // =====================================================
 
 function getStatusClass(status) {
-    switch (status) {
+    switch (String(status || "")) {
 
         case "Pending":
             return "pending";
@@ -1212,16 +1167,15 @@ function showMessage(type, text) {
     message.textContent =
         text;
 
-    setTimeout(
-        () => {
-            message.className =
-                "message";
+    setTimeout(() => {
 
-            message.textContent =
-                "";
-        },
-        5000
-    );
+        message.className =
+            "message";
+
+        message.textContent =
+            "";
+
+    }, 5000);
 }
 
 // =====================================================

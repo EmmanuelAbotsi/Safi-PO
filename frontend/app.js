@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5001";
+const API_URL = "https://safi-po.onrender.com";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -29,6 +29,91 @@ document.addEventListener("DOMContentLoaded", async () => {
         window.location.href = "login.html";
         return;
     }
+
+    // =====================================================
+    // CUSTOM DEPARTMENTS
+    // =====================================================
+
+    const departmentInput = document.getElementById("department");
+    const addDepartmentValue = "__add_department__";
+    const customDepartmentsKey = "safiPoCustomDepartments";
+
+    const addDepartmentOption = department => {
+
+        if (!departmentInput || !department) {
+            return;
+        }
+
+        const normalizedDepartment = department.trim();
+
+        const alreadyExists = Array.from(departmentInput.options)
+            .some(option =>
+                option.value.toLowerCase() ===
+                normalizedDepartment.toLowerCase()
+            );
+
+        if (alreadyExists) {
+            return;
+        }
+
+        const option = document.createElement("option");
+        option.value = normalizedDepartment;
+        option.textContent = normalizedDepartment;
+
+        const addDepartmentOption = Array.from(departmentInput.options)
+            .find(option => option.value === addDepartmentValue);
+
+        departmentInput.insertBefore(option, addDepartmentOption || null);
+    };
+
+    try {
+        const savedDepartments = JSON.parse(
+            localStorage.getItem(customDepartmentsKey) || "[]"
+        );
+
+        if (Array.isArray(savedDepartments)) {
+            savedDepartments.forEach(addDepartmentOption);
+        }
+    } catch (error) {
+        console.warn("Unable to load saved departments:", error);
+    }
+
+    departmentInput?.addEventListener("change", () => {
+
+        if (departmentInput.value !== addDepartmentValue) {
+            return;
+        }
+
+        const department = window.prompt("Enter the new department name:");
+
+        if (!department || !department.trim()) {
+            departmentInput.value = "";
+            return;
+        }
+
+        const newDepartment = department.trim();
+        addDepartmentOption(newDepartment);
+
+        const savedDepartments = JSON.parse(
+            localStorage.getItem(customDepartmentsKey) || "[]"
+        );
+
+        const departments = Array.isArray(savedDepartments)
+            ? savedDepartments
+            : [];
+
+        if (!departments.some(item =>
+            String(item).toLowerCase() === newDepartment.toLowerCase()
+        )) {
+            departments.push(newDepartment);
+            localStorage.setItem(
+                customDepartmentsKey,
+                JSON.stringify(departments)
+            );
+        }
+
+        departmentInput.value = newDepartment;
+    });
 
     // =====================================================
     // DISPLAY USER INFORMATION
@@ -128,6 +213,85 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
  
+    // =====================================================
+    // ACCOUNTABLES BY INDICATIVE PO AMOUNT
+    // =====================================================
+
+    const amountInput = document.getElementById("estimatedCost");
+    const accountableInput = document.getElementById("accountable");
+    const accountableGroup = document.getElementById("accountableGroup");
+    const accountable3Input = document.getElementById("accountable3");
+    const accountable3Group = document.getElementById("accountable3Group");
+
+    const updateAccountables = () => {
+
+        if (!amountInput || !accountableInput) {
+            return;
+        }
+
+        const amount = Number(amountInput.value);
+
+        if (!Number.isFinite(amount) || amount <= 0) {
+            accountableInput.innerHTML =
+                '<option value="">Enter an indicative PO amount first</option>';
+
+            if (accountable3Group) {
+                accountable3Group.hidden = true;
+            }
+
+            if (accountableGroup) {
+                accountableGroup.hidden = false;
+            }
+
+            if (accountable3Input) {
+                accountable3Input.required = false;
+            }
+
+            return;
+        }
+
+        const accountable = amount <= 15000
+            ? {
+                email: "francis.owusu@safisana.org",
+                name: "Francis Owusu"
+            }
+            : amount <= 30000
+            ? {
+                email: "berend@safisana.org",
+                name: "Berend Golterman"
+            }
+            : {
+                email: "aart@safisana.org",
+                name: "aart@safisana.org"
+            };
+
+        accountableInput.innerHTML = `
+            <option value="${accountable.email}">
+                ${accountable.name} (${accountable.email})
+            </option>
+        `;
+
+        const requiresAccountable3 = amount > 30000;
+
+        if (accountableGroup) {
+            accountableGroup.hidden = requiresAccountable3;
+        }
+
+        if (accountable3Group) {
+            accountable3Group.hidden = !requiresAccountable3;
+        }
+
+        if (accountable3Input) {
+            accountable3Input.required = requiresAccountable3;
+            accountable3Input.value = requiresAccountable3
+                ? "aart@safisana.org"
+                : "";
+        }
+    };
+
+    amountInput?.addEventListener("input", updateAccountables);
+    updateAccountables();
+
 // =====================================================
 // PURCHASE REQUEST SUBMISSION
 // =====================================================
@@ -202,6 +366,11 @@ if (purchaseRequestForm) {
                     .getElementById("accountable2")
                     .value;
 
+            const accountable3 =
+                document
+                    .getElementById("accountable3")
+                    ?.value || "";
+
             const projectReference =
                 document
                     .getElementById("projectReference")
@@ -264,11 +433,9 @@ if (purchaseRequestForm) {
                 !requesterName ||
                 !department ||
                 !itemDescription ||
-                !quantity ||
                 !budgetCategory ||
                 !projectDonor ||
                 !accountable ||
-                !projectReference ||
                 !estimatedCost ||
                 !justification ||
                 !preferredSupplier ||
@@ -335,11 +502,14 @@ if (purchaseRequestForm) {
 
                 return;
             }
-            const requestedQuantity = Number(quantity);
+            const requestedQuantity = quantity
+                ? Number(quantity)
+                : undefined;
 
             if (
-            !Number.isInteger(requestedQuantity) ||
-            requestedQuantity < 1
+                requestedQuantity !== undefined &&
+                (!Number.isInteger(requestedQuantity) ||
+                requestedQuantity < 1)
             ) {
 
         if (message) {
@@ -568,10 +738,9 @@ if (purchaseRequestForm) {
                 itemDescription
             );
             
-            formData.append(
-                "quantity",
-                requestedQuantity
-            );
+            if (requestedQuantity !== undefined) {
+                formData.append("quantity", requestedQuantity);
+            }
             formData.append(
                 "budgetCategory",
                 budgetCategory
@@ -590,6 +759,11 @@ if (purchaseRequestForm) {
             formData.append(
                 "accountable2",
                 accountable2
+            );
+
+            formData.append(
+                "accountable3",
+                accountable3
             );
 
             formData.append(
