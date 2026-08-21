@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const rateLimit = require("express-rate-limit");
+const { ipKeyGenerator } = require("express-rate-limit");
 
 const User = require("../models/User");
 
@@ -18,7 +19,43 @@ const router = express.Router();
 
 const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 10,
+
+    // Administrators have a larger allowance so a typo or password-reset
+    // issue does not lock them out as quickly. The account remains protected
+    // from unlimited password guessing.
+    limit: async req => {
+
+        const email = String(req.body?.email || "")
+            .trim()
+            .toLowerCase();
+
+        if (!isValidEmail(email)) {
+            return 10;
+        }
+
+        const user = await User.findOne({ email })
+            .select("role")
+            .lean();
+
+        return String(user?.role || "").toLowerCase() === "admin"
+            ? 30
+            : 10;
+    },
+
+    // Keep each account's failed attempts separate, even when several users
+    // are working from the same office network.
+    keyGenerator: req => {
+
+        const email = String(req.body?.email || "")
+            .trim()
+            .toLowerCase();
+
+        return `${ipKeyGenerator(req.ip)}:${email}`;
+    },
+
+    // A successful login should never contribute to a lockout.
+    // Only failed attempts remain in the 15-minute allowance.
+    skipSuccessfulRequests: true,
 
     standardHeaders: true,
     legacyHeaders: false,

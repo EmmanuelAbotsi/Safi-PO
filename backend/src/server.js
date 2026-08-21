@@ -65,6 +65,11 @@ const adminRoutes =
 
 const app = express();
 
+// Render forwards the visitor's IP address through one proxy. Trust that
+// proxy so rate limits are applied per visitor instead of to all users of
+// the hosted application as one shared IP address.
+app.set("trust proxy", 1);
+
 const PORT =
     process.env.PORT || 5001;
 
@@ -195,32 +200,11 @@ app.use(
 );
 
 // ==========================================
-// AUTHENTICATION RATE LIMIT
-// ==========================================
-
-const authLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-
-    max: 10,
-
-    standardHeaders: true,
-
-    legacyHeaders: false,
-
-    message: {
-        success: false,
-        message:
-            "Too many authentication attempts. Please try again later."
-    }
-});
-
-// ==========================================
 // API ROUTES
 // ==========================================
 
 app.use(
     "/api/auth",
-    authLimiter,
     authRoutes
 );
 
